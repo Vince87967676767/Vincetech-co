@@ -56,27 +56,31 @@ button:active{transform:scale(0.95);}
   <button id="themeToggle">🌙</button>
 </header>
 
+<!-- ICON GRID -->
 <div class="icon-wrapper fade">
   <a href="index.html" class="icon-box">
     <h3>Home</h3>
+    <p>Back to main page</p>
   </a>
   <a href="services.html" class="icon-box">
     <h3>Services</h3>
+    <p>Web design & development</p>
   </a>
   <a href="contact.html" class="icon-box">
     <h3>Contact</h3>
+    <p>Get in touch</p>
   </a>
   <a href="about.html" class="icon-box">
     <h3>About</h3>
+    <p>Who we are</p>
   </a>
 </div>
 
+<!-- HERO -->
 <section id="heroSlider" class="fade">
   <div style="flex:1;min-width:300px;">
     <h1 id="sliderTitle">Welcome to Our Website</h1>
     <p id="sliderText">Explore our amazing content and services.</p>
-    
-    <!-- ✅ FIXED BUTTON -->
     <button onclick="window.location='contact.html'">Get Started</button>
   </div>
   <div style="flex:1;min-width:300px;">
@@ -84,6 +88,7 @@ button:active{transform:scale(0.95);}
   </div>
 </section>
 
+<!-- PORTFOLIO -->
 <div id="neonGallery" class="image-gallery">
   <div class="gallery-photo">
     <img src="design.jpg">
@@ -103,28 +108,29 @@ button:active{transform:scale(0.95);}
 window.addEventListener('load', () => {
   const photos = document.querySelectorAll('#neonGallery .gallery-photo');
   photos.forEach((photo, index) => {
-    setTimeout(() => {
-      photo.classList.add('show');
-    }, index * 200);
+    setTimeout(() => { photo.classList.add('show'); }, index*200);
   });
 });
 
+// DARK MODE
 const toggle=document.getElementById("themeToggle");
 if(localStorage.theme==="dark"){document.body.classList.add("dark");}
 toggle.onclick=()=>{document.body.classList.toggle("dark");localStorage.theme=document.body.classList.contains("dark")?"dark":"light";};
 
+// CURSOR
 const cursor=document.getElementById("cursor");
 document.addEventListener("mousemove",e=>{cursor.style.left=e.clientX+"px";cursor.style.top=e.clientY+"px";});
 
+// SCROLL FADE
 const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("show");});});
 document.querySelectorAll(".fade").forEach(el=>obs.observe(el));
 
-const slides = [
-  { image: "web1.jpg", title: "Welcome to Our Website", text: "Explore our amazing content and services." },
-  { image: "sotfw.jpg", title: "Discover Our Features", text: "We provide modern solutions tailored for your business." },
-  { image: "white.jpg", title: "Join Us Today", text: "Connect with our team and enjoy a smooth, professional experience." }
+// HERO SLIDER
+const slides=[
+  {image:"web1.jpg",title:"Welcome to Our Website",text:"Explore our amazing content and services."},
+  {image:"sotfw.jpg",title:"Discover Our Features",text:"We provide modern solutions tailored for your business."},
+  {image:"white.jpg",title:"Join Us Today",text:"Connect with our team and enjoy a smooth, professional experience."}
 ];
-
 let current=0;
 const sliderImage=document.getElementById("heroImage");
 const sliderTitle=document.getElementById("sliderTitle");
@@ -144,7 +150,6 @@ function showSlide(index){
     sliderText.style.opacity=1;
   },400);
 }
-
 function nextSlide(){showSlide((current+1)%slides.length);}
 setInterval(nextSlide,5000);
 </script>
