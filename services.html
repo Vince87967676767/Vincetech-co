@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Futuristic Neon Showcase - Services</title>
+<title>Futuristic Neon Showcase</title>
 
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -11,13 +11,11 @@
 <style>
 * { box-sizing:border-box; margin:0; padding:0; font-family:Arial,sans-serif; }
 
-/* Fullscreen video background */
 body, html { height:100%; width:100%; overflow-x:hidden; background:#000; }
 body { display:flex; flex-direction:column; align-items:center; padding-top:8vh; }
 video#bg-video { position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-2; filter: brightness(0.4) contrast(1.2); }
 body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); z-index:-1; }
 
-/* Particles */
 #particles {
   position: fixed;
   top: 0;
@@ -28,24 +26,14 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
   z-index: 0;
   overflow: hidden;
 }
-.particle {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  background: rgba(0,255,255,0.55);
-  border-radius: 50%;
-  animation: float 6s linear infinite;
-}
+.particle { position: absolute; width: 3px; height: 3px; background: rgba(0,255,255,0.55); border-radius: 50%; animation: float 6s linear infinite; }
 @keyframes float{
   0%{transform:translateY(100vh) translateX(0) scale(1); opacity:0.4;}
   50%{opacity:0.7;}
   100%{transform:translateY(-10vh) translateX(50px) scale(0.5); opacity:0;}
 }
 
-/* Grid container for icons */
 .icon-wrapper { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:30px; width:90%; max-width:1200px; margin-bottom:50px; position:relative; z-index:1; }
-
-/* Icon box */
 .icon-box { position:relative; background:rgba(255,255,255,0); border-radius:18px; text-align:center; text-decoration:none; color:#fff; padding:30px 20px; transition: all 0.4s ease; overflow:visible; }
 .icon-box::before { content:''; position:absolute; top:-2px; left:-2px; right:-2px; bottom:-2px; border-radius:20px; border:1px solid rgba(0,255,255,0.25); box-shadow:0 0 8px rgba(0,255,255,0.5),0 0 16px rgba(0,255,255,0.3),0 0 24px rgba(0,255,255,0.2); z-index:0; animation: neonPulse 3s ease-in-out infinite alternate; }
 @keyframes neonPulse { 0% { box-shadow:0 0 4px rgba(0,255,255,0.3),0 0 8px rgba(0,255,255,0.2),0 0 12px rgba(0,255,255,0.1); } 100% { box-shadow:0 0 12px rgba(0,255,255,0.7),0 0 24px rgba(0,255,255,0.5),0 0 36px rgba(0,255,255,0.25); } }
@@ -59,25 +47,21 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
 .icon-box:hover{ transform: translateY(-6px); }
 .icon-box:hover .icon{ transform: scale(1.25) rotate(5deg); filter:brightness(1.7); }
 
-/* Logo Section as Neon Link */
 .logo-section { width: 100%; display: flex; justify-content: center; margin-bottom: 40px; z-index: 1; position: relative; }
 .logo-section .icon-box { padding:20px 25px; display:flex; justify-content:center; align-items:center; }
 .logo { width: 150px; max-width: 20vw; border-radius: 12px; box-shadow: 0 0 12px rgba(0,255,255,0.4),0 0 24px rgba(0,255,255,0.25); transition: transform 0.3s ease, box-shadow 0.3s ease; }
 .logo:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(0,255,255,0.6),0 0 35px rgba(0,255,255,0.4); }
 
-/* Service showcase */
 .service-showcase{ width:90%; max-width:1000px; margin-bottom:60px; text-align:center; color:#fff; }
 .service-showcase img{ max-width:100%; border-radius:12px; box-shadow:0 0 18px rgba(0,255,255,0.5); margin-bottom:25px; transition: transform 0.3s ease;}
 .service-showcase img:hover{ transform: scale(1.06);}
 .service-showcase h2{ font-size:36px; margin-bottom:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; }
 .service-showcase p.subtitle{ font-style:italic; font-size:18px; opacity:0.9; margin-bottom:35px; max-width:800px; margin-left:auto;margin-right:auto; }
 
-/* Neon gallery images */
 .image-gallery{ display:flex; justify-content:center; gap:60px; margin-bottom:60px; flex-wrap:wrap; position:relative; z-index:1; }
 .image-gallery img{ width:30vw; max-width:400px; min-width:250px; aspect-ratio:1/1; border-radius:20px; box-shadow:0 0 12px rgba(0,255,255,0.4),0 0 24px rgba(0,255,255,0.3),0 0 36px rgba(0,255,255,0.2); cursor:default; object-fit:cover; background:#000; transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease; }
 .image-gallery img:hover{ transform: scale(1.12); filter:brightness(1.25); box-shadow:0 0 25px rgba(0,255,255,0.6),0 0 45px rgba(0,255,255,0.4),0 0 60px rgba(0,255,255,0.25); }
 
-/* Sections, Projects, Testimonials, CTA */
 .section { width:90%; max-width:1200px; margin-bottom:60px; text-align:center; color:#fff; position:relative; z-index:1; }
 .section h2{ font-size:32px; margin-bottom:20px; letter-spacing:1px; }
 .section p{ font-size:18px; opacity:0.8; margin-bottom:30px; }
@@ -101,10 +85,8 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
 </head>
 <body>
 
-<!-- Particles -->
 <div id="particles"></div>
 
-<!-- Neon Icon Boxes -->
 <div class="icon-wrapper">
   <a href="index.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-house"></i></div>
@@ -116,39 +98,35 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
     <h3>Services</h3>
     <p>Web design & development</p>
   </a>
-  <a href="Contact.html" class="icon-box">
+  <a href="contact.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-envelope"></i></div>
     <h3>Contact</h3>
     <p>Get in touch</p>
   </a>
-  <a href="About.html" class="icon-box">
+  <a href="about.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-user"></i></div>
     <h3>About</h3>
     <p>Who we are</p>
   </a>
 </div>
 
-<!-- Logo Section -->
 <div class="logo-section">
-  <a href="index.html" class="icon-box">
+  <a href="index.html" class="icon-box" style="padding:20px 25px;">
     <img src="NVLME0005.JPG" alt="Forma Studio Logo" class="logo" />
   </a>
 </div>
 
-<!-- Neon Image Gallery -->
 <div class="image-gallery">
   <img src="image1.jpg" alt="Alien 1" />
   <img src="image2.jpg" alt="Alien 2" />
   <img src="image3.jpg" alt="Alien 3" />
 </div>
 
-<!-- Service Showcase -->
 <div class="service-showcase">
   <h2>Tec Studio</h2>
   <p class="subtitle">Experience Innovation</p>
 </div>
 
-<!-- Latest Projects -->
 <div class="section">
   <h2>Our Latest Projects</h2>
   <p>Check out our most innovative designs, featuring a demo video.</p>
@@ -165,7 +143,6 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
   </div>
 </div>
 
-<!-- Testimonials -->
 <div class="section">
   <h2>Client Testimonials</h2>
   <p>What our clients are saying.</p>
@@ -185,21 +162,18 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
   </div>
 </div>
 
-<!-- Call to Action -->
 <div class="section">
   <h2>Ready to Start Your Project?</h2>
   <p>Contact us today and bring your ideas to life.</p>
-  <a href="Contact.html" class="cta-btn">Get in Touch</a>
+  <a href="contact.html" class="cta-btn">Get in Touch</a>
 </div>
 
-<!-- Video Background -->
 <video id="bg-video" autoplay muted loop>
   <source src="background.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
 
 <script>
-// Generate particles
 const particleContainer = document.getElementById('particles');
 for (let i = 0; i < 80; i++) {
   const p = document.createElement('div');
