@@ -1,0 +1,439 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Developer Icon Boxes - Breathing Glow</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif;}
+
+/* Page background: soft pink, blue, and white gradient */
+body{
+  background: linear-gradient(135deg, #ffe4e6, #dbeafe, #ffffff);
+  padding:40px;
+}
+
+/* Grid container */
+.icon-wrapper{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:25px;
+}
+
+/* Glass-style card */
+.icon-box{
+  position: relative;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(10px);
+  border-radius:18px;
+  text-align:center;
+  text-decoration:none;
+  color:#1f2937;
+  padding:30px 20px;
+  transition: all 0.4s ease;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+/* Continuous animated gradient overlay for card */
+.icon-box::before{
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  background: linear-gradient(270deg, #f472b6, #9333ea, #3b82f6, #f43f5e);
+  background-size: 600% 600%;
+  opacity:0.12;
+  border-radius:18px;
+  z-index:0;
+  animation: gradientShift 6s ease infinite;
+}
+
+/* Gradient animation keyframes */
+@keyframes gradientShift {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+/* Icon */
+.icon{
+  position: relative;
+  z-index:1;
+  width:65px;
+  height:65px;
+  margin:0 auto 15px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:26px;
+  transition: transform 0.4s ease, filter 0.4s ease;
+  /* Continuous gradient color */
+  background: linear-gradient(270deg, #f472b6, #9333ea, #3b82f6, #f43f5e);
+  background-size: 600% 600%;
+  animation: iconGlow 6s ease infinite, iconPulse 2.5s ease-in-out infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: brightness(1);
+}
+
+/* Gradient animation keyframes */
+@keyframes iconGlow {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+/* Breathing glow animation */
+@keyframes iconPulse {
+  0%, 100%{filter: brightness(1);}
+  50%{filter: brightness(1.25);}
+}
+
+/* Text */
+.icon-box h3{
+  position: relative;
+  z-index:1;
+  margin-bottom:6px;
+  font-size:18px;
+}
+
+.icon-box p{
+  position: relative;
+  z-index:1;
+  font-size:14px;
+  color:#4b5563;
+}
+
+/* Hover Effects */
+.icon-box:hover{
+  transform: translateY(-8px);
+  box-shadow: 0 18px 35px rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.8);
+}
+
+.icon-box:hover .icon{
+  transform: scale(1.25) rotate(8deg);
+  filter: brightness(1.5); /* intensify glow on hover */
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="icon-wrapper">
+
+  <a href="index.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-house"></i></div>
+    <h3>Home</h3>
+    <p>Back to main page</p>
+  </a>
+
+  <a href="services.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
+    <h3>Services</h3>
+    <p>Web design & development</p>
+  </a>
+
+   <a href="Contact.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-envelope"></i></div>
+    <h3>Contact</h3>
+    <p>Get in touch</p>
+  </a>
+
+<a href="About.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-user"></i></div>
+    <h3>About</h3>
+    <p>Who we are</p>
+  </a>
+
+</div>
+
+</body>
+<!-- Ultimate Floating, Breathing, Glowing Form -->
+<div class="myform-container">
+
+  <!-- Theme Toggle Checkbox -->
+  <input type="checkbox" id="theme-toggle">
+  <label for="theme-toggle" class="theme-switch">
+    <span class="icon">🌙</span>
+  </label>
+
+  <!-- Radio buttons for tabs -->
+  <input type="radio" name="myform-tab" id="signin" checked>
+  <input type="radio" name="myform-tab" id="feedback">
+
+  <!-- Tab headers -->
+  <div class="tab-header">
+    <label for="signin">Sign In</label>
+    <label for="feedback">Feedback</label>
+  </div>
+
+  <!-- Tab content -->
+  <div class="tab-content">
+    <!-- Sign-In Form -->
+    <div class="tab" id="signin-tab">
+      <form>
+        <input type="text" placeholder="Username" required>
+        <input type="password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+        <div class="link"><a href="#">Forgot Password?</a></div>
+      </form>
+    </div>
+
+    <!-- Feedback Form -->
+    <div class="tab" id="feedback-tab">
+      <form>
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Email Address" required>
+        <textarea placeholder="Your Feedback" required></textarea>
+        <button type="submit">Submit Feedback</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ===== Scoped Styles ===== */
+.myform-container * { box-sizing:border-box; font-family:'Arial',sans-serif; transition: all 0.3s ease; }
+
+/* ===== Theme Toggle Switch ===== */
+#theme-toggle { display:none; }
+.theme-switch {
+  position:absolute; top:20px; right:20px; background:#ffb6c1; color:#fff; padding:8px 12px;
+  border-radius:20px; cursor:pointer; font-size:18px; user-select:none; z-index:10;
+  display:flex; align-items:center; justify-content:center; animation:glowPulse 5s ease-in-out infinite;
+}
+.theme-switch .icon { display:inline-block; transition: transform 0.6s ease, content 0.6s ease; }
+#theme-toggle:checked + .theme-switch .icon { transform: rotate(360deg); }
+#theme-toggle + .theme-switch .icon::before { content:"🌙"; }
+#theme-toggle:checked + .theme-switch .icon::before { content:"☀️"; }
+
+/* ===== Living Pastel Gradient with Breathing Glow ===== */
+.myform-container {
+  max-width:450px; margin:50px auto; border-radius:12px; overflow:hidden; position:relative;
+  color:#333; background:linear-gradient(-45deg,hsl(340,100%,95%),hsl(200,100%,95%),hsl(320,100%,95%),hsl(210,100%,95%));
+  background-size:800% 800%; animation:dreamyHueShift 30s ease infinite,dreamyGradient 20s ease infinite,glowPulse 5s ease-in-out infinite,floatForm 6s ease-in-out infinite;
+  box-shadow:0 0 30px rgba(255,182,193,0.4);
+}
+
+/* Gradient movement & hue shift */
+@keyframes dreamyGradient{0%{background-position:0% 50%;}25%{background-position:50% 50%;}50%{background-position:100% 50%;}75%{background-position:50% 50%;}100%{background-position:0% 50%;}}
+@keyframes dreamyHueShift{0%{filter:hue-rotate(0deg);}25%{filter:hue-rotate(20deg);}50%{filter:hue-rotate(40deg);}75%{filter:hue-rotate(60deg);}100%{filter:hue-rotate(0deg);}}
+
+/* Floating Animation */
+@keyframes floatForm{0%{transform:translateY(0px);}50%{transform:translateY(-10px);}100%{transform:translateY(0px);}}
+
+/* Glow pulse for form, tabs, buttons, inputs */
+@keyframes glowPulse{0%{box-shadow:0 0 20px rgba(255,182,193,0.3);}50%{box-shadow:0 0 40px rgba(255,182,193,0.6);}100%{box-shadow:0 0 20px rgba(255,182,193,0.3);}}
+
+/* Tab Headers */
+.myform-container .tab-header{display:flex;animation:glowPulse 5s ease-in-out infinite;}
+.myform-container .tab-header label{
+  flex:1;padding:15px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.8);
+  font-weight:bold;transition:all 0.3s ease;border-right:1px solid rgba(0,0,0,0.1);border-radius:6px;margin:0 5px;
+  box-shadow:0 0 15px rgba(255,182,193,0.3);
+}
+.myform-container .tab-header label:last-child{border-right:none;}
+.myform-container input[type="radio"]{display:none;}
+.myform-container #signin:checked ~ .tab-header label[for="signin"],
+.myform-container #feedback:checked ~ .tab-header label[for="feedback"]{
+  background:#ffb6c1;color:#fff;box-shadow:0 0 30px rgba(255,182,193,0.5);
+}
+
+/* Tab Content */
+.myform-container .tab-content{padding:30px;position:relative;min-height:320px;}
+.myform-container .tab{display:none;position:absolute;width:100%;top:0;left:0;animation:slideFade 0.5s ease forwards;}
+.myform-container #signin:checked ~ .tab-content #signin-tab,
+.myform-container #feedback:checked ~ .tab-content #feedback-tab{display:block;}
+@keyframes slideFade{0%{opacity:0;transform:translateX(30px);}100%{opacity:1;transform:translateX(0);}}
+
+/* Forms: Inputs, Textarea, Buttons with Breathing Glow */
+.myform-container input,
+.myform-container textarea,
+.myform-container button{
+  width:100%;padding:12px 15px;margin:10px 0 20px 0;border-radius:8px;border:1px solid #ccc;
+  outline:none;font-size:15px;animation:glowPulse 5s ease-in-out infinite;
+}
+.myform-container input:focus,
+.myform-container textarea:focus{border-color:#ffb6c1;box-shadow:0 0 20px rgba(255,182,193,0.5);}
+.myform-container textarea{resize:none;height:100px;}
+.myform-container button{background:#ffb6c1;color:#fff;border:none;cursor:pointer;font-size:16px;box-shadow:0 0 15px rgba(255,182,193,0.3);}
+.myform-container button:hover{background:#ff69b4;box-shadow:0 0 30px rgba(255,182,193,0.6);}
+
+/* Links */
+.myform-container .link{text-align:center;font-size:14px;margin-top:-10px;}
+.myform-container .link a{color:#ff69b4;text-decoration:none;}
+.myform-container .link a:hover{text-decoration:underline;}
+
+/* Dark Theme */
+#theme-toggle:checked ~ .myform-container{
+  background:linear-gradient(-45deg,#1e1e1e,#2b2b2b,#3a3a3a,#4a4a4a);color:#f0f0f0;
+  animation:dreamyGradientDark 20s ease infinite,glowPulseDark 5s ease-in-out infinite,floatForm 6s ease-in-out infinite;
+  box-shadow:0 0 30px rgba(255,105,180,0.4);
+}
+@keyframes dreamyGradientDark{0%{background-position:0% 50%;}25%{background-position:50% 50%;}50%{background-position:100% 50%;}75%{background-position:50% 50%;}100%{background-position:0% 50%;}}
+@keyframes glowPulseDark{0%{box-shadow:0 0 20px rgba(255,105,180,0.3);}50%{box-shadow:0 0 40px rgba(255,105,180,0.6);}100%{box-shadow:0 0 20px rgba(255,105,180,0.3);}}
+
+#theme-toggle:checked ~ .myform-container .tab-header label{background:rgba(50,50,50,0.9);color:#f0f0f0;box-shadow:0 0 15px rgba(255,105,180,0.3);}
+#theme-toggle:checked ~ .myform-container #signin:checked ~ .tab-header label[for="signin"],
+#theme-toggle:checked ~ .myform-container #feedback:checked ~ .tab-header label[for="feedback"]{background:#ff69b4;color:#fff;box-shadow:0 0 30px rgba(255,105,180,0.5);}
+#theme-toggle:checked ~ .myform-container input,
+#theme-toggle:checked ~ .myform-container textarea{background:#2b2b2b;border-color:#555;color:#f0f0f0;}
+#theme-toggle:checked ~ .myform-container button{background:#ff69b4;}
+
+/* Responsive */
+@media(max-width:500px){.myform-container{margin:20px;}}
+</style>
+<br>
+<a href="tel:+447424828204"
+   style="text-decoration:none; color:inherit; padding:6px 10px; border-radius:6px; transition: box-shadow 0.3s ease, background-color 0.3s ease;"
+   onmouseover="this.style.boxShadow='0 0 12px rgba(37,99,235,0.6)'; this.style.backgroundColor='rgba(37,99,235,0.1)'"
+   onmouseout="this.style.boxShadow='none'; this.style.backgroundColor='transparent'">
+  📞 +447424828204
+</a>
+<meta charset="UTF-8">
+<title>Homepage</title>
+
+<style>
+/* ===== AUTOMATIC LOGO GLOW ===== */
+.glow-logo {
+  width: 160px;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0% {
+    filter: drop-shadow(0 0 4px rgba(0, 150, 255, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(0, 150, 255, 0.9));
+  }
+  100% {
+    filter: drop-shadow(0 0 4px rgba(0, 150, 255, 0.4));
+  }
+}
+
+/* ===== WATERMARK LAYER ===== */
+.watermark-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* allows clicks through */
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* basic watermark style */
+.watermark-layer span {
+  position: absolute;
+  font-size: 32px;
+  color: #000;
+  opacity: 0.05;
+  transform: rotate(-30deg);
+  animation: fade 10s ease-in-out infinite alternate;
+}
+
+/* fade in/out */
+@keyframes fade {
+  0% { opacity: 0.03; }
+  50% { opacity: 0.08; }
+  100% { opacity: 0.03; }
+}
+
+/* unique paths for each watermark */
+.watermark-layer span:nth-child(1) {
+  top: 10%;
+  left: 5%;
+  animation-name: drift1, fade;
+  animation-duration: 60s, 10s;
+}
+
+.watermark-layer span:nth-child(2) {
+  top: 50%;
+  left: 30%;
+  animation-name: drift2, fade;
+  animation-duration: 55s, 12s;
+}
+
+.watermark-layer span:nth-child(3) {
+  top: 70%;
+  left: 60%;
+  animation-name: drift3, fade;
+  animation-duration: 70s, 15s;
+}
+
+.watermark-layer span:nth-child(4) {
+  top: 20%;
+  left: 80%;
+  animation-name: drift4, fade;
+  animation-duration: 65s, 13s;
+}
+
+/* drift paths using translate and small rotations */
+@keyframes drift1 {
+  0% { transform: translate(0,0) rotate(-30deg); }
+  25% { transform: translate(50px, 20px) rotate(-28deg); }
+  50% { transform: translate(100px, -10px) rotate(-32deg); }
+  75% { transform: translate(150px, 25px) rotate(-29deg); }
+  100% { transform: translate(200px, 0) rotate(-30deg); }
+}
+
+@keyframes drift2 {
+  0% { transform: translate(0,0) rotate(-30deg); }
+  25% { transform: translate(-30px, 40px) rotate(-33deg); }
+  50% { transform: translate(60px, 20px) rotate(-28deg); }
+  75% { transform: translate(80px, -15px) rotate(-31deg); }
+  100% { transform: translate(120px, 10px) rotate(-30deg); }
+}
+
+@keyframes drift3 {
+  0% { transform: translate(0,0) rotate(-30deg); }
+  25% { transform: translate(70px, -20px) rotate(-27deg); }
+  50% { transform: translate(120px, 40px) rotate(-34deg); }
+  75% { transform: translate(160px, 5px) rotate(-30deg); }
+  100% { transform: translate(200px, -25px) rotate(-30deg); }
+}
+
+@keyframes drift4 {
+  0% { transform: translate(0,0) rotate(-30deg); }
+  25% { transform: translate(-50px, 10px) rotate(-28deg); }
+  50% { transform: translate(30px, 30px) rotate(-32deg); }
+  75% { transform: translate(60px, -20px) rotate(-29deg); }
+  100% { transform: translate(100px, 15px) rotate(-30deg); }
+}
+
+/* accessibility: stop animations for reduced motion users */
+@media (prefers-reduced-motion: reduce) {
+  .glow-logo,
+  .watermark-layer span {
+    animation: none !important;
+  }
+}
+</style>
+
+
+<!-- ORIGINAL CONTENT -->
+<header>
+  <img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
+</header>
+
+
+<!-- WATERMARK OVERLAY -->
+<div class="watermark-layer">
+  <span><img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
+</span>
+  <span><img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
+ </span>
+  <span> <img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
+</span>
+  <span><img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
+</span>
+</div>
+
+</html>
