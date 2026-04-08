@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About - VINCETECH.CO</title>
+<title>VINCETECH.CO - Home</title>
 
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -11,21 +11,20 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif;}
 
-/* Background & Body */
+/* Page background: soft pink, blue, and white gradient */
 body{
   background: linear-gradient(135deg, #ffe4e6, #dbeafe, #ffffff);
   padding:40px;
-  min-height:100vh;
 }
 
-/* Icon Boxes Navigation */
+/* Grid container */
 .icon-wrapper{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:25px;
-  margin-bottom:40px;
 }
 
+/* Glass-style card */
 .icon-box{
   position: relative;
   background: rgba(255,255,255,0.6);
@@ -40,6 +39,7 @@ body{
   overflow: hidden;
 }
 
+/* Continuous animated gradient overlay for card */
 .icon-box::before{
   content:'';
   position:absolute;
@@ -52,21 +52,25 @@ body{
   animation: gradientShift 6s ease infinite;
 }
 
+/* Gradient animation keyframes */
 @keyframes gradientShift {
   0%{background-position:0% 50%;}
   50%{background-position:100% 50%;}
   100%{background-position:0% 50%;}
 }
 
+/* Icon */
 .icon{
   position: relative;
   z-index:1;
   width:65px;
   height:65px;
   margin:0 auto 15px;
+  border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
+  color:#fff;
   font-size:26px;
   transition: transform 0.4s ease, filter 0.4s ease;
   background: linear-gradient(270deg, #f472b6, #9333ea, #3b82f6, #f43f5e);
@@ -88,69 +92,45 @@ body{
   50%{filter: brightness(1.25);}
 }
 
-.icon-box h3{ position: relative; z-index:1; margin-bottom:6px; font-size:18px; }
-.icon-box p{ position: relative; z-index:1; font-size:14px; color:#4b5563; }
-
-.icon-box:hover{ transform: translateY(-8px); box-shadow:0 18px 35px rgba(0,0,0,0.08); background: rgba(255,255,255,0.8);}
-.icon-box:hover .icon{ transform: scale(1.25) rotate(8deg); filter: brightness(1.5); }
-
-/* About Section */
-#about-me-section {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-  line-height: 1.6;
-  padding: 40px 0;
+/* Text */
+.icon-box h3{
+  position: relative;
+  z-index:1;
+  margin-bottom:6px;
+  font-size:18px;
 }
 
-#about-me-section a { color:#007BFF; text-decoration:none; }
-#about-me-section a:hover { text-decoration:underline; }
-
-#about-me-section .container { width:90%; max-width:1200px; margin:auto; }
-#about-me-section header { text-align:center; margin-bottom:40px; }
-#about-me-section header h1 { font-size:2.5rem; color:#007BFF; }
-#about-me-section header p { font-size:1.1rem; color:#555; margin-top:10px; }
-.profile-pic { width:150px; height:150px; border-radius:50%; object-fit:cover; margin-bottom:20px; border:4px solid #007BFF; }
-
-#about-me-section .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
-#about-me-section .card { padding:20px; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; }
-#about-me-section .card:hover { transform: translateY(-5px); box-shadow:0 10px 20px rgba(0,0,0,0.15); }
-#about-me-section .card h3 { color:#007BFF; margin-bottom:15px; }
-#about-me-section .card ul { list-style:none; }
-#about-me-section .card ul li { margin-bottom:10px; padding-left:15px; position:relative; }
-#about-me-section .card ul li::before { content:"✔"; position:absolute; left:0; color:#007BFF; }
-
-.contact { text-align:center; margin-top:50px; padding:30px 20px; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
-.contact h2 { color:#007BFF; margin-bottom:15px; }
-.contact p { font-size:1.1rem; }
-
-/* Glow Logo & Watermark */
-.glow-logo { width:160px; animation: glowPulse 3s ease-in-out infinite; }
-@keyframes glowPulse {
-  0% { filter: drop-shadow(0 0 4px rgba(0,150,255,0.4)); }
-  50% { filter: drop-shadow(0 0 15px rgba(0,150,255,0.9)); }
-  100% { filter: drop-shadow(0 0 4px rgba(0,150,255,0.4)); }
+.icon-box p{
+  position: relative;
+  z-index:1;
+  font-size:14px;
+  color:#4b5563;
 }
 
-.watermark-layer { position:fixed; inset:0; pointer-events:none; z-index:9999; overflow:hidden; }
-.watermark-layer span { position:absolute; font-size:32px; color:#000; opacity:0.05; transform:rotate(-30deg); animation: fade 10s ease-in-out infinite alternate;}
-@keyframes fade {0% {opacity:0.03;}50% {opacity:0.08;}100% {opacity:0.03;}}
+/* Hover Effects */
+.icon-box:hover{
+  transform: translateY(-8px);
+  box-shadow: 0 18px 35px rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.8);
+}
 
-.watermark-layer span:nth-child(1){top:10%;left:5%;animation-name:drift1,fade;animation-duration:60s,10s;}
-.watermark-layer span:nth-child(2){top:50%;left:30%;animation-name:drift2,fade;animation-duration:55s,12s;}
-.watermark-layer span:nth-child(3){top:70%;left:60%;animation-name:drift3,fade;animation-duration:70s,15s;}
-.watermark-layer span:nth-child(4){top:20%;left:80%;animation-name:drift4,fade;animation-duration:65s,13s;}
+.icon-box:hover .icon{
+  transform: scale(1.25) rotate(8deg);
+  filter: brightness(1.5);
+}
 
-@keyframes drift1 {0%{transform:translate(0,0) rotate(-30deg);}25%{transform:translate(50px,20px) rotate(-28deg);}50%{transform:translate(100px,-10px) rotate(-32deg);}75%{transform:translate(150px,25px) rotate(-29deg);}100%{transform:translate(200px,0) rotate(-30deg);}}
-@keyframes drift2 {0%{transform:translate(0,0) rotate(-30deg);}25%{transform:translate(-30px,40px) rotate(-33deg);}50%{transform:translate(60px,20px) rotate(-28deg);}75%{transform:translate(80px,-15px) rotate(-31deg);}100%{transform:translate(120px,10px) rotate(-30deg);}}
-@keyframes drift3 {0%{transform:translate(0,0) rotate(-30deg);}25%{transform:translate(70px,-20px) rotate(-27deg);}50%{transform:translate(120px,40px) rotate(-34deg);}75%{transform:translate(160px,5px) rotate(-30deg);}100%{transform:translate(200px,-25px) rotate(-30deg);}}
-@keyframes drift4 {0%{transform:translate(0,0) rotate(-30deg);}25%{transform:translate(-50px,10px) rotate(-28deg);}50%{transform:translate(30px,30px) rotate(-32deg);}75%{transform:translate(60px,-20px) rotate(-29deg);}100%{transform:translate(100px,15px) rotate(-30deg);}}
-
-@media (prefers-reduced-motion: reduce){.glow-logo,.watermark-layer span{animation:none !important;}}
+/* ===== GET STARTED BUTTON STYLES ===== */
+.get-started{
+  margin: 40px auto;
+  max-width: 250px;
+}
+.get-started .icon-box{
+  text-align:center;
+}
 </style>
 </head>
 <body>
 
-<!-- Navigation -->
 <div class="icon-wrapper">
   <a href="index.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-house"></i></div>
@@ -177,70 +157,13 @@ body{
   </a>
 </div>
 
-<!-- About Me Section -->
-<div id="about-me-section">
-  <div class="container">
-    <header>
-      <img src="NVLME0005.JPG" alt="VINCETECH.CO" class="profile-pic">
-      <h1>Hi, Welcome To VINCETECH.CO</h1>
-      <p>A passionate Web Developer creating modern, responsive, and user-friendly websites.</p>
-    </header>
-
-    <section class="cards">
-      <div class="card">
-        <h3>Skills</h3>
-        <ul>
-          <li>HTML5, CSS3, JavaScript (ES6+)</li>
-          <li>Responsive & Mobile-First Design</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>Projects</h3>
-        <ul>
-          <li>Portfolio Website (React & CSS Grid)</li>
-          <li>E-commerce Web App (Node.js & MongoDB)</li>
-          <li>Landing Page for a Startup</li>
-          <li>Blog Platform (HTML, CSS, JS)</li>
-          <li>Responsive Dashboard UI</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>Experience</h3>
-        <ul>
-          <li>5+ years in web development</li>
-          <li>Freelance & agency projects</li>
-          <li>Collaboration with designers & backend teams</li>
-          <li>Focus on clean, maintainable code</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>My Philosophy</h3>
-        <ul>
-          <li>Write code that’s clean & readable</li>
-          <li>Prioritize user experience</li>
-          <li>Keep learning new technologies</li>
-          <li>Deliver projects on time & exceed expectations</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Contact CTA -->
-    <div class="contact">
-      <h2>Get in Touch</h2>
-      <p>If you’d like to collaborate, hire me, <a href="mailto:obiwuru010@gmail.com">send me an email</a> or connect on <a href="https://wa.me/447424828204" target="_blank">WhatsApp</a>.</p>
-    </div>
-  </div>
-</div>
-
-<!-- Watermark Overlay -->
-<div class="watermark-layer">
-  <span><img src="NVLME0005.JPG" alt="Logo" class="glow-logo"></span>
-  <span><img src="NVLME0005.JPG" alt="Logo" class="glow-logo"></span>
-  <span><img src="NVLME0005.JPG" alt="Logo" class="glow-logo"></span>
-  <span><img src="NVLME0005.JPG" alt="Logo" class="glow-logo"></span>
+<!-- GET STARTED BUTTON -->
+<div class="get-started">
+  <a href="contact.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-arrow-right"></i></div>
+    <h3>Get Started</h3>
+    <p>Start your project with us</p>
+  </a>
 </div>
 
 </body>
