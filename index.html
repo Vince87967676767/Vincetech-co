@@ -191,12 +191,13 @@ button:active{transform:scale(0.95);}
   <div style="flex:1;min-width:300px;">
     <h1 id="sliderTitle">Welcome to Our Website</h1>
     <p id="sliderText">Explore our amazing content and services.</p>
-    <button onclick="window.location='Contact Us.html'">Get Started</button>
+    <button onclick="window.location='contact.html'">Get Started</button>
   </div>
   <div style="flex:1;min-width:300px;">
     <img id="heroImage" src="web1.jpg" alt="Homepage Image">
   </div>
 </section>
+
 <!-- Portfolio Gallery with Come-Up Animation, Glow, Captions -->
 <style>
 .image-gallery {
@@ -254,15 +255,15 @@ button:active{transform:scale(0.95);}
 <div id="neonGallery" class="image-gallery">
   <div class="gallery-photo">
     <img src="design.jpg" alt="Landing Page Design">
-    <div class="Landing Page Design">Landing Page Design</div>
+    <div class="caption">Landing Page Design</div>
   </div>
   <div class="gallery-photo">
     <img src="beau.jpg" alt="Portfolio Website">
-    <div class="Portfolio Website">Portfolio Website</div>
+    <div class="caption">Portfolio Website</div>
   </div>
   <div class="gallery-photo">
     <img src="world.jpg" alt="E-commerce Design">
-    <div class="E-commerce Design">E-commerce Design</div>
+    <div class="caption">E-commerce Design</div>
   </div>
 </div>
 
@@ -273,12 +274,10 @@ window.addEventListener('load', () => {
   photos.forEach((photo, index) => {
     setTimeout(() => {
       photo.classList.add('show');
-    }, index * 200); // delay each image by 200ms
+    }, index * 200);
   });
 });
-</script>
 
-<script>
 // DARK MODE
 const toggle=document.getElementById("themeToggle");
 if(localStorage.theme==="dark"){document.body.classList.add("dark");}
