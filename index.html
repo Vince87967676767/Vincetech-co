@@ -150,8 +150,55 @@ button:active{transform:scale(0.95);}
   border-radius:50%;pointer-events:none;
   transform:translate(-50%,-50%);z-index:9999;
 }
+</style>
+</head>
+<body>
 
-/* PORTFOLIO GALLERY ANIMATION */
+<div id="cursor"></div>
+
+<header>
+  <img src="NVLME0005.JPG" class="glow-logo" alt="Logo">
+  <h2>Experience Innovation</h2>
+  <button id="themeToggle">🌙</button>
+</header>
+
+<!-- ICON GRID -->
+<div class="icon-wrapper fade">
+  <a href="index.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-house"></i></div>
+    <h3>Home</h3>
+    <p>Back to main page</p>
+  </a>
+  <a href="services.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
+    <h3>Services</h3>
+    <p>Web design & development</p>
+  </a>
+  <a href="contact.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-envelope"></i></div>
+    <h3>Contact</h3>
+    <p>Get in touch</p>
+  </a>
+  <a href="about.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-user"></i></div>
+    <h3>About</h3>
+    <p>Who we are</p>
+  </a>
+</div>
+
+<!-- HERO -->
+<section id="heroSlider" class="fade">
+  <div style="flex:1;min-width:300px;">
+    <h1 id="sliderTitle">Welcome to Our Website</h1>
+    <p id="sliderText">Explore our amazing content and services.</p>
+    <button onclick="window.location='Contact Us.html'">Get Started</button>
+  </div>
+  <div style="flex:1;min-width:300px;">
+    <img id="heroImage" src="web1.jpg" alt="Homepage Image">
+  </div>
+</section>
+<!-- Portfolio Gallery with Come-Up Animation, Glow, Captions -->
+<style>
 .image-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -203,80 +250,35 @@ button:active{transform:scale(0.95);}
   z-index: 2;
 }
 </style>
-</head>
-<body>
 
-<div id="cursor"></div>
-
-<header>
-  <img src="NVLME0005.JPG" class="glow-logo" alt="Logo">
-  <h2>Experience Innovation</h2>
-  <button id="themeToggle">🌙</button>
-</header>
-
-<!-- ICON GRID -->
-<div class="icon-wrapper fade">
-  <a href="index.html" class="icon-box">
-    <div class="icon"><i class="fa-solid fa-house"></i></div>
-    <h3>Home</h3>
-    <p>Back to main page</p>
-  </a>
-  <a href="services.html" class="icon-box">
-    <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
-    <h3>Services</h3>
-    <p>Web design & development</p>
-  </a>
-  <a href="Contact.html" class="icon-box">
-    <div class="icon"><i class="fa-solid fa-envelope"></i></div>
-    <h3>Contact</h3>
-    <p>Get in touch</p>
-  </a>
-  <a href="About.html" class="icon-box">
-    <div class="icon"><i class="fa-solid fa-user"></i></div>
-    <h3>About</h3>
-    <p>Who we are</p>
-  </a>
-</div>
-
-<!-- HERO -->
-<section id="heroSlider" class="fade">
-  <div style="flex:1;min-width:300px;">
-    <h1 id="sliderTitle">Welcome to Our Website</h1>
-    <p id="sliderText">Explore our amazing content and services.</p>
-    <button onclick="window.location='Contact.html'">Get Started</button>
-  </div>
-  <div style="flex:1;min-width:300px;">
-    <img id="heroImage" src="web1.jpg" alt="Homepage Image">
-  </div>
-</section>
-
-<!-- Portfolio Gallery -->
 <div id="neonGallery" class="image-gallery">
   <div class="gallery-photo">
     <img src="design.jpg" alt="Landing Page Design">
-    <div class="caption">Landing Page Design</div>
+    <div class="Landing Page Design">Landing Page Design</div>
   </div>
   <div class="gallery-photo">
     <img src="beau.jpg" alt="Portfolio Website">
-    <div class="caption">Portfolio Website</div>
+    <div class="Portfolio Website">Portfolio Website</div>
   </div>
   <div class="gallery-photo">
     <img src="world.jpg" alt="E-commerce Design">
-    <div class="caption">E-commerce Design</div>
+    <div class="E-commerce Design">E-commerce Design</div>
   </div>
 </div>
 
 <script>
-// Animate gallery images on load
+// Animate each image one by one on page load
 window.addEventListener('load', () => {
   const photos = document.querySelectorAll('#neonGallery .gallery-photo');
   photos.forEach((photo, index) => {
     setTimeout(() => {
       photo.classList.add('show');
-    }, index * 200);
+    }, index * 200); // delay each image by 200ms
   });
 });
+</script>
 
+<script>
 // DARK MODE
 const toggle=document.getElementById("themeToggle");
 if(localStorage.theme==="dark"){document.body.classList.add("dark");}
@@ -318,10 +320,9 @@ function showSlide(index){
 function nextSlide(){showSlide((current+1)%slides.length);}
 setInterval(nextSlide,5000);
 
-// PORTFOLIO HOVER SLIDES FIXED
-document.querySelectorAll('.photo').forEach(photo => {
+// PORTFOLIO HOVER SLIDES
+document.querySelectorAll('.photo').forEach(photo=>{
   const slides=photo.querySelectorAll('.slide');
-  if(slides.length===0) return;
   let slideIndex=1;
   let interval;
   photo.addEventListener('mouseenter',()=>{
@@ -337,7 +338,6 @@ document.querySelectorAll('.photo').forEach(photo => {
     slideIndex=1;
     photo.classList.remove('hover');
   });
-  slides.forEach((s,i)=>s.style.opacity=i===0?1:0);
 });
 </script>
 
