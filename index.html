@@ -32,7 +32,7 @@ header{
   cursor:pointer;
 }
 
-/* ICON GRID */
+/* ICON GRID (UNCHANGED DESIGN) */
 .icon-wrapper{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -63,13 +63,13 @@ header{
 }
 
 /* =========================
-   ✅ FIXED GALLERY (MAIN FIX)
+   ✅FIXED GALLERY (FINAL)
 ========================= */
 
 .image-gallery{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
-  gap:25px;
+  grid-template-columns:repeat(3, 1fr);
+  gap:20px;
   padding:40px;
 }
 
@@ -84,10 +84,9 @@ header{
   height:220px;
   object-fit:cover;
   display:block;
-  border-radius:12px;
 }
 
-/* CAPTION FIXED INSIDE IMAGE */
+/* CAPTION INSIDE IMAGE */
 .gallery-photo .caption{
   position:absolute;
   bottom:10px;
@@ -102,6 +101,25 @@ header{
   white-space:nowrap;
 }
 
+/* RESPONSIVE FIX (WORKS ALL DEVICES) */
+@media (max-width: 768px){
+  .image-gallery{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px){
+  .image-gallery{
+    grid-template-columns:repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1025px){
+  .image-gallery{
+    grid-template-columns:repeat(3, 1fr);
+  }
+}
+
 </style>
 </head>
 
@@ -113,7 +131,7 @@ header{
   <button id="themeToggle">🌙</button>
 </header>
 
-<!-- ICONS -->
+<!-- ICONS (UNCHANGED) -->
 <div class="icon-wrapper">
   <a href="index.html" class="icon-box">
     <h3>Home</h3>
@@ -136,7 +154,7 @@ header{
   </a>
 </div>
 
-<!-- HERO -->
+<!-- HERO (UNCHANGED) -->
 <section id="heroSlider">
   <div>
     <h1>Welcome to Our Website</h1>
