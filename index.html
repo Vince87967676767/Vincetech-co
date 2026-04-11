@@ -3,197 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vincetech - Homepage</title>
+<title>VINCETECH.CO - Home</title>
 
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:-apple-system,Segoe UI,sans-serif;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif;}
+body{background: linear-gradient(135deg, #ffe4e6, #dbeafe, #ffffff); padding:40px;}
 
-html{scroll-behavior:smooth;}
-
-body{
-  background: linear-gradient(135deg,#ffe4e6,#dbeafe,#ffffff);
-  color:#111;
-  overflow-x:hidden;
-  transition: background 0.4s, color 0.4s;
-  line-height:1.6;
-}
-
-/* DARK MODE */
-.dark{
-  background:#0f172a;
-  color:#e5e7eb;
-}
-
-/* HEADER */
-header{
-  display:flex;
-  align-items:center;
-  gap:20px;
-  padding:20px 40px;
-}
-
-#themeToggle{
-  margin-left:auto;
-  border:none;
-  padding:8px 14px;
-  border-radius:20px;
-  cursor:pointer;
-}
-
-/* LOGO */
-.glow-logo{
-  width:140px;
-  animation: glow 3s infinite;
-}
-
-@keyframes glow{
-  50%{filter:drop-shadow(0 0 15px #3b82f6);}
-}
-
-/* ICON GRID */
+/* Grid container */
 .icon-wrapper{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:25px;
-  padding:40px;
 }
 
+/* Glass-style card */
 .icon-box{
-  background:rgba(255,255,255,0.6);
-  backdrop-filter:blur(12px);
+  position: relative;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(10px);
   border-radius:18px;
-  padding:30px;
   text-align:center;
-  transition:0.4s;
   text-decoration:none;
-  color:inherit;
-  border:1px solid rgba(255,255,255,0.3);
+  color:#1f2937;
+  padding:30px 20px;
+  transition: all 0.4s ease;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  overflow: hidden;
 }
 
-.icon-box:hover{
-  transform:translateY(-12px) scale(1.03);
-  box-shadow:0 25px 50px rgba(59,130,246,0.2);
-}
-
-/* HERO */
-#heroSlider{
-  display:flex;
-  flex-wrap:wrap;
-  padding:60px 40px;
-  align-items:center;
-  gap:30px;
-}
-
-#sliderTitle{
-  font-size:3rem;
-  background:linear-gradient(90deg,#3b82f6,#9333ea);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-button{
-  margin-top:20px;
-  padding:12px 28px;
-  border:none;
-  border-radius:25px;
-  background:linear-gradient(135deg,#3b82f6,#9333ea);
-  color:#fff;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-button:hover{
-  transform:translateY(-3px);
-  box-shadow:0 10px 20px rgba(0,0,0,0.2);
-}
-
-/* GALLERY */
-#neonGallery{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
-  padding:40px;
-}
-
-.gallery-photo{
-  position:relative;
-  border-radius:12px;
-  overflow:hidden;
-}
-
-.gallery-photo img{
-  width:100%;
-  height:220px;
-  object-fit:cover;
-  display:block;
-  transition:0.3s;
-}
-
-.gallery-photo:hover img{
-  transform:scale(1.05);
-  box-shadow:0 0 25px #3b82f6;
-}
-
-.gallery-photo .caption{
+.icon-box::before{
+  content:'';
   position:absolute;
-  bottom:10px;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(0,0,0,0.7);
-  color:#fff;
-  padding:6px 12px;
-  border-radius:8px;
-  font-size:14px;
+  top:0; left:0; right:0; bottom:0;
+  background: linear-gradient(270deg, #f472b6, #9333ea, #3b82f6, #f43f5e);
+  background-size: 600% 600%;
+  opacity:0.12;
+  border-radius:18px;
+  z-index:0;
+  animation: gradientShift 6s ease infinite;
 }
 
-/* CURSOR */
-#cursor{
-  position:fixed;
-  width:120px;
-  height:120px;
-  background:radial-gradient(circle,#3b82f655,transparent);
-  border-radius:50%;
-  pointer-events:none;
-  transform:translate(-50%,-50%);
-  z-index:9999;
+@keyframes gradientShift {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
 }
+
+.icon{
+  position: relative;
+  z-index:1;
+  width:65px;
+  height:65px;
+  margin:0 auto 15px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:26px;
+  transition: transform 0.4s ease, filter 0.4s ease;
+  background: linear-gradient(270deg, #f472b6, #9333ea, #3b82f6, #f43f5e);
+  background-size: 600% 600%;
+  animation: iconGlow 6s ease infinite, iconPulse 2.5s ease-in-out infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: brightness(1);
+}
+
+@keyframes iconGlow {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+@keyframes iconPulse {
+  0%, 100%{filter: brightness(1);}
+  50%{filter: brightness(1.25);}
+}
+
+.icon-box h3{position: relative; z-index:1; margin-bottom:6px; font-size:18px;}
+.icon-box p{position: relative; z-index:1; font-size:14px; color:#4b5563;}
+
+.icon-box:hover{transform: translateY(-8px); box-shadow: 0 18px 35px rgba(0,0,0,0.08); background: rgba(255,255,255,0.8);}
+.icon-box:hover .icon{transform: scale(1.25) rotate(8deg); filter: brightness(1.5);}
 </style>
 </head>
 
 <body>
 
-<div id="cursor"></div>
-
-<header>
-  <img src="NVLME0005.JPG" class="glow-logo" alt="Logo">
-  <h2>Experience Innovation</h2>
-  <button id="themeToggle">🌙</button>
-</header>
-
-<!-- ICONS -->
+<!-- Navigation Icon Boxes -->
 <div class="icon-wrapper">
   <a href="index.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-house"></i></div>
     <h3>Home</h3>
     <p>Back to main page</p>
   </a>
+
   <a href="services.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
     <h3>Services</h3>
     <p>Web design & development</p>
   </a>
+
   <a href="contact.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-envelope"></i></div>
     <h3>Contact</h3>
     <p>Get in touch</p>
   </a>
+
   <a href="about.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-user"></i></div>
     <h3>About</h3>
@@ -201,49 +121,13 @@ button:hover{
   </a>
 </div>
 
-<!-- HERO -->
-<section id="heroSlider">
-  <div>
-    <h1 id="sliderTitle">Welcome to Our Website</h1>
-    <p>Explore our amazing content and services.</p>
-    <button onclick="window.location='contact.html'">Get Started</button>
-  </div>
-
-  <img id="heroImage" src="web1.jpg" style="width:100%;border-radius:12px;">
-</section>
-
-<!-- GALLERY -->
-<div id="neonGallery">
-
-  <div class="gallery-photo">
-    <img src="design.jpg">
-    <div class="caption">Landing Page Design</div>
-  </div>
-
-  <div class="gallery-photo">
-    <img src="beau.jpg">
-    <div class="caption">Portfolio Website</div>
-  </div>
-
-  <div class="gallery-photo">
-    <img src="world.jpg">
-    <div class="caption">E-commerce Design</div>
-  </div>
-
+<!-- Hero / Get Started Button -->
+<div style="text-align:center; margin-top:40px;">
+  <a href="contact.html" class="cta-btn"
+     style="display:inline-block; padding:15px 35px; background:#3b82f6; color:white; border-radius:10px; text-decoration:none; font-weight:bold; transition:all 0.3s ease;">
+    Get Started
+  </a>
 </div>
-
-<script>
-// CURSOR
-const cursor=document.getElementById("cursor");
-document.addEventListener("mousemove",e=>{
-  cursor.style.left=e.clientX+"px";
-  cursor.style.top=e.clientY+"px";
-});
-
-// DARK MODE
-const toggle=document.getElementById("themeToggle");
-toggle.onclick=()=>document.body.classList.toggle("dark");
-</script>
 
 </body>
 </html>
