@@ -91,7 +91,7 @@ header{
   -webkit-text-fill-color:transparent;
 }
 
-/* BUTTON (UNCHANGED DESIGN) */
+/* BUTTON */
 button{
   margin-top:20px;
   padding:12px 28px;
@@ -166,6 +166,58 @@ button:active{transform:scale(0.95);}
   transform:translate(-50%,-50%);
   z-index:9999;
 }
+
+/* ✅ MOBILE FIX ONLY (NO DESIGN CHANGE) */
+@media (max-width: 768px) {
+
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+    gap: 10px;
+  }
+
+  #themeToggle {
+    margin-left: 0;
+  }
+
+  .glow-logo {
+    width: 100px;
+  }
+
+  .icon-wrapper {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    padding: 20px;
+    gap: 15px;
+  }
+
+  #heroSlider {
+    flex-direction: column;
+    padding: 25px 15px;
+    text-align: center;
+  }
+
+  #sliderTitle {
+    font-size: 1.8rem;
+  }
+
+  #heroSlider img {
+    width: 100%;
+    height: auto;
+  }
+
+  .image-gallery {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .gallery-photo img {
+    height: 180px;
+  }
+
+}
+
 </style>
 </head>
 
@@ -179,7 +231,6 @@ button:active{transform:scale(0.95);}
   <button id="themeToggle">🌙</button>
 </header>
 
-<!-- ICON GRID -->
 <div class="icon-wrapper">
   <a href="index.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-house"></i></div>
@@ -203,23 +254,21 @@ button:active{transform:scale(0.95);}
   </a>
 </div>
 
-<!-- HERO -->
 <section id="heroSlider">
   <div style="flex:1;min-width:300px;">
     <h1 id="sliderTitle">Welcome to Our Website</h1>
     <p id="sliderText">Explore our amazing content and services.</p>
 
     <a href="contact.html" style="text-decoration:none;">
-  <button>Get Started</button>
-</a>
-
+      <button>Get Started</button>
+    </a>
   </div>
+
   <div style="flex:1;min-width:300px;">
     <img id="heroImage" src="web1.jpg" alt="Homepage Image">
   </div>
 </section>
 
-<!-- GALLERY -->
 <div id="neonGallery" class="image-gallery">
 
   <div class="gallery-photo">
@@ -240,25 +289,21 @@ button:active{transform:scale(0.95);}
 </div>
 
 <script>
-// Animate gallery
 window.addEventListener('load', () => {
   document.querySelectorAll('.gallery-photo').forEach((photo, i) => {
     setTimeout(() => photo.classList.add('show'), i * 200);
   });
 });
 
-// DARK MODE
-const toggle=document.getElementById("themeToggle");
-toggle.onclick=()=>document.body.classList.toggle("dark");
+document.getElementById("themeToggle").onclick = () =>
+  document.body.classList.toggle("dark");
 
-// CURSOR
 const cursor=document.getElementById("cursor");
 document.addEventListener("mousemove",e=>{
   cursor.style.left=e.clientX+"px";
   cursor.style.top=e.clientY+"px";
 });
 
-// HERO SLIDER
 const slides=[
   {image:"web1.jpg",title:"Welcome to Our Website",text:"Explore our amazing content and services."},
   {image:"sotfw.jpg",title:"Discover Our Features",text:"We provide modern solutions tailored for your business."},
