@@ -17,10 +17,12 @@ body{
   transition: background 0.4s, color 0.4s;
 }
 
+/* DARK MODE */
 .dark{background:#0f172a;color:#e5e7eb;}
 .dark .icon-box{background:rgba(30,41,59,0.6);color:#e5e7eb;}
 .dark .photo:hover{box-shadow:0 20px 40px rgba(0,0,0,0.5);}
 
+/* HEADER */
 header{
   display:flex;
   align-items:center;
@@ -35,12 +37,14 @@ header{
   cursor:pointer;
 }
 
+/* LOGO */
 .glow-logo{
   width:140px;
   animation: glow 3s infinite;
 }
 @keyframes glow{50%{filter:drop-shadow(0 0 15px #3b82f6);}}
 
+/* ICON GRID */
 .icon-wrapper{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -66,6 +70,7 @@ header{
 .icon-box h3{margin-bottom:6px;}
 .icon-box p{font-size:14px;color:#4b5563;}
 
+/* HERO */
 #heroSlider{
   display:flex;
   flex-wrap:wrap;
@@ -97,6 +102,7 @@ button{
 button:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,0.2);}
 button:active{transform:scale(0.95);}
 
+/* PORTFOLIO */
 .portfolio-gallery-dynamic{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
@@ -121,73 +127,45 @@ button:active{transform:scale(0.95);}
   opacity:0;
   transition:opacity 0.5s ease-in-out;
 }
-.caption{
-  position:absolute;
-  bottom:10px;left:50%;
-  transform:translateX(-50%);
-  background:rgba(0,0,0,0.7);
-  color:#fff;padding:6px 12px;border-radius:8px;
-  opacity:0;pointer-events:none;
-  transition:0.3s,0.3s;
-}
-.photo.hover .caption{opacity:1;transform:translateX(-50%) translateY(-10px);}
 
+/* ✅ FIXED SCOPING (IMPORTANT) */
+.photo .caption {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+  z-index: 2;
+
+  /* keep hover system working if you use it */
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s;
+}
+
+.photo:hover .caption {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-10px);
+}
+
+/* HERO / SCROLL */
 .fade{opacity:0;transform:translateY(40px);transition:0.8s;}
 .fade.show{opacity:1;transform:translateY(0);}
 
+/* CURSOR */
 #cursor{
   position:fixed;width:120px;height:120px;
   background:radial-gradient(circle,#3b82f655,transparent);
   border-radius:50%;pointer-events:none;
   transform:translate(-50%,-50%);z-index:9999;
 }
-</style>
-</head>
-<body>
 
-<div id="cursor"></div>
-
-<header>
-  <img src="NVLME0005.JPG" class="glow-logo" alt="Logo">
-  <h2>Experience Innovation</h2>
-  <button id="themeToggle">🌙</button>
-</header>
-
-<div class="icon-wrapper fade">
-  <a href="index.html" class="icon-box">
-    <div class="icon"><i class="fa-solid fa-house"></i></div>
-    <h3>Home</h3>
-    <p>Back to main page</p>
-  </a>
-  <a href="services.html" class="icon-box">
-    <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
-    <h3>Services</h3>
-    <p>Web design & development</p>
-  </a>
-  <a href="contact.html" class="icon-box">
-    <div class="icon"><i class="fa-solid fa-envelope"></i></div>
-    <h3>Contact</h3>
-    <p>Get in touch</p>
-  </a>
-  <a href="about.html" class="icon-box">
-    <div class="icon"><i class="fa-solid fa-user"></i></div>
-    <h3>About</h3>
-    <p>Who we are</p>
-  </a>
-</div>
-
-<section id="heroSlider" class="fade">
-  <div style="flex:1;min-width:300px;">
-    <h1 id="sliderTitle">Welcome to Our Website</h1>
-    <p id="sliderText">Explore our amazing content and services.</p>
-    <button onclick="window.location='contact.html'">Get Started</button>
-  </div>
-  <div style="flex:1;min-width:300px;">
-    <img id="heroImage" src="web1.jpg" alt="Homepage Image">
-  </div>
-</section>
-
-<style>
+/* GALLERY */
 .image-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -237,9 +215,60 @@ button:active{transform:scale(0.95);}
   font-size: 14px;
   text-align: center;
   z-index: 2;
+
+  /* IMPORTANT FIX */
+  opacity: 1 !important;
 }
 </style>
+</head>
 
+<body>
+
+<div id="cursor"></div>
+
+<header>
+  <img src="NVLME0005.JPG" class="glow-logo" alt="Logo">
+  <h2>Experience Innovation</h2>
+  <button id="themeToggle">🌙</button>
+</header>
+
+<!-- ICON GRID -->
+<div class="icon-wrapper fade">
+  <a href="index.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-house"></i></div>
+    <h3>Home</h3>
+    <p>Back to main page</p>
+  </a>
+  <a href="services.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
+    <h3>Services</h3>
+    <p>Web design & development</p>
+  </a>
+  <a href="contact.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-envelope"></i></div>
+    <h3>Contact</h3>
+    <p>Get in touch</p>
+  </a>
+  <a href="about.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-user"></i></div>
+    <h3>About</h3>
+    <p>Who we are</p>
+  </a>
+</div>
+
+<!-- HERO -->
+<section id="heroSlider" class="fade">
+  <div style="flex:1;min-width:300px;">
+    <h1 id="sliderTitle">Welcome to Our Website</h1>
+    <p id="sliderText">Explore our amazing content and services.</p>
+    <button onclick="window.location='contact.html'">Get Started</button>
+  </div>
+  <div style="flex:1;min-width:300px;">
+    <img id="heroImage" src="web1.jpg" alt="Homepage Image">
+  </div>
+</section>
+
+<!-- GALLERY -->
 <div id="neonGallery" class="image-gallery">
   <div class="gallery-photo">
     <img src="design.jpg" alt="Landing Page Design">
@@ -256,19 +285,10 @@ button:active{transform:scale(0.95);}
 </div>
 
 <script>
-// Animate each image one by one on page load
+// animation
 window.addEventListener('load', () => {
-  const photos = document.querySelectorAll('#neonGallery .gallery-photo');
-  photos.forEach((photo, index) => {
-    setTimeout(() => {
-      photo.classList.add('show');
-    }, index * 200);
-  });
-
-  // ✅ ONLY ADDITION — force captions visible
-  document.querySelectorAll('#neonGallery .caption').forEach(caption => {
-    caption.style.opacity = '1';
-    caption.style.pointerEvents = 'auto';
+  document.querySelectorAll('#neonGallery .gallery-photo').forEach((p, i) => {
+    setTimeout(() => p.classList.add('show'), i * 200);
   });
 });
 </script>
