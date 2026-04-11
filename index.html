@@ -8,12 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:-apple-system,Segoe UI,sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,Segoe UI,sans-serif;}
 
 html{scroll-behavior:smooth;}
 
@@ -21,14 +16,10 @@ body{
   background: linear-gradient(135deg,#ffe4e6,#dbeafe,#ffffff);
   color:#111;
   overflow-x:hidden;
-  min-height:100vh;
 }
 
 /* DARK MODE */
-.dark{
-  background:#0f172a;
-  color:#e5e7eb;
-}
+.dark{background:#0f172a;color:#e5e7eb;}
 
 /* HEADER */
 header{
@@ -38,7 +29,6 @@ header{
   padding:20px 40px;
 }
 
-/* LOGO */
 .glow-logo{
   width:140px;
   animation: glow 3s infinite;
@@ -56,7 +46,7 @@ header{
   cursor:pointer;
 }
 
-/* ICONS */
+/* ICON GRID (RESTORED) */
 .icon-wrapper{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -79,7 +69,7 @@ header{
   transform:translateY(-12px);
 }
 
-/* HERO */
+/* HERO (RESTORED) */
 #heroSlider{
   display:flex;
   flex-wrap:wrap;
@@ -105,42 +95,18 @@ button{
   cursor:pointer;
 }
 
-/* CURSOR */
-#cursor{
-  position:fixed;
-  width:120px;
-  height:120px;
-  background:radial-gradient(circle,#3b82f655,transparent);
-  border-radius:50%;
-  pointer-events:none;
-  transform:translate(-50%,-50%);
-  z-index:9999;
-}
-
-/* FADE */
-.fade{
-  opacity:0;
-  transform:translateY(40px);
-  transition:0.8s;
-}
-
-.fade.show{
-  opacity:1;
-  transform:translateY(0);
-}
-
-/* GALLERY FIX ONLY */
+/* GALLERY (FIX ONLY) */
 #neonGallery{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
   gap:20px;
   padding:40px;
 }
 
 .gallery-photo{
   position:relative;
-  overflow:hidden;
   border-radius:12px;
+  overflow:hidden;
 }
 
 .gallery-photo img{
@@ -148,11 +114,6 @@ button{
   height:220px;
   object-fit:cover;
   display:block;
-  transition:0.3s;
-}
-
-.gallery-photo:hover img{
-  transform:scale(1.05);
 }
 
 .gallery-photo .caption{
@@ -164,9 +125,18 @@ button{
   color:#fff;
   padding:6px 12px;
   border-radius:8px;
-  font-size:14px;
 }
 
+/* CURSOR */
+#cursor{
+  position:fixed;
+  width:120px;
+  height:120px;
+  background:radial-gradient(circle,#3b82f655,transparent);
+  border-radius:50%;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+}
 </style>
 </head>
 
@@ -180,7 +150,8 @@ button{
   <button id="themeToggle">🌙</button>
 </header>
 
-<div class="icon-wrapper fade">
+<!-- ICONS (BACK) -->
+<div class="icon-wrapper">
   <a href="index.html" class="icon-box">
     <h3>Home</h3>
     <p>Back to main page</p>
@@ -199,17 +170,18 @@ button{
   </a>
 </div>
 
-<section id="heroSlider" class="fade">
-  <div style="flex:1;min-width:300px;">
+<!-- HERO (BACK) -->
+<section id="heroSlider">
+  <div>
     <h1 id="sliderTitle">Welcome to Our Website</h1>
-    <p id="sliderText">Explore our amazing content and services.</p>
+    <p>Explore our amazing content and services.</p>
     <button onclick="window.location='contact.html'">Get Started</button>
   </div>
-  <div style="flex:1;min-width:300px;">
-    <img id="heroImage" src="web1.jpg" style="width:100%;border-radius:12px;">
-  </div>
+
+  <img src="web1.jpg" style="width:100%;border-radius:12px;">
 </section>
 
+<!-- GALLERY -->
 <div id="neonGallery">
 
   <div class="gallery-photo">
@@ -234,49 +206,17 @@ button{
 /* DARK MODE */
 const toggle=document.getElementById("themeToggle");
 
-if(localStorage.theme==="dark"){
-  document.body.classList.add("dark");
-}
-
 toggle.onclick=()=>{
   document.body.classList.toggle("dark");
-  localStorage.theme=document.body.classList.contains("dark")?"dark":"light";
 };
 
 /* CURSOR */
 const cursor=document.getElementById("cursor");
+
 document.addEventListener("mousemove",e=>{
   cursor.style.left=e.clientX+"px";
   cursor.style.top=e.clientY+"px";
 });
-
-/* FADE */
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting)e.target.classList.add("show");
-  });
-});
-
-document.querySelectorAll(".fade").forEach(el=>obs.observe(el));
-
-/* HERO SLIDER */
-const slides=[
-  {image:"web1.jpg", title:"Welcome to Our Website", text:"Explore our amazing content and services."},
-  {image:"sotfw.jpg", title:"Discover Our Features", text:"We provide modern solutions tailored for your business."},
-  {image:"white.jpg", title:"Join Us Today", text:"Connect with our team and enjoy a smooth experience."}
-];
-
-let current=0;
-const img=document.getElementById("heroImage");
-const t=document.getElementById("sliderTitle");
-const p=document.getElementById("sliderText");
-
-setInterval(()=>{
-  current=(current+1)%slides.length;
-  img.src=slides[current].image;
-  t.textContent=slides[current].title;
-  p.textContent=slides[current].text;
-},5000);
 
 </script>
 
