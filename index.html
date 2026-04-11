@@ -238,13 +238,6 @@ button:active{transform:scale(0.95);}
   text-align: center;
   z-index: 2;
 }
-
-/* ✅ FIX (only addition) */
-#neonGallery .gallery-photo .caption {
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  transform: translateX(-50%) !important;
-}
 </style>
 
 <div id="neonGallery" class="image-gallery">
@@ -263,7 +256,21 @@ button:active{transform:scale(0.95);}
 </div>
 
 <script>
-// unchanged JS
+// Animate each image one by one on page load
+window.addEventListener('load', () => {
+  const photos = document.querySelectorAll('#neonGallery .gallery-photo');
+  photos.forEach((photo, index) => {
+    setTimeout(() => {
+      photo.classList.add('show');
+    }, index * 200);
+  });
+
+  // ✅ ONLY ADDITION — force captions visible
+  document.querySelectorAll('#neonGallery .caption').forEach(caption => {
+    caption.style.opacity = '1';
+    caption.style.pointerEvents = 'auto';
+  });
+});
 </script>
 
 </body>
