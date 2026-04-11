@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vincetech - Homepage</title>
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
@@ -103,55 +102,70 @@ button{
 button:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,0.2);}
 button:active{transform:scale(0.95);}
 
-/* PORTFOLIO */
-.portfolio-gallery-dynamic{
+/* GALLERY */
+.image-gallery{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
-  padding:40px;
+  gap:25px;
+  margin-top:40px;
+  padding-bottom:40px;
 }
-.photo{
+
+.gallery-photo{
   position:relative;
-  padding-top:60%;
-  border-radius:12px;
   overflow:hidden;
+  border-radius:12px;
   cursor:pointer;
-  transition:0.5s;
-}
-.photo:hover{transform:scale(1.05);}
-.slide{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background-size:cover;
-  background-position:center;
   opacity:0;
-  transition:opacity 0.5s ease-in-out;
+  transform:translateY(40px);
+  transition:0.6s;
 }
-.caption{
+
+.gallery-photo.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.gallery-photo img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:12px;
+  transition:0.3s;
+}
+
+.gallery-photo:hover img{
+  transform:scale(1.05);
+  box-shadow:0 0 25px #3b82f6, 0 0 50px #3b82f655;
+}
+
+/* FIXED CAPTION (THIS WAS BROKEN BEFORE) */
+.gallery-photo .caption{
   position:absolute;
-  bottom:10px;left:50%;
+  bottom:10px;
+  left:50%;
   transform:translateX(-50%);
   background:rgba(0,0,0,0.7);
-  color:#fff;padding:6px 12px;border-radius:8px;
-  opacity:0;pointer-events:none;
-  transition:0.3s,0.3s;
+  color:#fff;
+  padding:6px 12px;
+  border-radius:8px;
+  font-size:14px;
 }
-.photo.hover .caption{opacity:1;transform:translateX(-50%) translateY(-10px);}
-
-/* SCROLL ANIMATION */
-.fade{opacity:0;transform:translateY(40px);transition:0.8s;}
-.fade.show{opacity:1;transform:translateY(0);}
 
 /* CURSOR GLOW */
 #cursor{
-  position:fixed;width:120px;height:120px;
+  position:fixed;
+  width:120px;
+  height:120px;
   background:radial-gradient(circle,#3b82f655,transparent);
-  border-radius:50%;pointer-events:none;
-  transform:translate(-50%,-50%);z-index:9999;
+  border-radius:50%;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  z-index:9999;
 }
 </style>
 </head>
+
 <body>
 
 <div id="cursor"></div>
@@ -162,8 +176,7 @@ button:active{transform:scale(0.95);}
   <button id="themeToggle">🌙</button>
 </header>
 
-<!-- ICON GRID -->
-<div class="icon-wrapper fade">
+<div class="icon-wrapper">
   <a href="index.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-house"></i></div>
     <h3>Home</h3>
@@ -174,19 +187,18 @@ button:active{transform:scale(0.95);}
     <h3>Services</h3>
     <p>Web design & development</p>
   </a>
-  <a href="contact.html" class="icon-box">
+  <a href="Contact.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-envelope"></i></div>
     <h3>Contact</h3>
     <p>Get in touch</p>
   </a>
-  <a href="about.html" class="icon-box">
+  <a href="About.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-user"></i></div>
     <h3>About</h3>
     <p>Who we are</p>
   </a>
 </div>
 
-<!-- HERO -->
 <section id="heroSlider" class="fade">
   <div style="flex:1;min-width:300px;">
     <h1 id="sliderTitle">Welcome to Our Website</h1>
@@ -197,83 +209,31 @@ button:active{transform:scale(0.95);}
     <img id="heroImage" src="web1.jpg" alt="Homepage Image">
   </div>
 </section>
-<!-- Portfolio Gallery with Come-Up Animation, Glow, Captions -->
-<style>
-.image-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
-  margin-top: 40px;
-  padding-bottom: 40px;
-}
-
-.gallery-photo {
-  position: relative;
-  overflow: hidden;
-  border-radius: 12px;
-  cursor: pointer;
-  margin-bottom: 20px;
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.gallery-photo.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.gallery-photo img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 12px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.gallery-photo:hover img {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px #3b82f6, 0 0 50px #3b82f655;
-}
-
-.gallery-photo .caption {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.7);
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  text-align: center;
-  z-index: 2;
-}
-</style>
 
 <div id="neonGallery" class="image-gallery">
+
   <div class="gallery-photo">
     <img src="design.jpg" alt="Landing Page Design">
-    <div class="Landing Page Design">Landing Page Design</div>
+    <div class="caption">Landing Page Design</div>
   </div>
+
   <div class="gallery-photo">
     <img src="beau.jpg" alt="Portfolio Website">
-    <div class="Portfolio Website">Portfolio Website</div>
+    <div class="caption">Portfolio Website</div>
   </div>
+
   <div class="gallery-photo">
     <img src="world.jpg" alt="E-commerce Design">
-    <div class="E-commerce Design">E-commerce Design</div>
+    <div class="caption">E-commerce Design</div>
   </div>
+
 </div>
 
 <script>
-// Animate each image one by one on page load
+// Animate gallery
 window.addEventListener('load', () => {
-  const photos = document.querySelectorAll('#neonGallery .gallery-photo');
-  photos.forEach((photo, index) => {
-    setTimeout(() => {
-      photo.classList.add('show');
-    }, index * 200); // delay each image by 200ms
+  document.querySelectorAll('.gallery-photo').forEach((photo, i) => {
+    setTimeout(() => photo.classList.add('show'), i * 200);
   });
 });
 </script>
@@ -281,64 +241,34 @@ window.addEventListener('load', () => {
 <script>
 // DARK MODE
 const toggle=document.getElementById("themeToggle");
-if(localStorage.theme==="dark"){document.body.classList.add("dark");}
-toggle.onclick=()=>{document.body.classList.toggle("dark");localStorage.theme=document.body.classList.contains("dark")?"dark":"light";};
+toggle.onclick=()=>document.body.classList.toggle("dark");
 
 // CURSOR
 const cursor=document.getElementById("cursor");
-document.addEventListener("mousemove",e=>{cursor.style.left=e.clientX+"px";cursor.style.top=e.clientY+"px";});
-
-// SCROLL ANIMATION
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("show");});});
-document.querySelectorAll(".fade").forEach(el=>obs.observe(el));
-
-// HERO SLIDER AUTOMATIC
-const slides = [
-  { image: "web1.jpg", title: "Welcome to Our Website", text: "Explore our amazing content and services." },
-  { image: "sotfw.jpg", title: "Discover Our Features", text: "We provide modern solutions tailored for your business." },
-  { image: "white.jpg", title: "Join Us Today", text: "Connect with our team and enjoy a smooth, professional experience." }
-];
-let current=0;
-const sliderImage=document.getElementById("heroImage");
-const sliderTitle=document.getElementById("sliderTitle");
-const sliderText=document.getElementById("sliderText");
-
-function showSlide(index){
-  current=index;
-  sliderImage.style.opacity=0;
-  sliderTitle.style.opacity=0;
-  sliderText.style.opacity=0;
-  setTimeout(()=>{
-    sliderImage.src=slides[current].image;
-    sliderTitle.textContent=slides[current].title;
-    sliderText.textContent=slides[current].text;
-    sliderImage.style.opacity=1;
-    sliderTitle.style.opacity=1;
-    sliderText.style.opacity=1;
-  },400);
-}
-function nextSlide(){showSlide((current+1)%slides.length);}
-setInterval(nextSlide,5000);
-
-// PORTFOLIO HOVER SLIDES
-document.querySelectorAll('.photo').forEach(photo=>{
-  const slides=photo.querySelectorAll('.slide');
-  let slideIndex=1;
-  let interval;
-  photo.addEventListener('mouseenter',()=>{
-    interval=setInterval(()=>{
-      slides.forEach((s,i)=>s.style.opacity=i===slideIndex?1:0);
-      slideIndex=(slideIndex+1)%slides.length;
-    },1000);
-    photo.classList.add('hover');
-  });
-  photo.addEventListener('mouseleave',()=>{
-    clearInterval(interval);
-    slides.forEach((s,i)=>s.style.opacity=i===0?1:0);
-    slideIndex=1;
-    photo.classList.remove('hover');
-  });
+document.addEventListener("mousemove",e=>{
+  cursor.style.left=e.clientX+"px";
+  cursor.style.top=e.clientY+"px";
 });
+
+// HERO SLIDER
+const slides=[
+  {image:"web1.jpg",title:"Welcome to Our Website",text:"Explore our amazing content and services."},
+  {image:"sotfw.jpg",title:"Discover Our Features",text:"We provide modern solutions tailored for your business."},
+  {image:"white.jpg",title:"Join Us Today",text:"Connect with our team and enjoy a smooth experience."}
+];
+
+let current=0;
+const img=document.getElementById("heroImage");
+const title=document.getElementById("sliderTitle");
+const text=document.getElementById("sliderText");
+
+function next(){
+  current=(current+1)%slides.length;
+  img.src=slides[current].image;
+  title.textContent=slides[current].title;
+  text.textContent=slides[current].text;
+}
+setInterval(next,5000);
 </script>
 
 </body>
