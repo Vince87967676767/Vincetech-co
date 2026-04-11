@@ -8,14 +8,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,Segoe UI,sans-serif;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:-apple-system,Segoe UI,sans-serif;
+}
+
 html{scroll-behavior:smooth;}
 
 body{
   background: linear-gradient(135deg,#ffe4e6,#dbeafe,#ffffff);
   color:#111;
   overflow-x:hidden;
-  transition: background 0.4s, color 0.4s;
+  min-height:100vh;
 }
 
 /* DARK MODE */
@@ -24,41 +30,12 @@ body{
   color:#e5e7eb;
 }
 
-.dark .icon-box{
-  background:rgba(30,41,59,0.6);
-  color:#e5e7eb;
-}
-
-.dark .photo:hover{
-  box-shadow:0 20px 40px rgba(0,0,0,0.5);
-}
-
-/* CURSOR */
-#cursor{
-  position:fixed;
-  width:120px;
-  height:120px;
-  background:radial-gradient(circle,#3b82f655,transparent);
-  border-radius:50%;
-  pointer-events:none;
-  transform:translate(-50%,-50%);
-  z-index:9999;
-}
-
 /* HEADER */
 header{
   display:flex;
   align-items:center;
   gap:20px;
   padding:20px 40px;
-}
-
-#themeToggle{
-  margin-left:auto;
-  border:none;
-  padding:8px 14px;
-  border-radius:20px;
-  cursor:pointer;
 }
 
 /* LOGO */
@@ -71,7 +48,15 @@ header{
   50%{filter:drop-shadow(0 0 15px #3b82f6);}
 }
 
-/* ICON GRID */
+#themeToggle{
+  margin-left:auto;
+  border:none;
+  padding:8px 14px;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+/* ICONS */
 .icon-wrapper{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -86,14 +71,12 @@ header{
   padding:30px;
   text-align:center;
   transition:0.4s;
-  border:1px solid rgba(255,255,255,0.3);
   text-decoration:none;
   color:inherit;
 }
 
 .icon-box:hover{
-  transform:translateY(-12px) scale(1.03);
-  box-shadow:0 25px 50px rgba(59,130,246,0.2);
+  transform:translateY(-12px);
 }
 
 /* HERO */
@@ -103,12 +86,6 @@ header{
   padding:60px 40px;
   align-items:center;
   gap:30px;
-}
-
-#heroSlider img{
-  width:100%;
-  border-radius:12px;
-  transition:0.5s;
 }
 
 #sliderTitle{
@@ -128,6 +105,18 @@ button{
   cursor:pointer;
 }
 
+/* CURSOR */
+#cursor{
+  position:fixed;
+  width:120px;
+  height:120px;
+  background:radial-gradient(circle,#3b82f655,transparent);
+  border-radius:50%;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  z-index:9999;
+}
+
 /* FADE */
 .fade{
   opacity:0;
@@ -140,10 +129,7 @@ button{
   transform:translateY(0);
 }
 
-/* ===================== */
-/* FIXED GALLERY ONLY */
-/* ===================== */
-
+/* GALLERY FIX ONLY */
 #neonGallery{
   display:grid;
   grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
@@ -167,7 +153,6 @@ button{
 
 .gallery-photo:hover img{
   transform:scale(1.05);
-  box-shadow:0 0 25px #3b82f6;
 }
 
 .gallery-photo .caption{
@@ -180,7 +165,6 @@ button{
   padding:6px 12px;
   border-radius:8px;
   font-size:14px;
-  text-align:center;
 }
 
 </style>
@@ -221,13 +205,12 @@ button{
     <p id="sliderText">Explore our amazing content and services.</p>
     <button onclick="window.location='contact.html'">Get Started</button>
   </div>
-
   <div style="flex:1;min-width:300px;">
-    <img id="heroImage" src="web1.jpg">
+    <img id="heroImage" src="web1.jpg" style="width:100%;border-radius:12px;">
   </div>
 </section>
 
-<div id="neonGallery" class="image-gallery">
+<div id="neonGallery">
 
   <div class="gallery-photo">
     <img src="design.jpg">
@@ -250,9 +233,11 @@ button{
 
 /* DARK MODE */
 const toggle=document.getElementById("themeToggle");
+
 if(localStorage.theme==="dark"){
   document.body.classList.add("dark");
 }
+
 toggle.onclick=()=>{
   document.body.classList.toggle("dark");
   localStorage.theme=document.body.classList.contains("dark")?"dark":"light";
@@ -265,12 +250,13 @@ document.addEventListener("mousemove",e=>{
   cursor.style.top=e.clientY+"px";
 });
 
-/* SCROLL */
+/* FADE */
 const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting)e.target.classList.add("show");
   });
 });
+
 document.querySelectorAll(".fade").forEach(el=>obs.observe(el));
 
 /* HERO SLIDER */
@@ -285,14 +271,12 @@ const img=document.getElementById("heroImage");
 const t=document.getElementById("sliderTitle");
 const p=document.getElementById("sliderText");
 
-function next(){
+setInterval(()=>{
   current=(current+1)%slides.length;
   img.src=slides[current].image;
   t.textContent=slides[current].title;
   p.textContent=slides[current].text;
-}
-
-setInterval(next,5000);
+},5000);
 
 </script>
 
