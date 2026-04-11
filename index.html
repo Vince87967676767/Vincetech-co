@@ -3,141 +3,193 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vincetech</title>
+<title>Vincetech - Homepage</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,Segoe UI,sans-serif;}
+html{scroll-behavior:smooth;}
 
 body{
-  background:linear-gradient(135deg,#ffe4e6,#dbeafe,#fff);
+  background: linear-gradient(135deg,#ffe4e6,#dbeafe,#ffffff);
   color:#111;
+  overflow-x:hidden;
+  transition: background 0.4s, color 0.4s;
 }
+
+/* DARK MODE */
+.dark{background:#0f172a;color:#e5e7eb;}
 
 /* HEADER */
 header{
   display:flex;
   align-items:center;
-  padding:20px 40px;
   gap:20px;
+  padding:20px 40px;
 }
 
+#themeToggle{
+  margin-left:auto;
+  border:none;
+  padding:8px 14px;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+/* LOGO */
 .glow-logo{
   width:140px;
-  animation:glow 3s infinite;
+  animation: glow 3s infinite;
 }
 
 @keyframes glow{
   50%{filter:drop-shadow(0 0 15px #3b82f6);}
 }
 
-#themeToggle{
-  margin-left:auto;
-  padding:8px 14px;
-  border:none;
-  border-radius:20px;
-}
-
-/* ICONS */
+/* ICON GRID */
 .icon-wrapper{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
+  gap:25px;
   padding:40px;
 }
 
 .icon-box{
   background:rgba(255,255,255,0.6);
-  padding:25px;
-  border-radius:15px;
+  backdrop-filter:blur(12px);
+  border-radius:18px;
+  padding:30px;
   text-align:center;
+  transition:0.4s;
   text-decoration:none;
   color:inherit;
+}
+
+.icon-box:hover{
+  transform:translateY(-12px) scale(1.03);
 }
 
 /* HERO */
 #heroSlider{
   display:flex;
   flex-wrap:wrap;
-  padding:50px 40px;
-  gap:20px;
+  padding:60px 40px;
   align-items:center;
+  gap:30px;
 }
 
 #sliderTitle{
-  font-size:2.5rem;
+  font-size:3rem;
   background:linear-gradient(90deg,#3b82f6,#9333ea);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
 button{
-  margin-top:15px;
-  padding:10px 25px;
+  margin-top:20px;
+  padding:12px 28px;
   border:none;
-  border-radius:20px;
-  background:#3b82f6;
+  border-radius:25px;
+  background:linear-gradient(135deg,#3b82f6,#9333ea);
   color:#fff;
+  cursor:pointer;
 }
 
-/* GALLERY */
+/* GALLERY (FIX ONLY) */
 #neonGallery{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
-  padding:30px;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  padding:40px;
 }
 
 .gallery-photo{
   position:relative;
-  border-radius:12px;
   overflow:hidden;
+  border-radius:12px;
 }
 
 .gallery-photo img{
   width:100%;
-  height:200px;
+  height:220px;
   object-fit:cover;
+  display:block;
+  transition:0.3s;
 }
 
-.caption{
+.gallery-photo:hover img{
+  transform:scale(1.05);
+}
+
+.gallery-photo .caption{
   position:absolute;
-  bottom:8px;
+  bottom:10px;
   left:50%;
   transform:translateX(-50%);
   background:rgba(0,0,0,0.7);
   color:#fff;
-  padding:5px 10px;
-  border-radius:6px;
-  font-size:13px;
+  padding:6px 12px;
+  border-radius:8px;
+  font-size:14px;
 }
+
+/* CURSOR */
+#cursor{
+  position:fixed;
+  width:120px;
+  height:120px;
+  background:radial-gradient(circle,#3b82f655,transparent);
+  border-radius:50%;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  z-index:9999;
+}
+
 </style>
 </head>
 
 <body>
 
+<div id="cursor"></div>
+
 <header>
-  <img src="NVLME0005.JPG" class="glow-logo">
+  <img src="NVLME0005.JPG" class="glow-logo" alt="Logo">
   <h2>Experience Innovation</h2>
   <button id="themeToggle">🌙</button>
 </header>
 
 <div class="icon-wrapper">
-  <a class="icon-box" href="index.html">Home</a>
-  <a class="icon-box" href="services.html">Services</a>
-  <a class="icon-box" href="contact.html">Contact</a>
-  <a class="icon-box" href="about.html">About</a>
+  <a href="index.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-house"></i></div>
+    <h3>Home</h3>
+    <p>Back to main page</p>
+  </a>
+  <a href="services.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
+    <h3>Services</h3>
+    <p>Web design & development</p>
+  </a>
+  <a href="contact.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-envelope"></i></div>
+    <h3>Contact</h3>
+    <p>Get in touch</p>
+  </a>
+  <a href="about.html" class="icon-box">
+    <div class="icon"><i class="fa-solid fa-user"></i></div>
+    <h3>About</h3>
+    <p>Who we are</p>
+  </a>
 </div>
 
 <section id="heroSlider">
   <div>
-    <h1 id="sliderTitle">Welcome</h1>
-    <p>Explore our services</p>
+    <h1 id="sliderTitle">Welcome to Our Website</h1>
+    <p>Explore our amazing content and services.</p>
     <button onclick="window.location='contact.html'">Get Started</button>
   </div>
 
-  <img src="web1.jpg" style="width:100%;border-radius:12px;">
+  <img id="heroImage" src="web1.jpg" style="width:100%;border-radius:12px;">
 </section>
 
 <div id="neonGallery">
@@ -160,6 +212,14 @@ button{
 </div>
 
 <script>
+// CURSOR
+const cursor=document.getElementById("cursor");
+document.addEventListener("mousemove",e=>{
+  cursor.style.left=e.clientX+"px";
+  cursor.style.top=e.clientY+"px";
+});
+
+// DARK MODE
 const toggle=document.getElementById("themeToggle");
 toggle.onclick=()=>document.body.classList.toggle("dark");
 </script>
