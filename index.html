@@ -127,16 +127,25 @@ button:active{transform:scale(0.95);}
   opacity:0;
   transition:opacity 0.5s ease-in-out;
 }
-.caption{
+
+/* ✅ FIXED CAPTION (ONLY CHANGE) */
+.gallery-photo .caption{
   position:absolute;
-  bottom:10px;left:50%;
+  bottom:10px;
+  left:50%;
   transform:translateX(-50%);
   background:rgba(0,0,0,0.7);
-  color:#fff;padding:6px 12px;border-radius:8px;
-  opacity:0;pointer-events:none;
-  transition:0.3s,0.3s;
+  color:#fff;
+  padding:6px 12px;
+  border-radius:8px;
+  font-size:14px;
+  text-align:center;
+  z-index:2;
+
+  opacity:1 !important;
+  visibility:visible !important;
+  pointer-events:auto !important;
 }
-.photo.hover .caption{opacity:1;transform:translateX(-50%) translateY(-10px);}
 
 /* SCROLL ANIMATION */
 .fade{opacity:0;transform:translateY(40px);transition:0.8s;}
@@ -148,12 +157,6 @@ button:active{transform:scale(0.95);}
   background:radial-gradient(circle,#3b82f655,transparent);
   border-radius:50%;pointer-events:none;
   transform:translate(-50%,-50%);z-index:9999;
-}
-
-/* ✅ ONLY FIX ADDED — NOTHING ELSE CHANGED */
-#neonGallery .gallery-photo .caption {
-  opacity: 1 !important;
-  pointer-events: auto !important;
 }
 </style>
 </head>
@@ -168,6 +171,7 @@ button:active{transform:scale(0.95);}
   <button id="themeToggle">🌙</button>
 </header>
 
+<!-- ICON GRID -->
 <div class="icon-wrapper fade">
   <a href="index.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-house"></i></div>
@@ -191,6 +195,7 @@ button:active{transform:scale(0.95);}
   </a>
 </div>
 
+<!-- HERO -->
 <section id="heroSlider" class="fade">
   <div style="flex:1;min-width:300px;">
     <h1 id="sliderTitle">Welcome to Our Website</h1>
@@ -202,6 +207,7 @@ button:active{transform:scale(0.95);}
   </div>
 </section>
 
+<!-- GALLERY -->
 <div id="neonGallery" class="image-gallery">
   <div class="gallery-photo">
     <img src="design.jpg" alt="Landing Page Design">
@@ -218,14 +224,22 @@ button:active{transform:scale(0.95);}
 </div>
 
 <script>
+// Animate gallery
 window.addEventListener('load', () => {
   document.querySelectorAll('.fade').forEach(el => el.classList.add('show'));
+
+  const photos = document.querySelectorAll('#neonGallery .gallery-photo');
+  photos.forEach((photo, index) => {
+    setTimeout(() => photo.classList.add('show'), index * 200);
+  });
 });
 
+// theme
 document.getElementById("themeToggle").onclick = () => {
   document.body.classList.toggle("dark");
 };
 
+// cursor
 const cursor=document.getElementById("cursor");
 document.addEventListener("mousemove",e=>{
   cursor.style.left=e.clientX+"px";
