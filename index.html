@@ -5,23 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vincetech - Homepage</title>
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,Segoe UI,sans-serif;}
 html{scroll-behavior:smooth;}
+
 body{
   background: linear-gradient(135deg,#ffe4e6,#dbeafe,#ffffff);
   color:#111;
   overflow-x:hidden;
-  transition: background 0.4s, color 0.4s;
 }
-
-/* DARK MODE */
-.dark{background:#0f172a;color:#e5e7eb;}
-.dark .icon-box{background:rgba(30,41,59,0.6);color:#e5e7eb;}
-.dark .photo:hover{box-shadow:0 20px 40px rgba(0,0,0,0.5);}
 
 /* HEADER */
 header{
@@ -29,7 +23,9 @@ header{
   align-items:center;
   gap:20px;
   padding:20px 40px;
+  position:relative;
 }
+
 #themeToggle{
   margin-left:auto;
   border:none;
@@ -45,6 +41,32 @@ header{
 }
 @keyframes glow{50%{filter:drop-shadow(0 0 15px #3b82f6);}}
 
+/* MENU ICON */
+#menuToggle{
+  display:none;
+  font-size:24px;
+  cursor:pointer;
+}
+
+/* MOBILE MENU */
+#mobileMenu{
+  display:none;
+  flex-direction:column;
+  gap:10px;
+  position:absolute;
+  top:70px;
+  right:20px;
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+#mobileMenu a{
+  text-decoration:none;
+  color:#111;
+}
+
 /* ICON GRID */
 .icon-wrapper{
   display:grid;
@@ -52,24 +74,16 @@ header{
   gap:25px;
   padding:40px;
 }
+
 .icon-box{
   background:rgba(255,255,255,0.6);
   backdrop-filter:blur(12px);
   border-radius:18px;
   padding:30px;
   text-align:center;
-  transition:0.4s;
-  border:1px solid rgba(255,255,255,0.3);
   text-decoration:none;
   color:inherit;
 }
-.icon-box:hover{
-  transform:translateY(-12px) scale(1.03);
-  box-shadow:0 25px 50px rgba(59,130,246,0.2);
-}
-.icon{font-size:28px;margin-bottom:10px;background:linear-gradient(90deg,#3b82f6,#9333ea);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.icon-box h3{margin-bottom:6px;}
-.icon-box p{font-size:14px;color:#4b5563;}
 
 /* HERO */
 #heroSlider{
@@ -79,16 +93,9 @@ header{
   align-items:center;
   gap:30px;
 }
-#heroSlider img{
-  width:100%;
-  border-radius:12px;
-  transition:0.5s;
-}
+
 #sliderTitle{
   font-size:3rem;
-  background:linear-gradient(90deg,#3b82f6,#9333ea);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
 }
 
 /* BUTTON */
@@ -100,62 +107,23 @@ button{
   background:linear-gradient(135deg,#3b82f6,#9333ea);
   color:#fff;
   cursor:pointer;
-  transition:0.3s;
 }
-button:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,0.2);}
-button:active{transform:scale(0.95);}
 
-/* PORTFOLIO */
+/* GALLERY */
 .image-gallery{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
   gap:25px;
-  margin-top:40px;
-  padding-bottom:40px;
+  padding:40px;
 }
 
-.gallery-photo {
-  position: relative;
-  overflow: hidden;
-  border-radius: 12px;
-  cursor: pointer;
-  margin-bottom: 20px;
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+.gallery-photo img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
 }
 
-.gallery-photo.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.gallery-photo img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 12px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.gallery-photo:hover img {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px #3b82f6, 0 0 50px #3b82f655;
-}
-
-.gallery-photo .caption {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.7);
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-/* CURSOR GLOW */
+/* CURSOR */
 #cursor{
   position:fixed;
   width:120px;
@@ -163,80 +131,55 @@ button:active{transform:scale(0.95);}
   background:radial-gradient(circle,#3b82f655,transparent);
   border-radius:50%;
   pointer-events:none;
-  transform:translate(-50%,-50%);
-  z-index:9999;
 }
 
-/* MOBILE FIX */
-@media (max-width: 768px) {
+/* MOBILE */
+@media (max-width:768px){
 
-  body {
-    padding: 12px;
+  header{
+    flex-direction:column;
+    padding:15px;
+    text-align:center;
   }
 
-  header {
-    flex-direction: column;
-    text-align: center;
-    padding: 15px 10px;
-    gap: 10px;
+  #menuToggle{
+    display:block;
+    margin-left:auto;
   }
 
-  #themeToggle {
-    margin-left: 0;
+  #mobileMenu{
+    position:static;
+    width:100%;
   }
 
-  .glow-logo {
-    width: 100px;
+  .glow-logo{
+    width:100px;
   }
 
-  h2 {
-    font-size: 18px;
+  .icon-wrapper{
+    grid-template-columns:1fr;
+    padding:15px;
   }
 
-  .icon-wrapper {
-    grid-template-columns: 1fr;
-    padding: 15px;
-    gap: 12px;
+  #heroSlider{
+    flex-direction:column;
+    padding:20px;
+    text-align:center;
   }
 
-  .icon-box {
-    padding: 18px;
+  #sliderTitle{
+    font-size:1.6rem;
   }
 
-  #heroSlider {
-    flex-direction: column;
-    padding: 20px 12px;
-    text-align: center;
+  button{
+    width:100%;
+    max-width:260px;
   }
 
-  #sliderTitle {
-    font-size: 1.6rem;
+  .image-gallery{
+    grid-template-columns:1fr;
+    padding:15px;
   }
-
-  #sliderText {
-    font-size: 14px;
-  }
-
-  #heroSlider img {
-    width: 100%;
-  }
-
-  button {
-    width: 100%;
-    max-width: 260px;
-    margin: 15px auto 0;
-    display: block;
-  }
-
-  .image-gallery {
-    grid-template-columns: 1fr;
-    padding: 10px;
-  }
-
-  .gallery-photo img {
-    height: 180px;
-  }
-
 }
 
 </style>
@@ -249,99 +192,72 @@ button:active{transform:scale(0.95);}
 <header>
   <img src="NVLME0005.JPG" class="glow-logo" alt="Logo">
   <h2>Experience Innovation</h2>
+
+  <div id="menuToggle"><i class="fa-solid fa-bars"></i></div>
+
   <button id="themeToggle">🌙</button>
+
+  <nav id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="contact.html">Contact</a>
+    <a href="about.html">About</a>
+  </nav>
 </header>
 
 <div class="icon-wrapper">
   <a href="index.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-house"></i></div>
     <h3>Home</h3>
-    <p>Back to main page</p>
   </a>
+
   <a href="services.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
     <h3>Services</h3>
-    <p>Web design & development</p>
   </a>
+
   <a href="contact.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-envelope"></i></div>
     <h3>Contact</h3>
-    <p>Get in touch</p>
   </a>
+
   <a href="about.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-user"></i></div>
     <h3>About</h3>
-    <p>Who we are</p>
   </a>
 </div>
 
 <section id="heroSlider">
-  <div style="flex:1;min-width:300px;">
+  <div>
     <h1 id="sliderTitle">Welcome to Our Website</h1>
-    <p id="sliderText">Explore our amazing content and services.</p>
+    <p>Explore our amazing content and services.</p>
 
-    <a href="contact.html" style="text-decoration:none;">
-      <button>Get Started</button>
-    </a>
+    <button>Get Started</button>
   </div>
 
-  <div style="flex:1;min-width:300px;">
-    <img id="heroImage" src="web1.jpg" alt="Homepage Image">
-  </div>
+  <img src="web1.jpg">
 </section>
 
-<div id="neonGallery" class="image-gallery">
-
-  <div class="gallery-photo">
-    <img src="design.jpg" alt="Landing Page Design">
-    <div class="caption">Landing Page Design</div>
-  </div>
-
-  <div class="gallery-photo">
-    <img src="beau.jpg" alt="Portfolio Website">
-    <div class="caption">Portfolio Website</div>
-  </div>
-
-  <div class="gallery-photo">
-    <img src="world.jpg" alt="E-commerce Design">
-    <div class="caption">E-commerce Design</div>
-  </div>
-
+<div class="image-gallery">
+  <img src="design.jpg">
+  <img src="beau.jpg">
+  <img src="world.jpg">
 </div>
 
 <script>
-window.addEventListener('load', () => {
-  document.querySelectorAll('.gallery-photo').forEach((photo, i) => {
-    setTimeout(() => photo.classList.add('show'), i * 200);
-  });
-});
+const menuToggle=document.getElementById("menuToggle");
+const mobileMenu=document.getElementById("mobileMenu");
 
-document.getElementById("themeToggle").onclick = () =>
-  document.body.classList.toggle("dark");
+menuToggle.onclick=()=>{
+  mobileMenu.style.display=
+  mobileMenu.style.display==="flex"?"none":"flex";
+};
 
 const cursor=document.getElementById("cursor");
 document.addEventListener("mousemove",e=>{
   cursor.style.left=e.clientX+"px";
   cursor.style.top=e.clientY+"px";
 });
-
-const slides=[
-  {image:"web1.jpg",title:"Welcome to Our Website",text:"Explore our amazing content and services."},
-  {image:"sotfw.jpg",title:"Discover Our Features",text:"We provide modern solutions tailored for your business."},
-  {image:"white.jpg",title:"Join Us Today",text:"Connect with our team and enjoy a smooth experience."}
-];
-
-let current=0;
-const img=document.getElementById("heroImage");
-const title=document.getElementById("sliderTitle");
-const text=document.getElementById("sliderText");
-
-setInterval(()=>{
-  current=(current+1)%slides.length;
-  img.src=slides[current].image;
-  title.textContent=slides[current].title;
-  text.textContent=slides[current].text;
-},5000);
 </script>
 
 </body>
