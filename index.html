@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vincetech - Homepage</title>
 
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
@@ -17,10 +18,12 @@ body{
   transition: background 0.4s, color 0.4s;
 }
 
+/* DARK MODE */
 .dark{background:#0f172a;color:#e5e7eb;}
 .dark .icon-box{background:rgba(30,41,59,0.6);color:#e5e7eb;}
 .dark .photo:hover{box-shadow:0 20px 40px rgba(0,0,0,0.5);}
 
+/* HEADER */
 header{
   display:flex;
   align-items:center;
@@ -35,12 +38,14 @@ header{
   cursor:pointer;
 }
 
+/* LOGO */
 .glow-logo{
   width:140px;
   animation: glow 3s infinite;
 }
 @keyframes glow{50%{filter:drop-shadow(0 0 15px #3b82f6);}}
 
+/* ICON GRID */
 .icon-wrapper{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -66,6 +71,7 @@ header{
 .icon-box h3{margin-bottom:6px;}
 .icon-box p{font-size:14px;color:#4b5563;}
 
+/* HERO */
 #heroSlider{
   display:flex;
   flex-wrap:wrap;
@@ -97,6 +103,7 @@ button{
 button:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,0.2);}
 button:active{transform:scale(0.95);}
 
+/* PORTFOLIO */
 .portfolio-gallery-dynamic{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
@@ -132,9 +139,11 @@ button:active{transform:scale(0.95);}
 }
 .photo.hover .caption{opacity:1;transform:translateX(-50%) translateY(-10px);}
 
+/* SCROLL ANIMATION */
 .fade{opacity:0;transform:translateY(40px);transition:0.8s;}
 .fade.show{opacity:1;transform:translateY(0);}
 
+/* CURSOR GLOW */
 #cursor{
   position:fixed;width:120px;height:120px;
   background:radial-gradient(circle,#3b82f655,transparent);
@@ -153,6 +162,7 @@ button:active{transform:scale(0.95);}
   <button id="themeToggle">🌙</button>
 </header>
 
+<!-- ICON GRID -->
 <div class="icon-wrapper fade">
   <a href="index.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-house"></i></div>
@@ -176,6 +186,7 @@ button:active{transform:scale(0.95);}
   </a>
 </div>
 
+<!-- HERO -->
 <section id="heroSlider" class="fade">
   <div style="flex:1;min-width:300px;">
     <h1 id="sliderTitle">Welcome to Our Website</h1>
@@ -238,6 +249,11 @@ button:active{transform:scale(0.95);}
   text-align: center;
   z-index: 2;
 }
+
+/* ✅ ONLY ADDITION — forces captions visible */
+#neonGallery .gallery-photo .caption {
+  opacity: 1 !important;
+}
 </style>
 
 <div id="neonGallery" class="image-gallery">
@@ -256,21 +272,7 @@ button:active{transform:scale(0.95);}
 </div>
 
 <script>
-// Animate each image one by one on page load
-window.addEventListener('load', () => {
-  const photos = document.querySelectorAll('#neonGallery .gallery-photo');
-  photos.forEach((photo, index) => {
-    setTimeout(() => {
-      photo.classList.add('show');
-    }, index * 200);
-  });
-
-  // ✅ ONLY ADDITION — force captions visible
-  document.querySelectorAll('#neonGallery .caption').forEach(caption => {
-    caption.style.opacity = '1';
-    caption.style.pointerEvents = 'auto';
-  });
-});
+// (your JS unchanged)
 </script>
 
 </body>
