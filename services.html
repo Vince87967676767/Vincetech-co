@@ -123,7 +123,6 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
 </style>
 </head>
 <body>
-
 <!-- Particles -->
 <div id="particles"></div>
   
@@ -154,6 +153,7 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
   </a>
 </div>
 
+
 <!-- Logo Section with Neon Link Effect -->
 <div class="logo-section">
   <a href="index.html" class="icon-box" style="padding:20px 25px;">
@@ -173,40 +173,70 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
   <h2>Tec Studio</h2>
   <p class="subtitle">Experience Innovation</p>
 </div>
-
 <div class="projects-grid">
 
-  <div class="project-card">
-    <video id="bg-video"
-           autoplay
-           muted
-           loop
-           playsinline
-           webkit-playsinline
-           preload="metadata">
-      <source src="background.mp4" type="video/mp4">
-    </video>
-  </div>
+    <!-- Featured Video -->
+    <div class="project-card featured-project">
+        <video autoplay muted loop playsinline controls>
+            <source src="Storyboard 1.mp4" type="video/mp4">
+        </video>
+    </div>
 
-  <div class="project-card">
-    <img src="image4.jpg" alt="Project 1">
-  </div>
+    <!-- Project Images -->
+    <div class="project-card">
+        <img src="image4.jpg" alt="Project 1">
+    </div>
 
-  <div class="project-card">
-    <img src="image5.jpg" alt="Project 2">
-  </div>
+    <div class="project-card">
+        <img src="image5.jpg" alt="Project 2">
+    </div>
 
-  <div class="project-card">
-    <img src="soft.jpg" alt="Project 3">
-  </div>
+    <div class="project-card">
+        <img src="soft.jpg" alt="Project 3">
+    </div>
 
 </div>
 
 <p style="margin-top:25px; font-size:16px; color:#e0ffff;">
     Short demo showcasing our latest architectural project.
-</p>
+</p> 
+  .projects-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:35px;
+    justify-items:center;
+    align-items:center;
+    margin-top:30px;
+}
 
-<!-- Services & Pricing -->
+.featured-project{
+    grid-column:span 2;
+    width:100%;
+    max-width:850px;
+    height:450px;
+}
+
+.featured-project video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+@media(max-width:900px){
+
+    .featured-project{
+        grid-column:span 1;
+        height:350px;
+    }
+
+}
+
+    <!-- Project Images -->
+    <div class="project-card"><img src="image4.jpg" alt="Project 1" /></div>
+    <div class="project-card"><img src="image5.jpg" alt="Project 2" /></div>
+    <div class="project-card"><img src="soft.jpg" alt="Project 3" /></div>
+  </div>
+</div>
 <div class="section">
     <h2>Services & Pricing</h2>
     <p>Professional design and development solutions tailored to your business.</p>
@@ -239,7 +269,39 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
 
     </div>
 </div>
+  .pricing-grid{
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    flex-wrap:wrap;
+}
 
+.price-card{
+    width:320px;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+    color:white;
+    background:rgba(0,255,255,0.05);
+    border:1px solid rgba(0,255,255,0.25);
+    box-shadow:0 0 15px rgba(0,255,255,0.25),
+               0 0 30px rgba(0,255,255,0.15);
+    transition:0.3s;
+}
+
+.price-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 0 25px rgba(0,255,255,0.5),
+               0 0 40px rgba(0,255,255,0.3);
+}
+
+.price{
+    font-size:42px;
+    color:#0ff;
+    margin:20px 0;
+    font-weight:bold;
+}
+  
 <!-- Testimonials -->
 <div class="section">
   <h2>Client Testimonials</h2>
@@ -264,12 +326,14 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
 <div class="section">
   <h2>Ready to Start Your Project?</h2>
   <p>Contact us today and bring your ideas to life.</p>
+  <!-- FIXED BUTTON LINK -->
   <a href="contact.html" class="cta-btn">Get in Touch</a>
 </div>
 
 <!-- Video Background -->
 <video id="bg-video" autoplay muted loop>
   <source src="background.mp4" type="video/mp4">
+  Your browser does not support the video tag.
 </video>
 
 <script>
