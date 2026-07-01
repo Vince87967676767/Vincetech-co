@@ -120,9 +120,40 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
 .cta-btn{ display:inline-block; padding:15px 35px; color:#0ff; border:2px solid #0ff; border-radius:50px; font-size:18px; text-decoration:none; transition: all 0.3s ease; margin-top:20px; }
 .cta-btn:hover{ background:#0ff; color:#000; box-shadow:0 0 20px #0ff, 0 0 40px #0ff; transform:scale(1.05); }
 
+ .projects-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:35px;
+    justify-items:center;
+    align-items:center;
+    margin-top:30px;
+}
+
+.featured-project{
+    grid-column:span 2;
+    width:100%;
+    max-width:850px;
+    height:450px;
+}
+
+.featured-project video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+@media(max-width:900px){
+    .featured-project{
+        grid-column:span 1;
+        height:350px;
+    }
+} 
+
 </style>
 </head>
 <body>
+  
 <!-- Particles -->
 <div id="particles"></div>
   
@@ -175,21 +206,22 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
 </div>
 <div class="projects-grid">
 
-  <!-- Featured Video -->
-<div class="project-card featured-project">
-    <video
-        controls
-        playsinline
-        preload="metadata"
-        width="100%">
+  <div class="projects-grid">
 
-        <source src="storyboard-1.mp4" type="video/mp4">
+    <!-- Featured Video -->
+    <div class="project-card featured-project">
+        <video
+            controls
+            muted
+            playsinline
+            preload="metadata">
 
-        Your browser does not support video.
-    </video>
-</div>
-  
-  
+            <source src="storyboard-1.mp4" type="video/mp4">
+
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
     <!-- Project Images -->
     <div class="project-card">
         <img src="image4.jpg" alt="Project 1">
@@ -207,7 +239,10 @@ body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%
 
 <p style="margin-top:25px; font-size:16px; color:#e0ffff;">
     Short demo showcasing our latest architectural project.
-</p> 
+</p>
+  
+  
+  
   .projects-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
