@@ -5,36 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>vinctec.co.uk</title>
 
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
 <style>
 * { box-sizing:border-box; margin:0; padding:0; font-family:Arial,sans-serif; }
 
+/* Fullscreen video background */
 body, html { height:100%; width:100%; overflow-x:hidden; background:#000; }
 body { display:flex; flex-direction:column; align-items:center; padding-top:8vh; }
+video#bg-video { position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-2; filter: brightness(0.4) contrast(1.2); }
+body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); z-index:-1; }
 
-video#bg-video {
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  z-index:-2;
-  filter: brightness(0.4) contrast(1.2);
-}
-
-body::after {
-  content:'';
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.3);
-  z-index:-1;
-}
-
+/* Particles */
 #particles {
   position: fixed;
   top: 0;
@@ -45,7 +28,6 @@ body::after {
   z-index: 0;
   overflow: hidden;
 }
-
 .particle {
   position: absolute;
   width: 3px;
@@ -54,150 +36,253 @@ body::after {
   border-radius: 50%;
   animation: float 6s linear infinite;
 }
-
 @keyframes float{
   0%{transform:translateY(100vh) translateX(0) scale(1); opacity:0.4;}
   50%{opacity:0.7;}
   100%{transform:translateY(-10vh) translateX(50px) scale(0.5); opacity:0;}
 }
 
+/* Grid container for icons */
 .icon-wrapper { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:30px; width:90%; max-width:1200px; margin-bottom:50px; position:relative; z-index:1; }
 
-.icon-box { position:relative; background:rgba(255,255,255,0); border-radius:18px; text-align:center; text-decoration:none; color:#fff; padding:30px 20px; }
+/* Icon box */
+.icon-box { position:relative; background:rgba(255,255,255,0); border-radius:18px; text-align:center; text-decoration:none; color:#fff; padding:30px 20px; transition: all 0.4s ease; overflow:visible; }
+.icon-box::before { content:''; position:absolute; top:-2px; left:-2px; right:-2px; bottom:-2px; border-radius:20px; border:1px solid rgba(0,255,255,0.25); box-shadow:0 0 8px rgba(0,255,255,0.5),0 0 16px rgba(0,255,255,0.3),0 0 24px rgba(0,255,255,0.2); z-index:0; animation: neonPulse 3s ease-in-out infinite alternate; }
+@keyframes neonPulse { 0% { box-shadow:0 0 4px rgba(0,255,255,0.3),0 0 8px rgba(0,255,255,0.2),0 0 12px rgba(0,255,255,0.1); } 100% { box-shadow:0 0 12px rgba(0,255,255,0.7),0 0 24px rgba(0,255,255,0.5),0 0 36px rgba(0,255,255,0.25); } }
 
-.icon-box::before {
-  content:'';
-  position:absolute;
-  top:-2px; left:-2px; right:-2px; bottom:-2px;
-  border-radius:20px;
-  border:1px solid rgba(0,255,255,0.25);
-  box-shadow:0 0 8px rgba(0,255,255,0.5);
-}
+/* Icon */
+.icon { position:relative; z-index:1; width:80px; height:80px; margin:0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:34px; background:linear-gradient(270deg,#0ff,#0ff,#0ff,#0ff); background-size:600% 600%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation: iconGlow 6s ease infinite, iconPulse 3s ease-in-out infinite; }
+@keyframes iconGlow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@keyframes iconPulse { 0%,100%{filter:brightness(1);} 50%{filter:brightness(1.5);} }
 
-.icon { font-size:34px; color:#0ff; margin-bottom:10px; }
+.icon-box h3{ margin-bottom:6px; font-size:18px; }
+.icon-box p{ font-size:14px; color:#e0ffff; z-index:1; position:relative; }
 
+.icon-box:hover{ transform: translateY(-6px); }
+.icon-box:hover .icon{ transform: scale(1.25) rotate(5deg); filter:brightness(1.7); }
+
+/* Logo Section as Neon Link */
 .logo-section {
-  width:100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  z-index: 1;
+  position: relative;
+}
+.logo-section .icon-box {
+  padding:20px 25px;
   display:flex;
   justify-content:center;
-  margin-bottom:40px;
+  align-items:center;
+}
+.logo {
+  width: 150px;
+  max-width: 20vw;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,255,255,0.4),0 0 24px rgba(0,255,255,0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.logo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0,255,255,0.6),0 0 35px rgba(0,255,255,0.4);
 }
 
-.logo { width:150px; }
+/* Service showcase */
+.service-showcase{ width:90%; max-width:1000px; margin-bottom:60px; text-align:center; color:#fff; }
+.service-showcase img{ max-width:100%; border-radius:12px; box-shadow:0 0 18px rgba(0,255,255,0.5); margin-bottom:25px; transition: transform 0.3s ease;}
+.service-showcase img:hover{ transform: scale(1.06);}
+.service-showcase h2{ font-size:36px; margin-bottom:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; }
+.service-showcase p.subtitle{ font-style:italic; font-size:18px; opacity:0.9; margin-bottom:35px; max-width:800px; margin-left:auto;margin-right:auto; }
 
-.image-gallery { display:flex; justify-content:center; gap:60px; flex-wrap:wrap; margin-bottom:60px; }
+/* Neon gallery images */
+.image-gallery{ display:flex; justify-content:center; gap:60px; margin-bottom:60px; flex-wrap:wrap; position:relative; z-index:1; }
+.image-gallery img{ width:30vw; max-width:400px; min-width:250px; aspect-ratio:1/1; border-radius:20px; box-shadow:0 0 12px rgba(0,255,255,0.4),0 0 24px rgba(0,255,255,0.3),0 0 36px rgba(0,255,255,0.2); cursor:default; object-fit:cover; background:#000; transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease; }
+.image-gallery img:hover{ transform: scale(1.12); filter:brightness(1.25); box-shadow:0 0 25px rgba(0,255,255,0.6),0 0 45px rgba(0,255,255,0.4),0 0 60px rgba(0,255,255,0.25); }
 
-.image-gallery img {
-  width:30vw;
-  max-width:400px;
-  min-width:250px;
-  border-radius:20px;
-}
+/* Sections, Projects, Testimonials, CTA */
+.section { width:90%; max-width:1200px; margin-bottom:60px; text-align:center; color:#fff; position:relative; z-index:1; }
+.section h2{ font-size:32px; margin-bottom:20px; letter-spacing:1px; }
+.section p{ font-size:18px; opacity:0.8; margin-bottom:30px; }
 
-.project-card {
-  width:350px;
-  height:350px;
-  overflow:hidden;
-}
+.project-card { width:350px; height:350px; border-radius:20px; overflow:hidden; position:relative; box-shadow:0 0 20px rgba(0,255,255,0.5),0 0 35px rgba(0,255,255,0.3),0 0 50px rgba(0,255,255,0.2); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.project-card::before { content:''; position:absolute; top:-10px; left:-10px; right:-10px; bottom:-10px; border-radius:25px; box-shadow:0 0 10px rgba(0,255,255,0.2),0 0 20px rgba(0,255,255,0.15),0 0 30px rgba(0,255,255,0.1); opacity:0.7; transition: opacity 0.3s ease; }
+.project-card:hover::before { opacity:1; }
+.project-card:hover{ transform:scale(1.08); box-shadow:0 0 25px rgba(0,255,255,0.7),0 0 40px rgba(0,255,255,0.5); }
+.project-card img, .project-card video{ width:100%; height:100%; border-radius:20px; object-fit:cover; transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease; }
+.project-card img:hover, .project-card video:hover{ transform: scale(1.12); box-shadow:0 0 35px rgba(0,255,255,0.7),0 0 55px rgba(0,255,255,0.5); }
 
-.project-card img, .project-card video {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
+.testimonial-card { background:rgba(0,255,255,0.05); border:1px solid rgba(0,255,255,0.2); border-radius:15px; padding:25px; margin:10px; width:300px; color:#e0ffff; box-shadow:0 0 10px rgba(0,255,255,0.3),0 0 20px rgba(0,255,255,0.2),0 0 30px rgba(0,255,255,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; position:relative; }
+.testimonial-card::before { content:''; position:absolute; top:-8px; left:-8px; right:-8px; bottom:-8px; border-radius:20px; box-shadow:0 0 8px rgba(0,255,255,0.2),0 0 16px rgba(0,255,255,0.15),0 0 24px rgba(0,255,255,0.1); opacity:0.6; transition: opacity 0.3s ease; }
+.testimonial-card:hover::before { opacity:1; }
+.testimonial-card:hover { transform:scale(1.05); box-shadow:0 0 20px rgba(0,255,255,0.5),0 0 35px rgba(0,255,255,0.3); }
 
-/* ONLY CHANGE: mobile video fix */
-@media (max-width: 768px) {
-  video#bg-video {
-    display:block;
-  }
-}
+.cta-btn{ display:inline-block; padding:15px 35px; color:#0ff; border:2px solid #0ff; border-radius:50px; font-size:18px; text-decoration:none; transition: all 0.3s ease; margin-top:20px; }
+.cta-btn:hover{ background:#0ff; color:#000; box-shadow:0 0 20px #0ff, 0 0 40px #0ff; transform:scale(1.05); }
+
 </style>
 </head>
-
 <body>
 
+<!-- Particles -->
 <div id="particles"></div>
-
+  
+<!-- ICON GRID -->
 <div class="icon-wrapper">
   <a href="/" class="icon-box">
     <div class="icon"><i class="fa-solid fa-house"></i></div>
     <h3>Home</h3>
+    <p>Back to main page</p>
   </a>
 
   <a href="/services/" class="icon-box">
     <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
     <h3>Services</h3>
+    <p>Web design & development</p>
   </a>
 
   <a href="/contact/" class="icon-box">
     <div class="icon"><i class="fa-solid fa-envelope"></i></div>
     <h3>Contact</h3>
+    <p>Get in touch</p>
   </a>
 
   <a href="/about/" class="icon-box">
     <div class="icon"><i class="fa-solid fa-user"></i></div>
     <h3>About</h3>
+    <p>Who we are</p>
   </a>
 </div>
 
+<!-- Logo Section with Neon Link Effect -->
 <div class="logo-section">
-  <a href="index.html">
-    <img src="NVLME0005.JPG" class="logo">
+  <a href="index.html" class="icon-box" style="padding:20px 25px;">
+    <img src="NVLME0005.JPG" alt="Forma Studio Logo" class="logo" />
   </a>
 </div>
 
+<!-- Neon Image Gallery -->
 <div class="image-gallery">
-  <img src="image1.jpg">
-  <img src="image2.jpg">
-  <img src="image3.jpg">
+  <img src="image1.jpg" alt="Alien 1" />
+  <img src="image2.jpg" alt="Alien 2" />
+  <img src="image3.jpg" alt="Alien 3" />
 </div>
 
-<!-- FIXED VIDEO (ONLY ADDITION) -->
-<video id="bg-video"
-       autoplay
-       muted
-       loop
-       playsinline
-       webkit-playsinline
-       preload="auto">
+<!-- Service Showcase -->
+<div class="service-showcase">
+  <h2>Tec Studio</h2>
+  <p class="subtitle">Experience Innovation</p>
+</div>
+
+<div class="projects-grid">
+
+  <div class="project-card">
+    <video id="bg-video"
+           autoplay
+           muted
+           loop
+           playsinline
+           webkit-playsinline
+           preload="metadata">
+      <source src="background.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="project-card">
+    <img src="image4.jpg" alt="Project 1">
+  </div>
+
+  <div class="project-card">
+    <img src="image5.jpg" alt="Project 2">
+  </div>
+
+  <div class="project-card">
+    <img src="soft.jpg" alt="Project 3">
+  </div>
+
+</div>
+
+<p style="margin-top:25px; font-size:16px; color:#e0ffff;">
+    Short demo showcasing our latest architectural project.
+</p>
+
+<!-- Services & Pricing -->
+<div class="section">
+    <h2>Services & Pricing</h2>
+    <p>Professional design and development solutions tailored to your business.</p>
+
+    <div class="pricing-grid">
+
+        <div class="price-card">
+            <h3>Starter Website</h3>
+            <div class="price">£499</div>
+            <p>1-5 Pages</p>
+            <p>Mobile Responsive</p>
+            <p>Contact Form</p>
+        </div>
+
+        <div class="price-card">
+            <h3>Business Website</h3>
+            <div class="price">£999</div>
+            <p>Up to 10 Pages</p>
+            <p>Custom Design</p>
+            <p>SEO Setup</p>
+        </div>
+
+        <div class="price-card">
+            <h3>Premium Package</h3>
+            <div class="price">£1,999+</div>
+            <p>Custom Development</p>
+            <p>Advanced Features</p>
+            <p>Ongoing Support</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- Testimonials -->
+<div class="section">
+  <h2>Client Testimonials</h2>
+  <p>What our clients are saying.</p>
+  <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+    <div class="testimonial-card">
+      <p>"Amazing service! Their design brought our vision to life."</p>
+      <strong>- Alex P.</strong>
+    </div>
+    <div class="testimonial-card">
+      <p>"Professional, creative, and extremely reliable."</p>
+      <strong>- Jessica L.</strong>
+    </div>
+    <div class="testimonial-card">
+      <p>"Our website has never looked this good. Highly recommend!"</p>
+      <strong>- Michael T.</strong>
+    </div>
+  </div>
+</div>
+
+<!-- Call to Action -->
+<div class="section">
+  <h2>Ready to Start Your Project?</h2>
+  <p>Contact us today and bring your ideas to life.</p>
+  <a href="contact.html" class="cta-btn">Get in Touch</a>
+</div>
+
+<!-- Video Background -->
+<video id="bg-video" autoplay muted loop>
   <source src="background.mp4" type="video/mp4">
 </video>
 
-<div class="project-card">
-  <video autoplay muted loop playsinline webkit-playsinline>
-    <source src="background.mp4" type="video/mp4">
-  </video>
-</div>
-
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const video = document.getElementById("bg-video");
-  if (!video) return;
-
-  video.muted = true;
-
-  const playVideo = () => {
-    const p = video.play();
-    if (p) {
-      p.catch(() => {
-        document.body.addEventListener("touchstart", () => {
-          video.play();
-        }, { once: true });
-      });
-    }
-  };
-
-  playVideo();
-});
-
-// particles
+// Generate particles
 const particleContainer = document.getElementById('particles');
 for (let i = 0; i < 80; i++) {
   const p = document.createElement('div');
   p.classList.add('particle');
   p.style.left = Math.random() * 100 + 'vw';
   p.style.animationDelay = Math.random() * 6 + 's';
+  const size = 2 + Math.random() * 4;
+  p.style.width = size + 'px';
+  p.style.height = size + 'px';
   particleContainer.appendChild(p);
 }
 </script>
