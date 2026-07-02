@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard</title>
 
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background: #0f172a;
-  color: #e5e7eb;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  color: white;
 }
 
 .box {
@@ -23,32 +23,16 @@ body {
   border-radius: 12px;
   width: 320px;
   text-align: center;
-  box-shadow: 0 0 25px rgba(0,255,255,0.15);
-}
-
-h2 {
-  margin-bottom: 10px;
-}
-
-p {
-  font-size: 14px;
-  opacity: 0.8;
 }
 
 button {
-  margin-top: 20px;
-  padding: 10px 18px;
+  margin-top: 15px;
+  padding: 10px 15px;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
-  background: #ef4444;
+  background: red;
   color: white;
-  font-weight: bold;
-  transition: 0.2s;
-}
-
-button:hover {
-  transform: scale(1.05);
+  cursor: pointer;
 }
 </style>
 </head>
@@ -61,16 +45,16 @@ button:hover {
   <button onclick="logout()">Logout</button>
 </div>
 
-<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } 
+from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB7PRzYOUR_REAL_KEY_HERE",
+  apiKey: "AIzaSyB7PRz9K6IMr3foH5xsaVwmRTFJUlpv1Sg",
   authDomain: "vinctec-admin.firebaseapp.com",
   projectId: "vinctec-admin",
-  storageBucket: "vinctec-admin.appspot.com",
+  storageBucket: "vinctec-admin.firebasestorage.app",
   messagingSenderId: "714000687361",
   appId: "1:714000687361:web:db2cc5745df0cb91b9bb00"
 };
@@ -78,26 +62,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// ONLY YOU CAN ACCESS
+// ONLY YOU ALLOWED
 const allowedEmail = "obiwuru010@gmail.com";
 
-// CHECK LOGIN STATUS
 onAuthStateChanged(auth, (user) => {
-  if (user) {
-    if (user.email === allowedEmail) {
-      document.getElementById("status").innerText =
-        "Logged in as: " + user.email;
-    } else {
-      alert("Access denied");
-      signOut(auth);
-      window.location.href = "login.html";
-    }
+  if (user && user.email === allowedEmail) {
+    document.getElementById("status").innerText = "Logged in as: " + user.email;
   } else {
     window.location.href = "login.html";
   }
 });
 
-// LOGOUT
 window.logout = function () {
   signOut(auth).then(() => {
     window.location.href = "login.html";
