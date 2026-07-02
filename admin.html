@@ -10,24 +10,33 @@ body {
   margin: 0;
   font-family: Arial;
   background: #0f172a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
   color: white;
 }
 
-.box {
-  background: #111827;
-  padding: 30px;
-  border-radius: 12px;
-  width: 320px;
+.header {
+  padding: 20px;
   text-align: center;
-  box-shadow: 0 0 20px rgba(0,255,255,0.15);
+  background: #111827;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  background: #1f2937;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+}
+
+small {
+  color: #9ca3af;
 }
 
 button {
-  margin-top: 15px;
   padding: 10px 15px;
   border: none;
   border-radius: 8px;
@@ -35,29 +44,31 @@ button {
   color: white;
   cursor: pointer;
 }
-
-#status {
-  opacity: 0.8;
-}
 </style>
 </head>
 
 <body>
 
-<div class="box">
-  <h2>🔒 Admin Panel</h2>
-  <p id="status">Loading admin...</p>
+<div class="header">
+  <h2>🔒 Admin Dashboard</h2>
+  <p id="status">Checking login...</p>
   <button onclick="logout()">Logout</button>
 </div>
+
+<div class="container" id="messages"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } 
 from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
+import { getDatabase, ref, onValue } 
+from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyB7PRz9K6IMr3foH5xsaVwmRTFJUlpv1Sg",
   authDomain: "vinctec-admin.firebaseapp.com",
+  databaseURL: "https://vinctec-admin-default-rtdb.firebaseio.com",
   projectId: "vinctec-admin",
   storageBucket: "vinctec-admin.firebasestorage.app",
   messagingSenderId: "714000687361",
@@ -66,30 +77,64 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getDatabase(app);
 
-// ONLY YOU ALLOWED
 const allowedEmail = "obiwuru010@gmail.com";
 
-// Smooth auth check (no flash)
+const status = document.getElementById("status");
+const messagesDiv = document.getElementById("messages");
+
+// LOGIN CHECK
 onAuthStateChanged(auth, (user) => {
 
   if (user && user.email === allowedEmail) {
-    document.getElementById("status").innerText =
-      "Logged in as: " + user.email;
-  } 
-  else {
-    document.getElementById("status").innerText = "Redirecting...";
-    setTimeout(() => {
-      window.location.replace("login.html");
-    }, 300);
-  }
+    status.innerText = "Logged in as: " + user.email;
 
+    loadMessages();
+
+  } else {
+    status.innerText = "Not authorised. Redirecting...";
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1000);
+  }
 });
 
-// Logout
+// LOAD FIREBASE MESSAGES
+function loadMessages() {
+  const feedbackRef = ref(db, "feedback");
+
+  onValue(feedbackRef, (snapshot) => {
+
+    messagesDiv.innerHTML = "";
+
+    if (!snapshot.exists()) {
+      messagesDiv.innerHTML = "<p>No messages yet</p>";
+      return;
+    }
+
+    snapshot.forEach((child) => {
+      const data = child.val();
+
+      const div = document.createElement("div");
+      div.className = "card";
+
+      div.innerHTML = `
+        <b>Name:</b> ${data.name}<br>
+        <b>Email:</b> ${data.email}<br>
+        <b>Message:</b> ${data.message}<br>
+        <small>${new Date(data.time).toLocaleString()}</small>
+      `;
+
+      messagesDiv.appendChild(div);
+    });
+  });
+}
+
+// LOGOUT
 window.logout = function () {
   signOut(auth).then(() => {
-    window.location.replace("login.html");
+    window.location.href = "login.html";
   });
 };
 </script>
