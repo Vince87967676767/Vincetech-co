@@ -214,9 +214,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-window.send = async function () {
+ const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
- window.send = async function () {
+/* 👇 PASTE THIS HERE 👇 */
+
+window.send = async function () {
 
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
@@ -254,6 +257,10 @@ window.send = async function () {
     status.style.color = "red";
   }
 };
+
+/* 👆 STOP PASTING HERE 👆 */
+
+ 
  
 </script>
 
