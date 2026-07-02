@@ -23,6 +23,7 @@ body {
   border-radius: 12px;
   width: 320px;
   text-align: center;
+  box-shadow: 0 0 20px rgba(0,255,255,0.15);
 }
 
 button {
@@ -34,6 +35,10 @@ button {
   color: white;
   cursor: pointer;
 }
+
+#status {
+  opacity: 0.8;
+}
 </style>
 </head>
 
@@ -41,7 +46,7 @@ button {
 
 <div class="box">
   <h2>🔒 Admin Panel</h2>
-  <p id="status">Checking login...</p>
+  <p id="status">Loading admin...</p>
   <button onclick="logout()">Logout</button>
 </div>
 
@@ -65,17 +70,26 @@ const auth = getAuth(app);
 // ONLY YOU ALLOWED
 const allowedEmail = "obiwuru010@gmail.com";
 
+// Smooth auth check (no flash)
 onAuthStateChanged(auth, (user) => {
+
   if (user && user.email === allowedEmail) {
-    document.getElementById("status").innerText = "Logged in as: " + user.email;
-  } else {
-    window.location.href = "login.html";
+    document.getElementById("status").innerText =
+      "Logged in as: " + user.email;
+  } 
+  else {
+    document.getElementById("status").innerText = "Redirecting...";
+    setTimeout(() => {
+      window.location.replace("login.html");
+    }, 300);
   }
+
 });
 
+// Logout
 window.logout = function () {
   signOut(auth).then(() => {
-    window.location.href = "login.html";
+    window.location.replace("login.html");
   });
 };
 </script>
