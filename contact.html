@@ -186,17 +186,48 @@ body{
       </form>
     </div>
 
-    <!-- Feedback Form -->
-    <div class="tab" id="feedback-tab">
-      <form>
-        <input type="text" placeholder="Your Name" required>
-        <input type="email" placeholder="Email Address" required>
-        <textarea placeholder="Your Feedback" required></textarea>
-        <button type="submit">Submit Feedback</button>
-      </form>
-    </div>
-  </div>
-</div>
+    <h2>Feedback</h2>
+
+<input id="name" placeholder="Your Name" />
+<input id="email" placeholder="Email Address" />
+<textarea id="message" placeholder="Your Feedback"></textarea>
+
+<button onclick="sendFeedback()">Submit Feedback</button>
+
+<p id="status"></p>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB7PRz9K6IMr3foH5xsaVwmRTFJUlpv1Sg",
+  authDomain: "vinctec-admin.firebaseapp.com",
+  databaseURL: "https://vinctec-admin-default-rtdb.firebaseio.com",
+  projectId: "vinctec-admin",
+  storageBucket: "vinctec-admin.firebasestorage.app",
+  messagingSenderId: "714000687361",
+  appId: "1:714000687361:web:db2cc5745df0cb91b9bb00"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.sendFeedback = function () {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const message = document.getElementById("message").value;
+
+  push(ref(db, "feedback"), {
+    name,
+    email,
+    message,
+    time: Date.now()
+  });
+
+  document.getElementById("status").innerText = "Sent!";
+};
+</script>
 
 <style>
 /* ===== Scoped Styles ===== */
