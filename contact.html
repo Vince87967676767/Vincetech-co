@@ -38,12 +38,11 @@ body{
 .icon-box::before{
   content:'';
   position:absolute;
-  top:0; left:0; right:0; bottom:0;
+  inset:0;
   background: linear-gradient(270deg, #f472b6, #9333ea, #3b82f6, #f43f5e);
   background-size: 600% 600%;
   opacity:0.12;
   border-radius:18px;
-  z-index:0;
   animation: gradientShift 6s ease infinite;
 }
 
@@ -63,50 +62,15 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  color:#fff;
   font-size:26px;
-  transition: transform 0.4s ease, filter 0.4s ease;
-  background: linear-gradient(270deg, #f472b6, #9333ea, #3b82f6, #f43f5e);
+  background: linear-gradient(270deg,#f472b6,#9333ea,#3b82f6,#f43f5e);
   background-size: 600% 600%;
-  animation: iconGlow 6s ease infinite, iconPulse 2.5s ease-in-out infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-@keyframes iconGlow {
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-
-@keyframes iconPulse {
-  0%, 100%{filter: brightness(1);}
-  50%{filter: brightness(1.25);}
-}
-
-.icon-box h3{
-  position: relative;
-  z-index:1;
-  margin-bottom:6px;
-  font-size:18px;
-}
-
-.icon-box p{
-  position: relative;
-  z-index:1;
-  font-size:14px;
-  color:#4b5563;
-}
-
 .icon-box:hover{
   transform: translateY(-8px);
-  box-shadow: 0 18px 35px rgba(0,0,0,0.08);
-  background: rgba(255,255,255,0.8);
-}
-
-.icon-box:hover .icon{
-  transform: scale(1.25) rotate(8deg);
-  filter: brightness(1.5);
 }
 </style>
 </head>
@@ -139,14 +103,8 @@ body{
   </a>
 </div>
 
-</body>
-
+<!-- FORM -->
 <div class="myform-container">
-
-  <input type="checkbox" id="theme-toggle">
-  <label for="theme-toggle" class="theme-switch">
-    <span class="icon">🌙</span>
-  </label>
 
   <input type="radio" name="myform-tab" id="signin" checked>
   <input type="radio" name="myform-tab" id="feedback">
@@ -163,7 +121,6 @@ body{
         <input type="text" placeholder="Username" required>
         <input type="password" placeholder="Password" required>
         <button type="submit">Sign In</button>
-        <div class="link"><a href="#">Forgot Password?</a></div>
       </form>
     </div>
 
@@ -179,98 +136,85 @@ body{
   </div>
 </div>
 
-<style>
-.myform-container * { box-sizing:border-box; font-family:'Arial',sans-serif; transition: all 0.3s ease; }
-
-#theme-toggle { display:none; }
-
-.theme-switch {
-  position:absolute; top:20px; right:20px;
-  background:#ffb6c1; color:#fff; padding:8px 12px;
-  border-radius:20px; cursor:pointer;
-  z-index:10;
-}
-
-.myform-container {
-  max-width:450px; margin:50px auto;
-  border-radius:12px; overflow:hidden;
-  background:linear-gradient(-45deg,#ffe4e6,#dbeafe,#ffffff);
-  animation: floatForm 6s ease-in-out infinite;
-}
-
-@keyframes floatForm {
-  0%{transform:translateY(0px);}
-  50%{transform:translateY(-10px);}
-  100%{transform:translateY(0px);}
-}
-</style>
-
-<header>
-  <img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
-</header>
-
-<div class="watermark-layer">
-  <span><img src="NVLME0005.JPG" class="glow-logo"></span>
-  <span><img src="NVLME0005.JPG" class="glow-logo"></span>
-  <span><img src="NVLME0005.JPG" class="glow-logo"></span>
-  <span><img src="NVLME0005.JPG" class="glow-logo"></span>
+<!-- ADMIN DASHBOARD -->
+<div id="admin-panel" style="display:none; max-width:800px; margin:40px auto; padding:20px; background:white; border-radius:12px;">
+  <h2>Admin Dashboard - Feedback</h2>
+  <div id="feedback-list"></div>
 </div>
 
 <style>
-.glow-logo {
-  width:160px;
-  animation: glowPulse 3s ease-in-out infinite;
-}
-
-@keyframes glowPulse {
-  0%{filter:drop-shadow(0 0 4px rgba(0,150,255,0.4));}
-  50%{filter:drop-shadow(0 0 15px rgba(0,150,255,0.9));}
-  100%{filter:drop-shadow(0 0 4px rgba(0,150,255,0.4));}
-}
+.myform-container{max-width:450px;margin:50px auto;}
+.tab-header{display:flex;gap:10px;}
+.tab-header label{flex:1;padding:10px;background:#eee;text-align:center;cursor:pointer;}
+.tab-content{padding:20px;}
+input,textarea,button{width:100%;margin:10px 0;padding:10px;}
 </style>
 
-<!-- ✅ ADDED WORKING SCRIPT -->
 <script>
-const demoUser = {
-  username: "admin",
-  password: "1234"
-};
+const demoUser = { username:"admin", password:"1234" };
 
-document.querySelector("#signin-tab form").addEventListener("submit", function(e) {
+const formContainer = document.querySelector(".myform-container");
+const adminPanel = document.getElementById("admin-panel");
+const feedbackListDiv = document.getElementById("feedback-list");
+
+// LOGIN
+document.querySelector("#signin-tab form").addEventListener("submit", function(e){
   e.preventDefault();
 
-  const username = this.querySelector("input[type='text']").value;
-  const password = this.querySelector("input[type='password']").value;
+  const u = this.querySelector("input[type='text']").value;
+  const p = this.querySelector("input[type='password']").value;
 
-  if (username === demoUser.username && password === demoUser.password) {
-    alert("Login successful! Welcome " + username);
-    localStorage.setItem("loggedInUser", username);
+  if(u === demoUser.username && p === demoUser.password){
+    alert("Login successful");
+
+    formContainer.style.display = "none";
+    adminPanel.style.display = "block";
+
+    renderFeedback();
   } else {
-    alert("Invalid username or password");
+    alert("Wrong login");
   }
 });
 
-document.querySelector("#feedback-tab form").addEventListener("submit", function(e) {
+// FEEDBACK
+document.querySelector("#feedback-tab form").addEventListener("submit", function(e){
   e.preventDefault();
 
   const name = this.querySelector("input[type='text']").value;
   const email = this.querySelector("input[type='email']").value;
-  const message = this.querySelector("textarea").value;
+  const msg = this.querySelector("textarea").value;
 
-  if (!name || !email || !message) {
-    alert("Please fill in all fields");
-    return;
-  }
+  let feedback = JSON.parse(localStorage.getItem("feedbackList") || "[]");
 
-  const feedback = JSON.parse(localStorage.getItem("feedbackList") || "[]");
-
-  feedback.push({ name, email, message, date: new Date().toLocaleString() });
+  feedback.push({
+    id: Date.now(),
+    name, email, message: msg,
+    date: new Date().toLocaleString()
+  });
 
   localStorage.setItem("feedbackList", JSON.stringify(feedback));
 
-  alert("Feedback submitted successfully!");
+  alert("Feedback saved!");
   this.reset();
 });
+
+// RENDER
+function renderFeedback(){
+  let feedback = JSON.parse(localStorage.getItem("feedbackList") || "[]");
+
+  if(feedback.length === 0){
+    feedbackListDiv.innerHTML = "<p>No feedback yet</p>";
+    return;
+  }
+
+  feedbackListDiv.innerHTML = feedback.map(f=>`
+    <div style="border:1px solid #ddd;padding:10px;margin:10px 0;">
+      <b>${f.name}</b> (${f.email})<br>
+      <small>${f.date}</small>
+      <p>${f.message}</p>
+    </div>
+  `).join("");
+}
 </script>
 
 </html>
