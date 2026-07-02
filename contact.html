@@ -184,23 +184,19 @@ body{
         <div class="link"><a href="#">Forgot Password?</a></div>
       </form>
     </div>
-  <div class="tab" id="feedback-tab">
-  <form onsubmit="event.preventDefault(); send();">
 
-    <input id="name" type="text" placeholder="Your Name" required>
-    <input id="email" type="email" placeholder="Email Address" required>
-    <textarea id="message" placeholder="Your Feedback" required></textarea>
+   <form onsubmit="event.preventDefault(); send();">
 
-    <button type="submit">
-      Submit Feedback
-    </button>
+  <input id="name" type="text" placeholder="Your Name" required>
+  <input id="email" type="email" placeholder="Email Address" required>
+  <textarea id="message" placeholder="Your Feedback" required></textarea>
 
-  </form>
-</div>
-    
-    </div>
-  </div>
-</div>
+  <button type="submit">Submit Feedback</button>
+
+  <div id="status" style="text-align:center; margin-top:10px;"></div>
+
+</form>
+   
   <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
@@ -220,10 +216,17 @@ const db = getDatabase(app);
 
 window.send = async function () {
 
+ window.send = async function () {
+
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const message = document.getElementById("message").value;
   const status = document.getElementById("status");
+
+  if (!status) {
+    console.error("Missing #status element in HTML");
+    return;
+  }
 
   if (!name || !email || !message) {
     status.innerText = "Fill all fields!";
@@ -240,7 +243,7 @@ window.send = async function () {
     });
 
     status.innerText = "Sent successfully!";
-    status.style.color = "lime";
+    status.style.color = "green";
 
     document.getElementById("name").value = "";
     document.getElementById("email").value = "";
@@ -251,6 +254,7 @@ window.send = async function () {
     status.style.color = "red";
   }
 };
+ 
 </script>
 
 <style>
