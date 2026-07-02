@@ -184,6 +184,70 @@ body{
         <div class="link"><a href="#">Forgot Password?</a></div>
       </form>
     </div>
+
+    <!-- Feedback Form -->
+    <div class="tab" id="feedback-tab">
+      <form onsubmit="event.preventDefault(); send();">
+      <input id="name" type="text" placeholder="Your Name" required>
+       <input id="email" type="email" placeholder="Email Address" required>
+        <textarea id="message" placeholder="Your Feedback" required></textarea>
+        <button type="button" onclick="send()">
+       <button type="submit">Submit Feedback</button>
+    </div>
+  </div>
+</div>
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB7PRz9K6IMr3foH5xsaVwmRTFJUlpv1Sg",
+  authDomain: "vinctec-admin.firebaseapp.com",
+  databaseURL: "https://vinctec-admin-default-rtdb.firebaseio.com",
+  projectId: "vinctec-admin",
+  storageBucket: "vinctec-admin.firebasestorage.app",
+  messagingSenderId: "714000687361",
+  appId: "1:714000687361:web:db2cc5745df0cb91b9bb00"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.send = async function () {
+
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const message = document.getElementById("message").value;
+  const status = document.getElementById("status");
+
+  if (!name || !email || !message) {
+    status.innerText = "Fill all fields!";
+    status.style.color = "red";
+    return;
+  }
+
+  try {
+    await push(ref(db, "feedback"), {
+      name,
+      email,
+      message,
+      time: Date.now()
+    });
+
+    status.innerText = "Sent successfully!";
+    status.style.color = "lime";
+
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("message").value = "";
+
+  } catch (error) {
+    status.innerText = "Error: " + error.message;
+    status.style.color = "red";
+  }
+};
+</script>
+
 <style>
 /* ===== Scoped Styles ===== */
 .myform-container * { box-sizing:border-box; font-family:'Arial',sans-serif; transition: all 0.3s ease; }
@@ -279,72 +343,6 @@ body{
 <br>
  
 </a>
-    <!-- Feedback Form -->
-    <div class="tab" id="feedback-tab">
-      <form onsubmit="event.preventDefault(); send();">
-      <input id="name" type="text" placeholder="Your Name" required>
-       <input id="email" type="email" placeholder="Email Address" required>
-        <textarea id="message" placeholder="Your Feedback" required></textarea>
-        <button type="button" onclick="send()">
-   <button type="submit">
-Submit Feedback
-</button>
-    </div>
-  </div>
-</div>
-  <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyB7PRz9K6IMr3foH5xsaVwmRTFJUlpv1Sg",
-  authDomain: "vinctec-admin.firebaseapp.com",
-  databaseURL: "https://vinctec-admin-default-rtdb.firebaseio.com",
-  projectId: "vinctec-admin",
-  storageBucket: "vinctec-admin.firebasestorage.app",
-  messagingSenderId: "714000687361",
-  appId: "1:714000687361:web:db2cc5745df0cb91b9bb00"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-window.send = async function () {
-
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const message = document.getElementById("message").value;
-  const status = document.getElementById("status");
-
-  if (!name || !email || !message) {
-    status.innerText = "Fill all fields!";
-    status.style.color = "red";
-    return;
-  }
-
-  try {
-    await push(ref(db, "feedback"), {
-      name,
-      email,
-      message,
-      time: Date.now()
-    });
-
-    status.innerText = "Sent successfully!";
-    status.style.color = "lime";
-
-    document.getElementById("name").value = "";
-    document.getElementById("email").value = "";
-    document.getElementById("message").value = "";
-
-  } catch (error) {
-    status.innerText = "Error: " + error.message;
-    status.style.color = "red";
-  }
-};
-</script>
-
-
 <meta charset="UTF-8">
 <title>Homepage</title>
 
