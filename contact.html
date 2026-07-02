@@ -184,17 +184,20 @@ body{
         <div class="link"><a href="#">Forgot Password?</a></div>
       </form>
     </div>
+  <div class="tab" id="feedback-tab">
+  <form onsubmit="event.preventDefault(); send();">
 
-    <!-- Feedback Form -->
-    <div class="tab" id="feedback-tab">
-      <form onsubmit="event.preventDefault(); send();">
-      <input id="name" type="text" placeholder="Your Name" required>
-       <input id="email" type="email" placeholder="Email Address" required>
-        <textarea id="message" placeholder="Your Feedback" required></textarea>
-        <button type="button" onclick="send()">
-      <button type="submit">
-Submit Feedback
-</button>
+    <input id="name" type="text" placeholder="Your Name" required>
+    <input id="email" type="email" placeholder="Email Address" required>
+    <textarea id="message" placeholder="Your Feedback" required></textarea>
+
+    <button type="submit">
+      Submit Feedback
+    </button>
+
+  </form>
+</div>
+    
     </div>
   </div>
 </div>
