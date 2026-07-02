@@ -7,85 +7,20 @@
 <link rel="stylesheet"
  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+<!-- YOUR ORIGINAL CSS (UNCHANGED) -->
 <style>
+/* (ALL YOUR DESIGN STAYS EXACTLY THE SAME — NOT REMOVED, NOT EDITED) */
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif;}
-
-body{
-  background: linear-gradient(135deg, #ffe4e6, #dbeafe, #ffffff);
-  padding:40px;
-}
-
-.icon-wrapper{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:25px;
-}
-
-.icon-box{
-  position: relative;
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(10px);
-  border-radius:18px;
-  text-align:center;
-  text-decoration:none;
-  color:#1f2937;
-  padding:30px 20px;
-  transition: all 0.4s ease;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-  overflow: hidden;
-}
-
-.icon-box::before{
-  content:'';
-  position:absolute;
-  top:0; left:0; right:0; bottom:0;
-  background: linear-gradient(270deg, #f472b6, #9333ea, #3b82f6, #f43f5e);
-  background-size: 600% 600%;
-  opacity:0.12;
-  border-radius:18px;
-  z-index:0;
-  animation: gradientShift 6s ease infinite;
-}
-
-@keyframes gradientShift {
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-
-.icon{
-  position: relative;
-  z-index:1;
-  width:65px;
-  height:65px;
-  margin:0 auto 15px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:26px;
-  background: linear-gradient(270deg, #f472b6, #9333ea, #3b82f6, #f43f5e);
-  background-size: 600% 600%;
-  animation: iconGlow 6s ease infinite, iconPulse 2.5s ease-in-out infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-@keyframes iconGlow {
-  0%{background-position:0% 50%;}
-  100%{background-position:100% 50%;}
-}
-
-@keyframes iconPulse {
-  0%,100%{filter:brightness(1);}
-  50%{filter:brightness(1.25);}
-}
-
+body{background: linear-gradient(135deg, #ffe4e6, #dbeafe, #ffffff);padding:40px;}
+.icon-wrapper{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;}
+.icon-box{position: relative;background: rgba(255,255,255,0.6);backdrop-filter: blur(10px);border-radius:18px;text-align:center;text-decoration:none;color:#1f2937;padding:30px 20px;transition: all 0.4s ease;box-shadow: 0 8px 20px rgba(0,0,0,0.05);overflow: hidden;}
+.icon-box::before{content:'';position:absolute;top:0; left:0; right:0; bottom:0;background: linear-gradient(270deg, #f472b6, #9333ea, #3b82f6, #f43f5e);background-size: 600% 600%;opacity:0.12;border-radius:18px;z-index:0;animation: gradientShift 6s ease infinite;}
+@keyframes gradientShift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+.icon{position: relative;z-index:1;width:65px;height:65px;margin:0 auto 15px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;background: linear-gradient(270deg, #f472b6, #9333ea, #3b82f6, #f43f5e);background-size: 600% 600%;animation: iconGlow 6s ease infinite, iconPulse 2.5s ease-in-out infinite;-webkit-background-clip: text;-webkit-text-fill-color: transparent;}
+@keyframes iconGlow{0%{background-position:0% 50%;}100%{background-position:100% 50%;}}
+@keyframes iconPulse{0%,100%{filter:brightness(1);}50%{filter:brightness(1.25);}}
 .icon-box h3,.icon-box p{position:relative;z-index:1;}
-
-.icon-box:hover{
-  transform: translateY(-8px);
-}
+.icon-box:hover{transform: translateY(-8px);}
 </style>
 </head>
 
@@ -117,7 +52,7 @@ body{
   </a>
 </div>
 
-<!-- YOUR ORIGINAL FORM (UNCHANGED) -->
+<!-- YOUR EXISTING FORM (UNCHANGED DESIGN) -->
 <div class="myform-container">
 
   <input type="checkbox" id="theme-toggle">
@@ -143,12 +78,11 @@ body{
       </form>
     </div>
 
-    <!-- FEEDBACK FORM (UNCHANGED DESIGN) -->
     <div class="tab" id="feedback-tab">
-      <form>
-        <input type="text" placeholder="Your Name" required>
-        <input type="email" placeholder="Email Address" required>
-        <textarea placeholder="Your Feedback" required></textarea>
+      <form id="feedback-form">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Email Address" required>
+        <textarea id="message" placeholder="Your Feedback" required></textarea>
         <button type="submit">Submit Feedback</button>
       </form>
     </div>
@@ -156,7 +90,7 @@ body{
   </div>
 </div>
 
-<!-- ✅ FIREBASE FIX (ONLY ADDITION) -->
+<!-- 🔥 ONLY ADDITION: FIREBASE (NO DESIGN CHANGE) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
@@ -174,28 +108,33 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-  const form = document.querySelector("#feedback-tab form");
+  const form = document.getElementById("feedback-form");
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const inputs = form.querySelectorAll("input, textarea");
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
 
-    const name = inputs[0].value;
-    const email = inputs[1].value;
-    const message = inputs[2].value;
+    if (!name || !email || !message) {
+      alert("Please fill all fields");
+      return;
+    }
 
     push(ref(db, "feedback"), {
       name,
       email,
       message,
       time: Date.now()
-    }).then(() => {
+    })
+    .then(() => {
       alert("Message sent successfully!");
       form.reset();
-    }).catch((err) => {
+    })
+    .catch((err) => {
       alert(err.message);
     });
 
