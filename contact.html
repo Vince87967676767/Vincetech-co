@@ -186,13 +186,13 @@ body{
       </form>
     </div>
 
-    <h2>Feedback</h2>
+   <h2>Feedback</h2>
 
 <input id="name" placeholder="Your Name" />
-<input id="email" placeholder="Email Address" />
-<textarea id="message" placeholder="Your Feedback"></textarea>
+<input id="email" placeholder="Email" />
+<textarea id="message" placeholder="Your Message"></textarea>
 
-<button onclick="sendFeedback()">Submit Feedback</button>
+<button onclick="send()">Submit</button>
 
 <p id="status"></p>
 
@@ -213,10 +213,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-window.sendFeedback = function () {
+window.send = function () {
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const message = document.getElementById("message").value;
+
+  if (!name || !email || !message) {
+    document.getElementById("status").innerText = "Fill all fields!";
+    return;
+  }
 
   push(ref(db, "feedback"), {
     name,
@@ -225,10 +230,10 @@ window.sendFeedback = function () {
     time: Date.now()
   });
 
-  document.getElementById("status").innerText = "Sent!";
+  document.getElementById("status").innerText = "Sent successfully!";
 };
 </script>
-
+   
 <style>
 /* ===== Scoped Styles ===== */
 .myform-container * { box-sizing:border-box; font-family:'Arial',sans-serif; transition: all 0.3s ease; }
