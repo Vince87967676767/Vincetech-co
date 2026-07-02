@@ -185,17 +185,46 @@ body{
       </form>
     </div>
 
-   <form onsubmit="event.preventDefault(); send();">
+   <div class="myform-container">
 
-  <input id="name" type="text" placeholder="Your Name" required>
-  <input id="email" type="email" placeholder="Email Address" required>
-  <textarea id="message" placeholder="Your Feedback" required></textarea>
+  <input type="radio" name="myform-tab" id="signin" checked>
+  <input type="radio" name="myform-tab" id="feedback">
 
-  <button type="submit">Submit Feedback</button>
+  <div class="tab-header">
+    <label for="signin">Sign In</label>
+    <label for="feedback">Feedback</label>
+  </div>
 
-  <div id="status" style="text-align:center; margin-top:10px;"></div>
+  <div class="tab-content">
 
-</form>
+    <!-- SIGN IN -->
+    <div class="tab" id="signin-tab">
+      <form>
+        <input type="text" placeholder="Username" required>
+        <input type="password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+      </form>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div class="tab" id="feedback-tab">
+
+      <form onsubmit="event.preventDefault(); send();">
+
+        <input id="name" type="text" placeholder="Your Name" required>
+        <input id="email" type="email" placeholder="Email Address" required>
+        <textarea id="message" placeholder="Your Feedback" required></textarea>
+
+        <button type="submit">Submit Feedback</button>
+
+        <div id="status" style="text-align:center;margin-top:10px;"></div>
+
+      </form>
+
+    </div>
+
+  </div>
+</div>
    
   <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
@@ -213,11 +242,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
- const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-/* 👇 PASTE THIS HERE 👇 */
 
 window.send = async function () {
 
@@ -257,11 +281,7 @@ window.send = async function () {
     status.style.color = "red";
   }
 };
-
-/* 👆 STOP PASTING HERE 👆 */
-
- 
- 
+   
 </script>
 
 <style>
