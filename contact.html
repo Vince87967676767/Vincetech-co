@@ -185,47 +185,17 @@ body{
       </form>
     </div>
 
-   <div class="myform-container">
-
-  <input type="radio" name="myform-tab" id="signin" checked>
-  <input type="radio" name="myform-tab" id="feedback">
-
-  <div class="tab-header">
-    <label for="signin">Sign In</label>
-    <label for="feedback">Feedback</label>
-  </div>
-
-  <div class="tab-content">
-
-    <!-- SIGN IN -->
-    <div class="tab" id="signin-tab">
-      <form>
-        <input type="text" placeholder="Username" required>
-        <input type="password" placeholder="Password" required>
-        <button type="submit">Sign In</button>
-      </form>
-    </div>
-
-    <!-- FEEDBACK -->
+    <!-- Feedback Form -->
     <div class="tab" id="feedback-tab">
-
       <form onsubmit="event.preventDefault(); send();">
-
-        <input id="name" type="text" placeholder="Your Name" required>
-        <input id="email" type="email" placeholder="Email Address" required>
+      <input id="name" type="text" placeholder="Your Name" required>
+       <input id="email" type="email" placeholder="Email Address" required>
         <textarea id="message" placeholder="Your Feedback" required></textarea>
-
-        <button type="submit">Submit Feedback</button>
-
-        <div id="status" style="text-align:center;margin-top:10px;"></div>
-
-      </form>
-
+        <button type="button" onclick="send()">
+       <button type="submit">Submit Feedback</button>
     </div>
-
   </div>
 </div>
-   
   <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
@@ -250,11 +220,6 @@ window.send = async function () {
   const message = document.getElementById("message").value;
   const status = document.getElementById("status");
 
-  if (!status) {
-    console.error("Missing #status element in HTML");
-    return;
-  }
-
   if (!name || !email || !message) {
     status.innerText = "Fill all fields!";
     status.style.color = "red";
@@ -270,7 +235,7 @@ window.send = async function () {
     });
 
     status.innerText = "Sent successfully!";
-    status.style.color = "green";
+    status.style.color = "lime";
 
     document.getElementById("name").value = "";
     document.getElementById("email").value = "";
@@ -281,7 +246,6 @@ window.send = async function () {
     status.style.color = "red";
   }
 };
-   
 </script>
 
 <style>
