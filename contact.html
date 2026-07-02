@@ -154,10 +154,7 @@ body{
   </a>
 </div>
 
-</body>
-
-
-<!-- Ultimate Floating, Breathing, Glowing Form -->
+<!-- Ultimate Floating Form -->
 <div class="myform-container">
 
   <!-- Theme Toggle Checkbox -->
@@ -191,11 +188,14 @@ body{
     <!-- Feedback Form -->
     <div class="tab" id="feedback-tab">
       <form>
-        <input type="text" placeholder="Your Name" required>
-        <input type="email" placeholder="Email Address" required>
-        <textarea placeholder="Your Feedback" required></textarea>
-        <button type="submit">Submit Feedback</button>
-      </form>
+      <input id="name" type="text" placeholder="Your Name" required>
+       <input id="email" type="email" placeholder="Email Address" required>
+        <textarea id="message" placeholder="Your Feedback" required></textarea>
+        <button type="button" onclick="send()">
+        <form onsubmit="event.preventDefault(); send();">
+        <button type="submit">
+Submit Feedback
+</button>
     </div>
   </div>
 </div>
@@ -465,7 +465,7 @@ window.send = async function () {
 }
 </style>
 
-
+</body>
 <!-- ORIGINAL CONTENT -->
 <header>
   <img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
