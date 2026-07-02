@@ -187,12 +187,14 @@ body{
 
     <!-- Feedback Form -->
     <div class="tab" id="feedback-tab">
-      <form>
+      <form onsubmit="event.preventDefault(); send();">
       <input id="name" type="text" placeholder="Your Name" required>
        <input id="email" type="email" placeholder="Email Address" required>
         <textarea id="message" placeholder="Your Feedback" required></textarea>
         <button type="button" onclick="send()">
-        <form onsubmit="event.preventDefault(); send();">
+       <button type="submit">
+Submit Feedback
+</button>
         <button type="submit">
 Submit Feedback
 </button>
