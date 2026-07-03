@@ -50,9 +50,6 @@ button {
 
 <body>
 
-<!-- 🔊 SOUND ALERT (ADDED) -->
-<audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3" preload="auto"></audio>
-
 <div class="header">
   <h2>🔒 Admin Dashboard</h2>
   <p id="status">Checking login...</p>
@@ -77,8 +74,9 @@ button {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
-import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
+import { getDatabase, ref, onValue, remove, set } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
 
+/* Firebase */
 const firebaseConfig = {
   apiKey: "AIzaSyB7PRz9K6IMr3foH5xsaVwmRTFJUlpv1Sg",
   authDomain: "vinctec-admin.firebaseapp.com",
@@ -100,9 +98,12 @@ const messagesDiv = document.getElementById("messages");
 const searchInput = document.getElementById("search");
 
 let allMessages = {};
-let firstLoad = true; // 🔊 SOUND CONTROL ADDED
+let lastCount = 0;
 
-// LOGIN CHECK
+/* 🔊 SOUND */
+const notifySound = new Audio("https://www.soundjay.com/buttons/sounds/button-09.mp3");
+
+/* LOGIN */
 onAuthStateChanged(auth, (user) => {
   if (user && user.email === allowedEmail) {
     status.innerText = "Logged in as: " + user.email;
@@ -112,7 +113,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// LOAD MESSAGES
+/* LOAD MESSAGES */
 function loadMessages() {
   const feedbackRef = ref(db, "feedback");
 
@@ -121,30 +122,42 @@ function loadMessages() {
     messagesDiv.innerHTML = "";
     allMessages = {};
 
-    document.getElementById("counter").innerText =
-      "Total Messages: " + snapshot.size;
-
-    // 🔊 PLAY SOUND ONLY FOR NEW UPDATES
-    if (!firstLoad) {
-      document.getElementById("notifSound").play();
-    }
+    let count = 0;
 
     snapshot.forEach((child) => {
       const key = child.key;
       const data = child.val();
 
       allMessages[key] = data;
+      count++;
+
       renderMessage(key, data);
     });
 
-    firstLoad = false;
+    document.getElementById("counter").innerText =
+      "Total Messages: " + count;
+
+    /* 🔥 NEW MESSAGE ALERT */
+    if (count > lastCount && lastCount !== 0) {
+      alert("🔥 New message received!");
+      notifySound.play();
+
+      if (navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]);
+      }
+    }
+
+    lastCount = count;
   });
 }
 
-// RENDER MESSAGE
+/* RENDER MESSAGE */
 function renderMessage(key, data) {
+
   const div = document.createElement("div");
   div.className = "card";
+
+  div.style.border = data.pinned ? "2px solid gold" : "none";
 
   div.innerHTML = `
     <b>Name:</b> ${data.name}<br>
@@ -154,21 +167,41 @@ function renderMessage(key, data) {
     <br>
 
     <button onclick="deleteMsg('${key}')">🗑️ Delete</button>
-    <a href="mailto:${data.email}?subject=Reply from Vinctec&body=Hi ${data.name}," 
-       style="margin-left:10px;color:#0ff;">
-       📧 Reply
-    </a>
+
+    <button onclick="pinMsg('${key}')">📌 Pin</button>
+
+    <button onclick="sendEmail('${data.email}','${data.name}')">
+      📧 Reply
+    </button>
   `;
 
   messagesDiv.appendChild(div);
 }
 
-// DELETE
+/* DELETE */
 window.deleteMsg = function(key){
   remove(ref(db, "feedback/" + key));
 };
 
-// SEARCH
+/* PIN */
+window.pinMsg = function(key){
+  const msg = allMessages[key];
+  set(ref(db, "feedback/" + key), {
+    ...msg,
+    pinned: !msg.pinned
+  });
+};
+
+/* EMAIL (MANUAL SAFE VERSION) */
+window.sendEmail = function(email, name) {
+  const subject = "Reply from Vinctec";
+  const body = `Hi ${name},`;
+
+  window.location.href =
+    `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+};
+
+/* SEARCH */
 searchInput.addEventListener("input", () => {
   const value = searchInput.value.toLowerCase();
 
@@ -180,12 +213,13 @@ searchInput.addEventListener("input", () => {
   });
 });
 
-// LOGOUT
+/* LOGOUT */
 window.logout = function () {
   signOut(auth).then(() => {
     window.location.href = "login.html";
   });
 };
+
 </script>
 
 </body>
