@@ -55,14 +55,27 @@ button {
   <button onclick="logout()">Logout</button>
 </div>
 
-<div class="container" id="messages"></div>
+<div class="container">
 
+  <!-- SEARCH + COUNTER (INSIDE CONTAINER) -->
+  <input id="search" type="text"
+    placeholder="Search messages..."
+    onkeyup="searchMessages()"
+    style="padding:10px;width:100%;border-radius:8px;border:none;margin-bottom:10px;">
+
+  <div id="counter" style="margin-bottom:10px;color:#0ff;"></div>
+
+  <!-- MESSAGES GO HERE -->
+  <div id="messages"></div>
+
+</div>
+  
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } 
 from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
-import { getDatabase, ref, onValue } 
+import { getDatabase, ref, onValue, remove } 
 from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
 
 const firebaseConfig = {
@@ -83,53 +96,88 @@ const allowedEmail = "obiwuru010@gmail.com";
 
 const status = document.getElementById("status");
 const messagesDiv = document.getElementById("messages");
+const searchInput = document.getElementById("search");
+
+let allMessages = {};
+let count = 0;
 
 // LOGIN CHECK
 onAuthStateChanged(auth, (user) => {
-
   if (user && user.email === allowedEmail) {
     status.innerText = "Logged in as: " + user.email;
-
     loadMessages();
-
   } else {
-    status.innerText = "Not authorised. Redirecting...";
-    setTimeout(() => {
-      window.location.href = "login.html";
-    }, 1000);
+    window.location.href = "login.html";
   }
 });
 
-// LOAD FIREBASE MESSAGES
+// LOAD MESSAGES
 function loadMessages() {
   const feedbackRef = ref(db, "feedback");
 
   onValue(feedbackRef, (snapshot) => {
-
     messagesDiv.innerHTML = "";
-
-    if (!snapshot.exists()) {
-      messagesDiv.innerHTML = "<p>No messages yet</p>";
-      return;
-    }
+    allMessages = {};
+    count = 0;
 
     snapshot.forEach((child) => {
       const data = child.val();
+      allMessages[child.key] = data;
+      count++;
 
-      const div = document.createElement("div");
-      div.className = "card";
-
-      div.innerHTML = `
-        <b>Name:</b> ${data.name}<br>
-        <b>Email:</b> ${data.email}<br>
-        <b>Message:</b> ${data.message}<br>
-        <small>${new Date(data.time).toLocaleString()}</small>
-      `;
-
-      messagesDiv.appendChild(div);
+      renderMessage(child.key, data);
     });
+
+    document.getElementById("counter").innerText = "Total Messages: " + count;
   });
 }
+
+// RENDER MESSAGE
+function renderMessage(key, data) {
+
+  const div = document.createElement("div");
+  div.className = "card";
+
+  div.innerHTML = `
+    <b>Name:</b> ${data.name}<br>
+    <b>Email:</b> ${data.email}<br>
+    <b>Message:</b> ${data.message}<br>
+    <small>${new Date(data.time).toLocaleString()}</small>
+    <br><br>
+
+    <button onclick="deleteMsg('${key}')">🗑️ Delete</button>
+    <a href="mailto:${data.email}?subject=Reply from Vinctec&body=Hi ${data.name},"
+       style="margin-left:10px;color:#0ff;">
+       📧 Reply
+    </a>
+  `;
+
+  messagesDiv.appendChild(div);
+}
+
+// DELETE MESSAGE
+window.deleteMsg = function(key){
+  const msgRef = ref(db, "feedback/" + key);
+  remove(msgRef);
+};
+
+// SEARCH
+window.searchMessages = function(){
+  const value = searchInput.value.toLowerCase();
+  messagesDiv.innerHTML = "";
+
+  Object.keys(allMessages).forEach(key => {
+    const m = allMessages[key];
+
+    if(
+      m.name.toLowerCase().includes(value) ||
+      m.email.toLowerCase().includes(value) ||
+      m.message.toLowerCase().includes(value)
+    ){
+      renderMessage(key, m);
+    }
+  });
+};
 
 // LOGOUT
 window.logout = function () {
@@ -138,6 +186,6 @@ window.logout = function () {
   });
 };
 </script>
-
+  
 </body>
 </html>
