@@ -372,15 +372,28 @@ window.send = async function () {
   }
 }
 
-/* ===== WATERMARK LAYER ===== */
+/* WATERMARK FIXED BOTTOM CORNER (SAFE) */
 .watermark-layer {
   position: fixed;
-  inset: 0;
-  pointer-events: none; /* allows clicks through */
-  z-index: 9999;
-  overflow: hidden;
+  bottom: 20px;
+  right: 20px;
+  width: 120px;
+  height: auto;
+  pointer-events: none;
+  z-index: 999;
 }
 
+/* remove animations for simplicity */
+.watermark-layer span {
+  display: none;
+}
+
+/* show only image */
+.watermark-layer img {
+  width: 100%;
+  height: auto;
+  opacity: 0.6;
+}
 /* basic watermark style */
 .watermark-layer span {
   position: absolute;
@@ -478,14 +491,11 @@ window.send = async function () {
 
 <!-- WATERMARK OVERLAY -->
 <div class="watermark-layer">
-  <span><img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
-</span>
-  <span><img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
- </span>
-  <span> <img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
-</span>
-  <span><img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
-</span>
+  <img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
+  <img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
+  <img src="NVLME0005.JPG" alt="Logo" class="glow-logo">
+</div>
+ 
 </div>
 </body>
 </html> 
