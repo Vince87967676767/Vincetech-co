@@ -50,6 +50,9 @@ button {
 
 <body>
 
+<!-- 🔊 SOUND ALERT (ADDED) -->
+<audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3" preload="auto"></audio>
+
 <div class="header">
   <h2>🔒 Admin Dashboard</h2>
   <p id="status">Checking login...</p>
@@ -97,6 +100,7 @@ const messagesDiv = document.getElementById("messages");
 const searchInput = document.getElementById("search");
 
 let allMessages = {};
+let firstLoad = true; // 🔊 SOUND CONTROL ADDED
 
 // LOGIN CHECK
 onAuthStateChanged(auth, (user) => {
@@ -113,11 +117,17 @@ function loadMessages() {
   const feedbackRef = ref(db, "feedback");
 
   onValue(feedbackRef, (snapshot) => {
+
     messagesDiv.innerHTML = "";
     allMessages = {};
 
     document.getElementById("counter").innerText =
       "Total Messages: " + snapshot.size;
+
+    // 🔊 PLAY SOUND ONLY FOR NEW UPDATES
+    if (!firstLoad) {
+      document.getElementById("notifSound").play();
+    }
 
     snapshot.forEach((child) => {
       const key = child.key;
@@ -126,6 +136,8 @@ function loadMessages() {
       allMessages[key] = data;
       renderMessage(key, data);
     });
+
+    firstLoad = false;
   });
 }
 
@@ -156,7 +168,7 @@ window.deleteMsg = function(key){
   remove(ref(db, "feedback/" + key));
 };
 
-// SEARCH (FAST + CLEAN)
+// SEARCH
 searchInput.addEventListener("input", () => {
   const value = searchInput.value.toLowerCase();
 
