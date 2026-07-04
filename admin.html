@@ -45,10 +45,81 @@ button {
   cursor: pointer;
   margin-top: 10px;
 }
+
+.reply-btn {
+  background: #2563eb;
+}
+
+.pin-btn {
+  background: #ca8a04;
+}
+
+#toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #22c55e;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: none;
+  z-index: 9999;
+}
+
+#replyBox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 9998;
+  align-items: center;
+  justify-content: center;
+}
+
+.reply-card {
+  background: #1f2937;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.reply-card input,
+.reply-card textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 8px;
+}
+
+.reply-card textarea {
+  height: 140px;
+}
 </style>
 </head>
 
 <body>
+
+<audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3" preload="auto"></audio>
+
+<div id="toast">New message received 🔔</div>
+
+<div id="replyBox">
+  <div class="reply-card">
+    <h3>📧 Reply to Customer</h3>
+
+    <input id="replyTo" readonly>
+    <input id="replyName" readonly>
+
+    <textarea id="replyMessage" placeholder="Type your reply here..."></textarea>
+
+    <button class="reply-btn" onclick="sendReply()">Send Email</button>
+    <button onclick="closeReply()">Cancel</button>
+
+    <p id="emailStatus"></p>
+  </div>
+</div>
 
 <div class="header">
   <h2>🔒 Admin Dashboard</h2>
@@ -58,25 +129,28 @@ button {
 
 <div class="container">
 
-  <!-- SEARCH -->
   <input id="search" type="text"
     placeholder="Search messages..."
     style="padding:10px;width:100%;border-radius:8px;border:none;margin-bottom:10px;">
 
-  <!-- COUNTER -->
   <div id="counter" style="margin-bottom:10px;color:#0ff;"></div>
 
-  <!-- MESSAGES -->
   <div id="messages"></div>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 import { getDatabase, ref, onValue, remove, set } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
 
-/* Firebase */
+emailjs.init("gNIrD27eCoUVVUR0B");
+
+const EMAILJS_SERVICE_ID = "service_omro2oc";
+const EMAILJS_TEMPLATE_ID = "template_7qci88h";
+
 const firebaseConfig = {
   apiKey: "AIzaSyB7PRz9K6IMr3foH5xsaVwmRTFJUlpv1Sg",
   authDomain: "vinctec-admin.firebaseapp.com",
@@ -100,10 +174,12 @@ const searchInput = document.getElementById("search");
 let allMessages = {};
 let lastCount = 0;
 
-/* 🔊 SOUND */
-const notifySound = new Audio("https://www.soundjay.com/buttons/sounds/button-09.mp3");
+function showToast() {
+  const toast = document.getElementById("toast");
+  toast.style.display = "block";
+  setTimeout(() => toast.style.display = "none", 3000);
+}
 
-/* LOGIN */
 onAuthStateChanged(auth, (user) => {
   if (user && user.email === allowedEmail) {
     status.innerText = "Logged in as: " + user.email;
@@ -113,12 +189,10 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-/* LOAD MESSAGES */
 function loadMessages() {
   const feedbackRef = ref(db, "feedback");
 
   onValue(feedbackRef, (snapshot) => {
-
     messagesDiv.innerHTML = "";
     allMessages = {};
 
@@ -134,13 +208,11 @@ function loadMessages() {
       renderMessage(key, data);
     });
 
-    document.getElementById("counter").innerText =
-      "Total Messages: " + count;
+    document.getElementById("counter").innerText = "Total Messages: " + count;
 
-    /* 🔥 NEW MESSAGE ALERT */
     if (count > lastCount && lastCount !== 0) {
-      alert("🔥 New message received!");
-      notifySound.play();
+      document.getElementById("notifSound").play();
+      showToast();
 
       if (navigator.vibrate) {
         navigator.vibrate([200, 100, 200]);
@@ -151,57 +223,85 @@ function loadMessages() {
   });
 }
 
-/* RENDER MESSAGE */
 function renderMessage(key, data) {
-
   const div = document.createElement("div");
   div.className = "card";
-
   div.style.border = data.pinned ? "2px solid gold" : "none";
 
   div.innerHTML = `
-    <b>Name:</b> ${data.name}<br>
-    <b>Email:</b> ${data.email}<br>
-    <b>Message:</b> ${data.message}<br>
-    <small>${new Date(data.time).toLocaleString()}</small>
+    <b>Name:</b> ${data.name || ""}<br>
+    <b>Email:</b> ${data.email || ""}<br>
+    <b>Message:</b> ${data.message || ""}<br>
+    <small>${data.time ? new Date(data.time).toLocaleString() : ""}</small>
     <br>
 
     <button onclick="deleteMsg('${key}')">🗑️ Delete</button>
-
-    <button onclick="pinMsg('${key}')">📌 Pin</button>
-
-    <button onclick="sendEmail('${data.email}','${data.name}')">
-      📧 Reply
-    </button>
+    <button class="pin-btn" onclick="pinMsg('${key}')">${data.pinned ? "📌 Unpin" : "📌 Pin"}</button>
+    <button class="reply-btn" onclick="openReply('${key}')">📧 Reply</button>
   `;
 
   messagesDiv.appendChild(div);
 }
 
-/* DELETE */
 window.deleteMsg = function(key){
   remove(ref(db, "feedback/" + key));
 };
 
-/* PIN */
 window.pinMsg = function(key){
   const msg = allMessages[key];
+
   set(ref(db, "feedback/" + key), {
     ...msg,
     pinned: !msg.pinned
   });
 };
 
-/* EMAIL (MANUAL SAFE VERSION) */
-window.sendEmail = function(email, name) {
-  const subject = "Reply from Vinctec";
-  const body = `Hi ${name},`;
+window.openReply = function(key) {
+  const msg = allMessages[key];
 
-  window.location.href =
-    `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  document.getElementById("replyTo").value = msg.email || "";
+  document.getElementById("replyName").value = msg.name || "";
+  document.getElementById("replyMessage").value = `Hi ${msg.name || ""},\n\n`;
+  document.getElementById("emailStatus").innerText = "";
+
+  document.getElementById("replyBox").style.display = "flex";
 };
 
-/* SEARCH */
+window.closeReply = function() {
+  document.getElementById("replyBox").style.display = "none";
+};
+
+window.sendReply = function() {
+  const toEmail = document.getElementById("replyTo").value;
+  const toName = document.getElementById("replyName").value;
+  const message = document.getElementById("replyMessage").value;
+  const emailStatus = document.getElementById("emailStatus");
+
+  if (!message.trim()) {
+    emailStatus.innerText = "Please type a message first.";
+    emailStatus.style.color = "red";
+    return;
+  }
+
+  emailStatus.innerText = "Sending...";
+  emailStatus.style.color = "#0ff";
+
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    to_email: toEmail,
+    to_name: toName,
+    message: message
+  })
+  .then(() => {
+    emailStatus.innerText = "Email sent successfully!";
+    emailStatus.style.color = "lime";
+  })
+  .catch((error) => {
+    emailStatus.innerText = "Failed to send email.";
+    emailStatus.style.color = "red";
+    console.error(error);
+  });
+};
+
 searchInput.addEventListener("input", () => {
   const value = searchInput.value.toLowerCase();
 
@@ -213,13 +313,11 @@ searchInput.addEventListener("input", () => {
   });
 });
 
-/* LOGOUT */
 window.logout = function () {
   signOut(auth).then(() => {
     window.location.href = "login.html";
   });
 };
-
 </script>
 
 </body>
