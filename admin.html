@@ -151,7 +151,7 @@ emailjs.init({
 });
 
 const EMAILJS_SERVICE_ID = "service_omro2oc";
-const EMAILJS_TEMPLATE_ID = "template_7qci88h";
+const EMAILJS_TEMPLATE_ID = "template_249t7dk";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB7PRz9K6IMr3foH5xsaVwmRTFJUlpv1Sg",
@@ -298,9 +298,9 @@ window.sendReply = function() {
     emailStatus.style.color = "lime";
   })
   .catch((error) => {
-    emailStatus.innerText = "Failed to send email: " + (error.text || error.message || JSON.stringify(error));
+    emailStatus.innerText = "Failed to send email: " + (error.text || JSON.stringify(error));
     emailStatus.style.color = "red";
-    console.error("EmailJS error:", error);
+    console.error(error);
   });
 };
 
