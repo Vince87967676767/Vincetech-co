@@ -20,7 +20,7 @@ body {
 }
 
 .container {
-  max-width: 800px;
+  max-width: 1000px;
   margin: auto;
   padding: 20px;
 }
@@ -30,6 +30,10 @@ body {
   padding: 15px;
   margin: 10px 0;
   border-radius: 10px;
+}
+
+.card.unread {
+  box-shadow: 0 0 0 2px #22c55e;
 }
 
 small {
@@ -44,6 +48,11 @@ button {
   color: white;
   cursor: pointer;
   margin-top: 10px;
+  margin-right: 5px;
+}
+
+button:hover {
+  opacity: 0.9;
 }
 
 .reply-btn {
@@ -52,6 +61,18 @@ button {
 
 .pin-btn {
   background: #ca8a04;
+}
+
+.read-btn {
+  background: #16a34a;
+}
+
+.status-select, .followup-input {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  margin-top: 10px;
+  margin-right: 5px;
 }
 
 #toast {
@@ -85,17 +106,61 @@ button {
 }
 
 .reply-card input,
-.reply-card textarea {
+.reply-card textarea,
+.tool-box input,
+.tool-box textarea {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
   border: none;
   border-radius: 8px;
+  box-sizing: border-box;
 }
 
-.reply-card textarea {
+.reply-card textarea,
+.tool-box textarea {
   height: 140px;
 }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.stat-box, .tool-box {
+  background: #1f2937;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.stat-number {
+  font-size: 28px;
+  font-weight: bold;
+  color: #0ff;
+}
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #334155;
+  color: #fff;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.badge-unread { background: #16a34a; }
+.badge-status { background: #2563eb; }
+.badge-follow { background: #9333ea; }
 </style>
 </head>
 
@@ -132,10 +197,36 @@ button {
 
   <input id="search" type="text"
     placeholder="Search messages..."
-    style="padding:10px;width:100%;border-radius:8px;border:none;margin-bottom:10px;">
+    style="padding:10px;width:100%;border-radius:8px;border:none;margin-bottom:10px;box-sizing:border-box;">
 
   <div id="counter" style="margin-bottom:10px;color:#0ff;"></div>
 
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-number" id="statTotal">0</div><div>Total Messages</div></div>
+    <div class="stat-box"><div class="stat-number" id="statUnread">0</div><div>Unread</div></div>
+    <div class="stat-box"><div class="stat-number" id="statLeads">0</div><div>Active Leads</div></div>
+    <div class="stat-box"><div class="stat-number" id="statClients">0</div><div>Clients</div></div>
+    <div class="stat-box"><div class="stat-number" id="statConversion">0%</div><div>Conversion Rate</div></div>
+  </div>
+
+  <div class="tool-grid">
+    <div class="tool-box">
+      <h3>✨ AI Business Outreach</h3>
+      <input id="companyName" placeholder="Company name">
+      <input id="companyType" placeholder="Business type, e.g. barber, restaurant, builder">
+      <button class="reply-btn" onclick="generateOutreach()">Generate Outreach Email</button>
+      <textarea id="outreachOutput" placeholder="Generated outreach email will appear here..."></textarea>
+    </div>
+
+    <div class="tool-box">
+      <h3>🔍 AI Website Audit</h3>
+      <input id="auditWebsite" placeholder="Paste business website URL">
+      <button class="reply-btn" onclick="generateAudit()">Generate Audit Points</button>
+      <textarea id="auditOutput" placeholder="Website audit ideas will appear here..."></textarea>
+    </div>
+  </div>
+
+  <h3>📥 Messages</h3>
   <div id="messages"></div>
 
 </div>
@@ -176,11 +267,32 @@ const searchInput = document.getElementById("search");
 
 let allMessages = {};
 let lastCount = 0;
+let currentReplyKey = null;
 
 function showToast() {
   const toast = document.getElementById("toast");
   toast.style.display = "block";
   setTimeout(() => toast.style.display = "none", 3000);
+}
+
+function cleanStatus(value) {
+  return value || "New Lead";
+}
+
+function updateStats() {
+  const messages = Object.values(allMessages);
+  const total = messages.length;
+  const unread = messages.filter(m => !m.read).length;
+  const clients = messages.filter(m => cleanStatus(m.status) === "Client").length;
+  const activeLeads = messages.filter(m => cleanStatus(m.status) !== "Client").length;
+  const conversion = total ? Math.round((clients / total) * 100) : 0;
+
+  document.getElementById("statTotal").innerText = total;
+  document.getElementById("statUnread").innerText = unread;
+  document.getElementById("statLeads").innerText = activeLeads;
+  document.getElementById("statClients").innerText = clients;
+  document.getElementById("statConversion").innerText = conversion + "%";
+  document.getElementById("counter").innerText = "Total Messages: " + total;
 }
 
 onAuthStateChanged(auth, (user) => {
@@ -199,21 +311,27 @@ function loadMessages() {
     messagesDiv.innerHTML = "";
     allMessages = {};
 
-    let count = 0;
+    const entries = [];
 
     snapshot.forEach((child) => {
-      const key = child.key;
-      const data = child.val();
+      entries.push({ key: child.key, data: child.val() });
+    });
 
+    entries.sort((a, b) => {
+      const pinA = a.data.pinned ? 1 : 0;
+      const pinB = b.data.pinned ? 1 : 0;
+      if (pinA !== pinB) return pinB - pinA;
+      return (b.data.time || 0) - (a.data.time || 0);
+    });
+
+    entries.forEach(({key, data}) => {
       allMessages[key] = data;
-      count++;
-
       renderMessage(key, data);
     });
 
-    document.getElementById("counter").innerText = "Total Messages: " + count;
+    updateStats();
 
-    if (count > lastCount && lastCount !== 0) {
+    if (entries.length > lastCount && lastCount !== 0) {
       document.getElementById("notifSound").play();
       showToast();
 
@@ -222,28 +340,54 @@ function loadMessages() {
       }
     }
 
-    lastCount = count;
+    lastCount = entries.length;
   });
 }
 
 function renderMessage(key, data) {
   const div = document.createElement("div");
-  div.className = "card";
-  div.style.border = data.pinned ? "2px solid gold" : "none";
+  div.className = "card" + (!data.read ? " unread" : "");
+  div.style.border = data.pinned ? "2px solid gold" : div.style.border;
+
+  const statusValue = cleanStatus(data.status);
+  const followUp = data.followUpDate || "";
 
   div.innerHTML = `
     <b>Name:</b> ${data.name || ""}<br>
     <b>Email:</b> ${data.email || ""}<br>
     <b>Message:</b> ${data.message || ""}<br>
-    <small>${data.time ? new Date(data.time).toLocaleString() : ""}</small>
+    <small>${data.time ? new Date(data.time).toLocaleString() : ""}</small><br>
+
+    <span class="badge ${data.read ? "" : "badge-unread"}">${data.read ? "Read" : "Unread"}</span>
+    <span class="badge badge-status">${statusValue}</span>
+    ${followUp ? `<span class="badge badge-follow">Follow up: ${followUp}</span>` : ""}
     <br>
 
     <button onclick="deleteMsg('${key}')">🗑️ Delete</button>
     <button class="pin-btn" onclick="pinMsg('${key}')">${data.pinned ? "📌 Unpin" : "📌 Pin"}</button>
+    <button class="read-btn" onclick="toggleRead('${key}')">${data.read ? "Mark Unread" : "Mark Read"}</button>
     <button class="reply-btn" onclick="openReply('${key}')">📧 Reply</button>
+    <br>
+
+    <select class="status-select" onchange="updateLeadStatus('${key}', this.value)">
+      <option ${statusValue === "New Lead" ? "selected" : ""}>New Lead</option>
+      <option ${statusValue === "Contacted" ? "selected" : ""}>Contacted</option>
+      <option ${statusValue === "Follow Up" ? "selected" : ""}>Follow Up</option>
+      <option ${statusValue === "Client" ? "selected" : ""}>Client</option>
+    </select>
+
+    <input class="followup-input" type="date" value="${followUp}" onchange="setFollowUp('${key}', this.value)">
   `;
 
   messagesDiv.appendChild(div);
+}
+
+function saveMessage(key, changes) {
+  const msg = allMessages[key];
+  set(ref(db, "feedback/" + key), {
+    ...msg,
+    ...changes
+  });
 }
 
 window.deleteMsg = function(key){
@@ -252,21 +396,32 @@ window.deleteMsg = function(key){
 
 window.pinMsg = function(key){
   const msg = allMessages[key];
+  saveMessage(key, { pinned: !msg.pinned });
+};
 
-  set(ref(db, "feedback/" + key), {
-    ...msg,
-    pinned: !msg.pinned
-  });
+window.toggleRead = function(key){
+  const msg = allMessages[key];
+  saveMessage(key, { read: !msg.read });
+};
+
+window.updateLeadStatus = function(key, value){
+  saveMessage(key, { status: value });
+};
+
+window.setFollowUp = function(key, value){
+  saveMessage(key, { followUpDate: value });
 };
 
 window.openReply = function(key) {
   const msg = allMessages[key];
+  currentReplyKey = key;
 
   document.getElementById("replyTo").value = msg.email || "";
   document.getElementById("replyName").value = msg.name || "";
   document.getElementById("replyMessage").value = `Hi ${msg.name || ""},\n\n`;
   document.getElementById("emailStatus").innerText = "";
 
+  saveMessage(key, { read: true });
   document.getElementById("replyBox").style.display = "flex";
 };
 
@@ -283,11 +438,11 @@ window.generateAIReply = function() {
 
 Thank you for getting in touch with Vinctec.
 
-I appreciate your message and I'd be happy to help.
+I appreciate your message and I'd be happy to help. At Vinctec, we support businesses with website design, development and IT solutions that help them look more professional online and manage their work more easily.
 
-Could you please provide a little more information about your requirements so I can recommend the best solution for your needs?
+Could you please share a little more information about what you need, your ideal timeframe, and any specific goals you have for your website or project?
 
-I look forward to hearing from you.
+Once I have that information, I can suggest the best next steps.
 
 Kind regards,
 
@@ -295,6 +450,48 @@ Vincent
 Vinctec
 https://vinctec.co.uk`;
 
+};
+
+window.generateOutreach = function() {
+  const company = document.getElementById("companyName").value || "your business";
+  const type = document.getElementById("companyType").value || "business";
+
+  document.getElementById("outreachOutput").value =
+`Subject: Website support for ${company}
+
+Hi,
+
+My name is Vincent and I run Vinctec.
+
+I help businesses with website design, development and IT solutions. I came across ${company} and wanted to introduce myself in case you're looking to improve your online presence or need technical support.
+
+For a ${type}, a strong website can help customers understand your services, contact you quickly and trust your business before they even visit or call.
+
+If you'd be interested, I'd be happy to have a quick chat about how Vinctec could help.
+
+Kind regards,
+
+Vincent
+Vinctec
+https://vinctec.co.uk`;
+};
+
+window.generateAudit = function() {
+  const site = document.getElementById("auditWebsite").value || "the website";
+
+  document.getElementById("auditOutput").value =
+`Website audit ideas for ${site}:
+
+1. Check if the homepage clearly explains what the business does.
+2. Check if the contact button is easy to find on mobile.
+3. Check if the website loads quickly and looks professional.
+4. Check if the design builds trust with customers.
+5. Check if services, pricing or enquiry steps are clear.
+6. Suggest adding a modern contact form or booking system.
+7. Suggest improving SEO titles and page descriptions.
+8. Suggest adding customer reviews, images and strong call-to-action buttons.
+
+You can use these points to create a helpful message to the business.`;
 };
 
 window.sendReply = function() {
@@ -320,6 +517,9 @@ window.sendReply = function() {
   .then(() => {
     emailStatus.innerText = "Email sent successfully!";
     emailStatus.style.color = "lime";
+    if (currentReplyKey) {
+      saveMessage(currentReplyKey, { status: "Contacted", read: true });
+    }
   })
   .catch((error) => {
     emailStatus.innerText = "Failed to send email: " + (error.text || JSON.stringify(error));
