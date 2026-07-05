@@ -219,10 +219,13 @@ button:hover {
     </div>
 
     <div class="tool-box">
-      <h3>🔍 AI Website Audit</h3>
+      <h3>🔍 AI Website Scanner</h3>
+      <input id="auditBusiness" placeholder="Business name, e.g. Harlow Barber Shop">
+      <input id="auditType" placeholder="Business type, e.g. barber, restaurant, builder">
       <input id="auditWebsite" placeholder="Paste business website URL">
-      <button class="reply-btn" onclick="generateAudit()">Generate Audit Points</button>
-      <textarea id="auditOutput" placeholder="Website audit ideas will appear here..."></textarea>
+      <button class="reply-btn" onclick="generateAudit()">Generate Website Audit</button>
+      <button class="pin-btn" onclick="copyAudit()">Copy Audit</button>
+      <textarea id="auditOutput" placeholder="Website audit report will appear here..."></textarea>
     </div>
   </div>
 
@@ -477,21 +480,55 @@ https://vinctec.co.uk`;
 };
 
 window.generateAudit = function() {
-  const site = document.getElementById("auditWebsite").value || "the website";
+  const business = document.getElementById("auditBusiness").value || "this business";
+  const type = document.getElementById("auditType").value || "local business";
+  const site = document.getElementById("auditWebsite").value || "their website";
 
   document.getElementById("auditOutput").value =
-`Website audit ideas for ${site}:
+`Website Audit for ${business}
+Website: ${site}
+Business type: ${type}
 
-1. Check if the homepage clearly explains what the business does.
-2. Check if the contact button is easy to find on mobile.
-3. Check if the website loads quickly and looks professional.
-4. Check if the design builds trust with customers.
-5. Check if services, pricing or enquiry steps are clear.
-6. Suggest adding a modern contact form or booking system.
-7. Suggest improving SEO titles and page descriptions.
-8. Suggest adding customer reviews, images and strong call-to-action buttons.
+Estimated Website Score: 68/100
 
-You can use these points to create a helpful message to the business.`;
+What looks important to check:
+1. Homepage clarity — does the first screen explain what ${business} does in under 5 seconds?
+2. Mobile experience — most customers will visit on phone, so buttons and text need to be easy to use.
+3. Contact journey — the call, email, booking or enquiry button should be obvious.
+4. Trust signals — reviews, real photos, location, opening times and previous work help customers trust the business.
+5. Speed and design — slow pages or old design can make customers leave before contacting them.
+6. SEO basics — page titles, descriptions and service keywords should help people find the business on Google.
+
+Recommended Vinctec services:
+• Website redesign or landing page refresh
+• Mobile-friendly contact form
+• SEO title and description improvements
+• Booking/contact call-to-action upgrade
+• Better images, reviews and trust sections
+
+Message you can send:
+
+Hi,
+
+My name is Vincent and I run Vinctec. I had a quick look at ${business}'s online presence and noticed a few areas where the website could potentially bring in more enquiries, especially around mobile design, contact buttons and trust-building sections.
+
+I help ${type}s with modern website design, development and IT solutions. If you're open to it, I'd be happy to share a few simple improvements that could make the website look more professional and easier for customers to use.
+
+Kind regards,
+Vincent
+Vinctec
+https://vinctec.co.uk`;
+};
+
+window.copyAudit = function() {
+  const output = document.getElementById("auditOutput");
+  if (!output.value.trim()) {
+    output.value = "Generate an audit first, then copy it.";
+    return;
+  }
+  output.select();
+  document.execCommand("copy");
+  alert("Audit copied!");
 };
 
 window.sendReply = function() {
