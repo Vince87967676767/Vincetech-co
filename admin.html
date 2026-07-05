@@ -114,6 +114,7 @@ button {
 
     <textarea id="replyMessage" placeholder="Type your reply here..."></textarea>
 
+    <button class="pin-btn" onclick="generateAIReply()">✨ Generate AI Reply</button>
     <button class="reply-btn" onclick="sendReply()">Send Email</button>
     <button onclick="closeReply()">Cancel</button>
 
@@ -271,6 +272,29 @@ window.openReply = function(key) {
 
 window.closeReply = function() {
   document.getElementById("replyBox").style.display = "none";
+};
+
+window.generateAIReply = function() {
+
+  const name = document.getElementById("replyName").value || "there";
+
+  document.getElementById("replyMessage").value =
+`Hi ${name},
+
+Thank you for getting in touch with Vinctec.
+
+I appreciate your message and I'd be happy to help.
+
+Could you please provide a little more information about your requirements so I can recommend the best solution for your needs?
+
+I look forward to hearing from you.
+
+Kind regards,
+
+Vincent
+Vinctec
+https://vinctec.co.uk`;
+
 };
 
 window.sendReply = function() {
