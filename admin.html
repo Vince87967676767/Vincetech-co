@@ -265,6 +265,11 @@ button:hover {
       <input id="siteFeatures" placeholder="Features, e.g. booking, gallery, prices, contact form">
       <input id="siteTone" placeholder="Tone, e.g. professional, friendly, luxury, bold">
 
+      <input id="siteHeroImage" placeholder="Hero image URL, e.g. https://example.com/hero.jpg">
+      <input id="siteGalleryImages" placeholder="Gallery image URLs, separated by commas">
+      <input id="siteVideoUrl" placeholder="Video URL, e.g. https://example.com/video.mp4 or YouTube link">
+      <input id="siteExtraFeatures" placeholder="Extra features, e.g. search bar, gallery, video, testimonials, prices, FAQ, WhatsApp">
+
       <div class="builder-actions">
         <button class="reply-btn" onclick="generateWebsiteStarter()">Generate Full Website Files</button>
         <button class="pin-btn" onclick="previewWebsite()">Live Preview</button>
@@ -1332,517 +1337,339 @@ window.logout = function () {
 };
 </script>
 
-
-
 <script>
-/* === VINCTEC VISUAL MOCKUP WEBSITE BUILDER FINAL OVERRIDE ===
-   Shows an actual visual website mockup in the preview box, not raw code.
-*/
-(function(){
-  let files = {};
-  let variants = { hero: 0, about: 0, services: 0, contact: 0 };
-
-  function $(id){ return document.getElementById(id); }
-  function val(id, fallback){ const el=$(id); return el && el.value.trim() ? el.value.trim() : fallback; }
-  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-  function list(raw, fallback){ return (raw || fallback).split(',').map(x=>x.trim()).filter(Boolean); }
-
-  function preset(style){
-    const data = {
-      luxury: {name:'Luxury', bg:'#060606', panel:'#111111', text:'#ffffff', muted:'#d6cbb6', accent:'#d4af37', btnText:'#111', hero:'radial-gradient(circle at 75% 25%, rgba(212,175,55,.24), transparent 28%), linear-gradient(135deg,#050505,#19130b)', image:'linear-gradient(135deg,rgba(0,0,0,.2),rgba(0,0,0,.7)), radial-gradient(circle at 60% 35%,#6b4f1d,transparent 16%), linear-gradient(135deg,#1b1b1b,#050505)', badge:'Premium Experience'},
-      corporate: {name:'Corporate', bg:'#f8fafc', panel:'#ffffff', text:'#0f172a', muted:'#475569', accent:'#2563eb', btnText:'#fff', hero:'linear-gradient(135deg,#e0f2fe,#ffffff)', image:'linear-gradient(135deg,#dbeafe,#f8fafc)', badge:'Trusted Business Support'},
-      trades: {name:'Trades', bg:'#101827', panel:'#1f2937', text:'#ffffff', muted:'#d1d5db', accent:'#f97316', btnText:'#fff', hero:'linear-gradient(135deg,#111827,#7c2d12)', image:'linear-gradient(135deg,#78350f,#111827)', badge:'Reliable Local Service'},
-      restaurant: {name:'Restaurant', bg:'#18110b', panel:'#26180f', text:'#fff7ed', muted:'#fed7aa', accent:'#ef4444', btnText:'#fff', hero:'linear-gradient(135deg,#2a0f0f,#7f1d1d)', image:'linear-gradient(135deg,#451a03,#7f1d1d)', badge:'Fresh Food & Fast Service'},
-      futuristic: {name:'Futuristic', bg:'#020617', panel:'#0f172a', text:'#e0f2fe', muted:'#a5f3fc', accent:'#22d3ee', btnText:'#001018', hero:'radial-gradient(circle at 80% 20%, rgba(34,211,238,.25), transparent 35%), linear-gradient(135deg,#020617,#164e63,#581c87)', image:'linear-gradient(135deg,#020617,#164e63,#581c87)', badge:'Digital First Design'},
-      minimal: {name:'Minimal', bg:'#ffffff', panel:'#f4f4f5', text:'#111827', muted:'#52525b', accent:'#111827', btnText:'#fff', hero:'linear-gradient(135deg,#ffffff,#f4f4f5)', image:'linear-gradient(135deg,#e5e7eb,#ffffff)', badge:'Simple Clean Fast'}
-    };
-    return data[style] || data.luxury;
-  }
-
-  function siteData(){
-    const style = ($('siteStyle') && $('siteStyle').value) || 'luxury';
-    return {
-      business: val('siteBusiness','Fresh Cuts Barbers'),
-      type: val('siteType','Barber Shop'),
-      description: val('siteDescription','Modern barber shop offering fades, beard trims and appointments.'),
-      services: list(val('siteServices','Haircuts, Beard Trims, Kids Cuts, Booking'), 'Haircuts, Beard Trims, Kids Cuts, Booking'),
-      phone: val('sitePhone','01279 123456'),
-      email: val('siteEmail','info@freshcuts.co.uk'),
-      address: val('siteAddress','Harlow, Essex'),
-      colours: val('siteColours','Black and Gold'),
-      pages: val('sitePages','Home, About, Services, Contact'),
-      features: val('siteFeatures','Booking, Gallery, Prices, Contact'),
-      tone: val('siteTone','Luxury'),
-      style,
-      preset: preset(style),
-      year: new Date().getFullYear()
-    };
-  }
-
-  function css(d){
-    return `*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}body{background:${d.preset.bg};color:${d.preset.text};line-height:1.6}a{color:inherit}header{display:flex;justify-content:space-between;align-items:center;padding:22px 8%;background:${d.preset.panel};position:sticky;top:0;z-index:10;border-bottom:1px solid rgba(255,255,255,.12)}.logo{font-size:24px;font-weight:900;color:${d.preset.accent};letter-spacing:.5px}nav a{text-decoration:none;margin-left:18px;font-weight:700;font-size:14px}.hero{min-height:78vh;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center;padding:70px 8%;background:${d.preset.hero}}.eyebrow{color:${d.preset.accent};font-weight:900;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}.hero h1{font-size:56px;line-height:1.03;margin-bottom:18px}.hero h1 span{color:${d.preset.accent}}p,li{color:${d.preset.muted};font-size:17px}.buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.btn{display:inline-block;background:${d.preset.accent};color:${d.preset.btnText};padding:14px 22px;border-radius:10px;text-decoration:none;font-weight:900}.btn.alt{background:transparent;color:${d.preset.text};border:1px solid ${d.preset.accent}}.mock-image{min-height:360px;border-radius:20px;background:${d.preset.image};border:1px solid rgba(255,255,255,.16);box-shadow:0 25px 70px rgba(0,0,0,.35);position:relative;overflow:hidden}.mock-image:before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.2),transparent)}.mock-label{position:absolute;bottom:20px;left:20px;background:rgba(0,0,0,.55);padding:12px 16px;border-radius:999px;border:1px solid ${d.preset.accent};color:${d.preset.accent};font-weight:900}.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:22px 8%;background:${d.preset.panel};border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}.trust div{padding:16px;border-left:2px solid ${d.preset.accent}}section{padding:65px 8%}.center{text-align:center}.center p{margin:auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:26px}.card,.contact-card{background:${d.preset.panel};border:1px solid rgba(255,255,255,.13);border-radius:18px;padding:24px;box-shadow:0 18px 45px rgba(0,0,0,.18)}.card h3{color:${d.preset.accent};margin-bottom:8px}.price{font-size:26px;font-weight:900;color:${d.preset.accent};margin-top:12px}.split{display:grid;grid-template-columns:1fr 1fr;gap:24px}.contact-card input,.contact-card textarea{width:100%;padding:14px;margin:8px 0;border:none;border-radius:10px}.contact-card textarea{height:120px}footer{text-align:center;padding:24px;background:#020617;color:#94a3b8}@media(max-width:800px){header{display:block}nav{margin-top:12px}nav a{display:inline-block;margin:5px 10px 0 0}.hero{grid-template-columns:1fr}.hero h1{font-size:38px}.trust{grid-template-columns:1fr}.split{grid-template-columns:1fr}}`;
-  }
-
-  function serviceCards(d){ return d.services.map((s,i)=>`<div class="card"><h3>${esc(s)}</h3><p>Professional ${esc(s).toLowerCase()} with clear communication and reliable customer support.</p><div class="price">${i===0?'From £25':i===1?'From £15':'Quote'}</div></div>`).join('\n'); }
-  function nav(d){ return `<header><div class="logo">${esc(d.business)}</div><nav><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a href="contact.html">Contact</a></nav></header>`; }
-  function footer(d){ return `<footer>© ${d.year} ${esc(d.business)}. Website by Vinctec.</footer>`; }
-
-  function indexHtml(d){
-    const heroTitles = [`${esc(d.business)} for customers who want quality and trust.`,`Professional ${esc(d.type)} services built around your needs.`,`${esc(d.preset.badge)} for ${esc(d.type)} customers.`];
-    const title = heroTitles[variants.hero % heroTitles.length];
-    return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${esc(d.business)} | ${esc(d.type)}</title><meta name="description" content="${esc(d.business)} provides ${esc(d.services.join(', '))} in ${esc(d.address)}."><link rel="stylesheet" href="style.css"></head><body>${nav(d)}<section class="hero"><div><p class="eyebrow">${esc(d.preset.name)} • ${esc(d.tone)}</p><h1>${title.replace(esc(d.business), `<span>${esc(d.business)}</span>`)}</h1><p>${esc(d.description)}</p><div class="buttons"><a class="btn" href="contact.html">Get a Free Quote</a><a class="btn alt" href="services.html">View Services</a></div></div><div class="mock-image"><div class="mock-label">${esc(d.preset.badge)}</div></div></section><div class="trust"><div><strong>Top Rated</strong><p>Trusted local service</p></div><div><strong>Fast Contact</strong><p>Easy enquiries and support</p></div><div><strong>Professional</strong><p>Clear and reliable experience</p></div></div><section class="center"><h2>Our Services</h2><p>Quality services tailored for you</p><div class="grid">${serviceCards(d)}</div></section><section class="split"><div><h2>About ${esc(d.business)}</h2><p>${esc(d.description)}</p><p>We focus on a ${esc(d.tone)} experience, clear service information and simple contact options.</p></div><div class="card"><h3>Contact Details</h3><p><strong>Phone:</strong> ${esc(d.phone)}</p><p><strong>Email:</strong> ${esc(d.email)}</p><p><strong>Address:</strong> ${esc(d.address)}</p></div></section>${footer(d)}</body></html>`;
-  }
-  function aboutHtml(d){ return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>About ${esc(d.business)}</title><link rel="stylesheet" href="style.css"></head><body>${nav(d)}<section class="hero"><div><p class="eyebrow">About Us</p><h1>About <span>${esc(d.business)}</span></h1><p>${esc(d.description)}</p></div><div class="mock-image"><div class="mock-label">${esc(d.tone)} Service</div></div></section><section><h2>Who we are</h2><p>${esc(d.business)} is a ${esc(d.type)} focused on reliable service, clear communication and customer confidence.</p></section>${footer(d)}</body></html>`; }
-  function servicesHtml(d){ return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${esc(d.business)} Services</title><link rel="stylesheet" href="style.css"></head><body>${nav(d)}<section class="hero"><div><p class="eyebrow">Services</p><h1>Services from <span>${esc(d.business)}</span></h1><p>Explore our main services below.</p></div><div class="mock-image"><div class="mock-label">${esc(d.services[0]||'Services')}</div></div></section><section><div class="grid">${serviceCards(d)}</div></section>${footer(d)}</body></html>`; }
-  function contactHtml(d){ return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Contact ${esc(d.business)}</title><link rel="stylesheet" href="style.css"></head><body>${nav(d)}<section class="hero"><div><p class="eyebrow">Contact</p><h1>Contact <span>${esc(d.business)}</span></h1><p>Send an enquiry and we will get back to you as soon as possible.</p></div><div class="contact-card"><input placeholder="Your Name"><input placeholder="Email Address"><textarea placeholder="Tell us what you need"></textarea><a class="btn" href="mailto:${esc(d.email)}">Send Enquiry</a></div></section>${footer(d)}</body></html>`; }
-
-  function makeFiles(){ const d = siteData(); return {'index.html': indexHtml(d),'about.html': aboutHtml(d),'services.html': servicesHtml(d),'contact.html': contactHtml(d),'style.css': css(d)}; }
-  function packageText(f){ return 'WEBSITE PACKAGE GENERATED BY VINCTEC VISUAL WEBSITE BUILDER\n\n' + Object.entries(f).map(([name,content]) => `==============================\nFILE: ${name}\n==============================\n${content}`).join('\n\n') + '\n\nGITHUB SETUP:\n1. Download the ZIP or each file.\n2. Upload index.html, about.html, services.html, contact.html and style.css to GitHub.\n3. Add real images/logo later.\n4. Replace the demo contact form with your real form setup.'; }
-
-  window.generateWebsiteStarter = function(){ files = makeFiles(); window.generatedWebsiteFiles = files; const out = $('websiteBuilderOutput'); if(out) out.value = packageText(files); window.previewWebsite(); };
-  window.previewWebsite = function(){
-    if(!files['index.html']) files = makeFiles();
-    const iframe = $('websitePreview');
-    if(!iframe) return;
-    let page = files['index.html'].replace('<link rel="stylesheet" href="style.css">', `<style>${files['style.css']}</style>`);
-
-    // Keep preview links inside the mockup from opening your real website pages.
-    page = page.replace('</body>', `<script>
-      document.addEventListener('click', function(e){
-        const a = e.target.closest('a');
-        if(a){
-          e.preventDefault();
-          const label = a.textContent.trim() || 'link';
-          const note = document.createElement('div');
-          note.textContent = 'Preview only: ' + label + ' button clicked';
-          note.style.position = 'fixed';
-          note.style.bottom = '18px';
-          note.style.left = '50%';
-          note.style.transform = 'translateX(-50%)';
-          note.style.background = 'rgba(0,0,0,.85)';
-          note.style.color = 'white';
-          note.style.padding = '10px 14px';
-          note.style.borderRadius = '10px';
-          note.style.zIndex = '99999';
-          document.body.appendChild(note);
-          setTimeout(function(){ note.remove(); }, 1600);
-        }
-      });
-    <\/script></body>`);
-
-    iframe.srcdoc = page;
-    iframe.scrollIntoView({behavior:'smooth', block:'center'});
-  };
-  window.downloadFile = function(filename){ if(!files[filename]) files = makeFiles(); const blob = new Blob([files[filename]], {type: filename.endsWith('.css') ? 'text/css' : 'text/html'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click(); URL.revokeObjectURL(a.href); };
-  window.downloadWebsiteZip = async function(){ if(!files['index.html']) files = makeFiles(); if(typeof JSZip === 'undefined') { alert('ZIP tool is still loading. Try again in a few seconds.'); return; } const zip = new JSZip(); Object.entries(files).forEach(([name,content]) => zip.file(name, content)); const blob = await zip.generateAsync({type:'blob'}); const name = val('siteBusiness','client-website').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'client-website'; const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${name}-website.zip`; a.click(); URL.revokeObjectURL(a.href); };
-  window.copyWebsiteStarter = function(){ const out = $('websiteBuilderOutput'); if(out && !out.value.trim()) window.generateWebsiteStarter(); if(out){ out.select(); document.execCommand('copy'); alert('Website package copied!'); } };
-  window.regenerateSection = function(section){ variants[section] = (variants[section] || 0) + 1; window.generateWebsiteStarter(); };
-})();
-</script>
-
-<script>
-/* === VINCTEC FINAL PATCH: PREVIEW NAVIGATION ONLY - NO RAW CODE DISPLAY ===
-   This patch keeps your full admin file and only overrides the website builder preview.
+/* === VINCTEC CLEAN WEBSITE BUILDER OVERRIDE ===
+   This keeps the existing dashboard and messages system.
+   It only replaces the website builder logic so raw package code never renders in the preview.
 */
 (function () {
-  let vbFiles = {};
-  let currentPreviewPage = "index.html";
-  let variant = { hero: 0, about: 0, services: 0, contact: 0 };
+  let files = {};
+  let currentPage = "index.html";
+  let variants = { hero: 0, about: 0, services: 0, contact: 0 };
 
-  function $(id) {
-    return document.getElementById(id);
-  }
-
-  function esc(value) {
-    return String(value ?? "").replace(/[&<>"']/g, function (ch) {
-      return {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      }[ch];
-    });
-  }
-
-  function val(id, fallback) {
+  function $(id) { return document.getElementById(id); }
+  function get(id, fallback) {
     const el = $(id);
     return el && el.value.trim() ? el.value.trim() : fallback;
   }
-
-  function serviceList(value) {
-    const raw = (value || "Main Service, Customer Support, Free Quote")
-      .split(",")
-      .map(x => x.trim())
-      .filter(Boolean);
-    return raw.length ? raw : ["Main Service", "Customer Support", "Free Quote"];
+  function esc(value) {
+    return String(value || "").replace(/[&<>"']/g, ch => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[ch]);
+  }
+  function list(value, fallback) {
+    const out = String(value || fallback).split(",").map(x => x.trim()).filter(Boolean);
+    return out.length ? out : String(fallback).split(",").map(x => x.trim()).filter(Boolean);
   }
 
-  function getPreset(style) {
-    const presets = {
-      luxury: {
-        label: "Luxury",
-        bg: "#080808",
-        panel: "#151515",
-        text: "#ffffff",
-        muted: "#d8d0bf",
-        accent: "#d4af37",
-        hero: "linear-gradient(135deg,#050505,#1f1a10)",
-        cta: "#111"
-      },
-      corporate: {
-        label: "Corporate",
-        bg: "#f8fafc",
-        panel: "#ffffff",
-        text: "#0f172a",
-        muted: "#475569",
-        accent: "#2563eb",
-        hero: "linear-gradient(135deg,#e0f2fe,#ffffff)",
-        cta: "#fff"
-      },
-      trades: {
-        label: "Trades",
-        bg: "#111827",
-        panel: "#1f2937",
-        text: "#ffffff",
-        muted: "#d1d5db",
-        accent: "#f97316",
-        hero: "linear-gradient(135deg,#111827,#7c2d12)",
-        cta: "#fff"
-      },
-      restaurant: {
-        label: "Restaurant",
-        bg: "#18110b",
-        panel: "#26180f",
-        text: "#fff7ed",
-        muted: "#fed7aa",
-        accent: "#ef4444",
-        hero: "linear-gradient(135deg,#2a0f0f,#7f1d1d)",
-        cta: "#fff"
-      },
-      futuristic: {
-        label: "Futuristic",
-        bg: "#020617",
-        panel: "#0f172a",
-        text: "#e0f2fe",
-        muted: "#a5f3fc",
-        accent: "#22d3ee",
-        hero: "linear-gradient(135deg,#020617,#164e63,#581c87)",
-        cta: "#001018"
-      },
-      minimal: {
-        label: "Minimal",
-        bg: "#ffffff",
-        panel: "#f4f4f5",
-        text: "#111827",
-        muted: "#52525b",
-        accent: "#111827",
-        hero: "linear-gradient(135deg,#ffffff,#f4f4f5)",
-        cta: "#fff"
-      }
+  function data() {
+    const style = ($("siteStyle") || {}).value || "luxury";
+    return {
+      business: get("siteBusiness", "Your Business"),
+      type: get("siteType", "local business"),
+      description: get("siteDescription", "A professional local business focused on reliable service and customer care."),
+      services: list(get("siteServices", "Main Service, Customer Support, Free Quote"), "Main Service, Customer Support, Free Quote"),
+      phone: get("sitePhone", "01279 000000"),
+      email: get("siteEmail", "info@example.co.uk"),
+      address: get("siteAddress", "Harlow, Essex"),
+      style,
+      colours: get("siteColours", "blue, white and dark navy"),
+      pages: get("sitePages", "Home, About, Services, Contact"),
+      features: get("siteFeatures", "booking, gallery, prices and contact form"),
+      tone: get("siteTone", "professional and friendly"),
+      heroImage: get("siteHeroImage", ""),
+      galleryImages: list(get("siteGalleryImages", ""), ""),
+      videoUrl: get("siteVideoUrl", ""),
+      extraFeatures: get("siteExtraFeatures", "")
     };
-    return presets[style] || presets.luxury;
   }
 
-  function getData() {
-    const business = val("siteBusiness", "Your Business");
-    const type = val("siteType", "local business");
-    const description = val("siteDescription", business + " provides trusted " + type + " services with a focus on quality, customer care and easy communication.");
-    const services = serviceList(val("siteServices", "Main Service, Customer Support, Free Quote"));
-    const phone = val("sitePhone", "01279 000000");
-    const email = val("siteEmail", "info@example.co.uk");
-    const address = val("siteAddress", "Harlow, Essex");
-    const style = $("siteStyle") ? $("siteStyle").value : "luxury";
-    const colours = val("siteColours", "black, gold and white");
-    const pages = val("sitePages", "Home, About, Services, Contact");
-    const features = val("siteFeatures", "booking, gallery, prices and contact form");
-    const tone = val("siteTone", "professional and friendly");
-    return { business, type, description, services, phone, email, address, style, colours, pages, features, tone, preset: getPreset(style), year: new Date().getFullYear() };
+  function preset(style) {
+    const p = {
+      luxury: { label: "Luxury", bg: "#080808", panel: "#151515", text: "#ffffff", muted: "#d8d0bf", accent: "#d4af37", hero: "linear-gradient(135deg,#050505,#1f1a10)", cta: "#111" },
+      corporate: { label: "Corporate", bg: "#f8fafc", panel: "#ffffff", text: "#0f172a", muted: "#475569", accent: "#2563eb", hero: "linear-gradient(135deg,#e0f2fe,#ffffff)", cta: "#fff" },
+      trades: { label: "Trades", bg: "#111827", panel: "#1f2937", text: "#ffffff", muted: "#d1d5db", accent: "#f97316", hero: "linear-gradient(135deg,#111827,#7c2d12)", cta: "#fff" },
+      restaurant: { label: "Restaurant", bg: "#18110b", panel: "#26180f", text: "#fff7ed", muted: "#fed7aa", accent: "#ef4444", hero: "linear-gradient(135deg,#2a0f0f,#7f1d1d)", cta: "#fff" },
+      futuristic: { label: "Futuristic", bg: "#020617", panel: "#0f172a", text: "#e0f2fe", muted: "#a5f3fc", accent: "#22d3ee", hero: "linear-gradient(135deg,#020617,#164e63,#581c87)", cta: "#001018" },
+      minimal: { label: "Minimal", bg: "#ffffff", panel: "#f4f4f5", text: "#111827", muted: "#52525b", accent: "#111827", hero: "linear-gradient(135deg,#ffffff,#f4f4f5)", cta: "#fff" }
+    };
+    return p[style] || p.luxury;
+  }
+
+  function extraFeatureFlags(d) {
+    const all = (d.features + " " + d.extraFeatures).toLowerCase();
+    return {
+      search: all.includes("search"),
+      gallery: all.includes("gallery") || d.galleryImages.length > 0,
+      video: all.includes("video") || !!d.videoUrl,
+      testimonials: all.includes("testimonial") || all.includes("review"),
+      prices: all.includes("price") || all.includes("pricing") || all.includes("package"),
+      faq: all.includes("faq"),
+      whatsapp: all.includes("whatsapp")
+    };
   }
 
   function css(d) {
-    return `
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif;}
+    const pr = preset(d.style);
+    return `*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif;}
 html{scroll-behavior:smooth;}
-body{background:${d.preset.bg};color:${d.preset.text};line-height:1.6;}
+body{background:${pr.bg};color:${pr.text};line-height:1.6;}
 a{color:inherit;}
-header{padding:22px 8%;display:flex;justify-content:space-between;align-items:center;background:${d.preset.panel};position:sticky;top:0;z-index:10;box-shadow:0 8px 24px rgba(0,0,0,.18);}
-.logo{font-size:24px;font-weight:800;color:${d.preset.accent};}
-nav a{color:${d.preset.text};text-decoration:none;margin-left:18px;font-weight:700;}
-.hero{min-height:82vh;padding:90px 8%;display:flex;align-items:center;background:${d.preset.hero};}
+header{padding:22px 8%;display:flex;justify-content:space-between;align-items:center;background:${pr.panel};position:sticky;top:0;z-index:10;box-shadow:0 8px 24px rgba(0,0,0,.18);}
+.logo{font-size:24px;font-weight:800;color:${pr.accent};}
+nav a{color:${pr.text};text-decoration:none;margin-left:18px;font-weight:700;}
+.search-box{display:inline-flex;align-items:center;gap:8px;margin-left:18px;background:rgba(255,255,255,.09);padding:8px 11px;border-radius:999px;color:${pr.muted};font-size:14px;}
+.hero{min-height:82vh;padding:90px 8%;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;background:${pr.hero};}
 .hero-content{max-width:920px;}
-.eyebrow{color:${d.preset.accent};font-weight:900;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
+.eyebrow{color:${pr.accent};font-weight:900;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
 h1{font-size:54px;max-width:980px;line-height:1.05;margin-bottom:18px;}
 h2{font-size:34px;margin-bottom:14px;}
-h3{color:${d.preset.accent};margin-bottom:8px;}
-p,li{color:${d.preset.muted};font-size:17px;max-width:760px;}
+h3{color:${pr.accent};margin-bottom:8px;}
+p,li{color:${pr.muted};font-size:17px;max-width:760px;}
 ul{margin:16px 0 0 20px;}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;}
-.btn,button{display:inline-block;padding:13px 22px;border-radius:10px;background:${d.preset.accent};color:${d.preset.cta};border:none;text-decoration:none;font-weight:900;cursor:pointer;}
-.btn.secondary{background:transparent;color:${d.preset.text};border:1px solid ${d.preset.accent};}
+.btn,button{display:inline-block;padding:13px 22px;border-radius:10px;background:${pr.accent};color:${pr.cta};border:none;text-decoration:none;font-weight:900;cursor:pointer;}
+.btn.secondary{background:transparent;color:${pr.text};border:1px solid ${pr.accent};}
 section{padding:65px 8%;}
-.page-hero{background:${d.preset.hero};padding:75px 8%;}
+.page-hero{background:${pr.hero};padding:75px 8%;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;margin-top:25px;}
-.card,.highlight,.contact-card{background:${d.preset.panel};padding:24px;border-radius:18px;border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 35px rgba(0,0,0,.16);}
+.card,.highlight,.contact-card,.price-card,.faq-card{background:${pr.panel};padding:24px;border-radius:18px;border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 35px rgba(0,0,0,.16);}
 .split{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:start;}
+.hero-img,.gallery-img{min-height:280px;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:${pr.muted};text-align:center;overflow:hidden;}
+.hero-img img,.gallery-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.video-box{margin-top:20px;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.14);background:${pr.panel};padding:20px;}
+.video-box video,.video-box iframe{width:100%;min-height:320px;border:0;border-radius:14px;}
 input,textarea{width:100%;padding:14px;margin:9px 0;border:none;border-radius:10px;}
 textarea{height:140px;resize:vertical;}
 footer{text-align:center;padding:24px;background:#020617;color:#94a3b8;}
-@media(max-width:760px){header{display:block;}nav{margin-top:12px;}nav a{display:inline-block;margin:6px 12px 0 0;}h1{font-size:36px;}.split{grid-template-columns:1fr;}.actions{display:block}.btn{margin-top:10px;}}`;
+@media(max-width:760px){header{display:block;}nav{margin-top:12px;}nav a{display:inline-block;margin:6px 12px 0 0;}.search-box{margin:10px 0 0 0;}h1{font-size:36px;}.split,.hero{grid-template-columns:1fr;}.actions{display:block}.btn{margin-top:10px;}}`;
+  }
+
+  function header(d) {
+    const f = extraFeatureFlags(d);
+    return `<header><div class="logo">${esc(d.business)}</div><nav><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a href="contact.html">Contact</a>${f.search ? '<span class="search-box">🔍 Search</span>' : ''}</nav></header>`;
+  }
+
+  function heroVisual(d) {
+    if (d.heroImage) return `<div class="hero-img"><img src="${esc(d.heroImage)}" alt="${esc(d.business)}"></div>`;
+    return `<div class="hero-img"><div><h3>${esc(preset(d.style).label)} Website Preview</h3><p>Hero image area</p></div></div>`;
   }
 
   function serviceCards(d) {
-    return d.services.map(function (s) {
-      const clean = esc(s);
-      return `<div class="card"><h3>${clean}</h3><p>Professional ${clean.toLowerCase()} delivered with clear communication, reliable service and customer-focused support.</p></div>`;
-    }).join("");
+    return d.services.map(service => `<div class="card"><h3>${esc(service)}</h3><p>Professional ${esc(service).toLowerCase()} delivered with clear communication, reliable service and customer-focused support.</p></div>`).join("\n");
   }
 
-  function serviceItems(d) {
-    return d.services.map(s => `<li>${esc(s)}</li>`).join("");
+  function gallerySection(d) {
+    const f = extraFeatureFlags(d);
+    if (!f.gallery) return "";
+    const imgs = d.galleryImages.filter(Boolean);
+    const cards = imgs.length
+      ? imgs.slice(0, 6).map((url, i) => `<div class="gallery-img"><img src="${esc(url)}" alt="Gallery image ${i + 1}"></div>`).join("")
+      : `<div class="gallery-img">Gallery Image 1</div><div class="gallery-img">Gallery Image 2</div><div class="gallery-img">Gallery Image 3</div>`;
+    return `<section><h2>Gallery</h2><p>Show customers real work, services, products or results.</p><div class="grid">${cards}</div></section>`;
+  }
+
+  function videoSection(d) {
+    const f = extraFeatureFlags(d);
+    if (!f.video) return "";
+    let embed = `<div class="video-box"><p>Video section placeholder</p></div>`;
+    if (d.videoUrl) {
+      const url = esc(d.videoUrl);
+      if (url.includes("youtube.com") || url.includes("youtu.be")) {
+        let id = "";
+        try {
+          const u = new URL(d.videoUrl);
+          id = u.hostname.includes("youtu.be") ? u.pathname.slice(1) : u.searchParams.get("v");
+        } catch(e) {}
+        embed = id ? `<div class="video-box"><iframe src="https://www.youtube.com/embed/${esc(id)}" allowfullscreen></iframe></div>` : `<div class="video-box"><a class="btn" href="${url}">Watch Video</a></div>`;
+      } else {
+        embed = `<div class="video-box"><video controls><source src="${url}">Your browser does not support video.</video></div>`;
+      }
+    }
+    return `<section><h2>Video</h2><p>Use video to show the service, location, menu, project or customer experience.</p>${embed}</section>`;
+  }
+
+  function extraSections(d) {
+    const f = extraFeatureFlags(d);
+    let out = "";
+    if (f.testimonials) {
+      out += `<section><h2>What customers say</h2><div class="grid"><div class="card"><p>"Great service and easy to contact."</p><h3>Happy Customer</h3></div><div class="card"><p>"Professional, reliable and friendly."</p><h3>Local Client</h3></div></div></section>`;
+    }
+    if (f.prices) {
+      out += `<section><h2>Prices & Packages</h2><div class="grid"><div class="price-card"><h3>Starter</h3><p>From £25</p></div><div class="price-card"><h3>Standard</h3><p>Contact for quote</p></div><div class="price-card"><h3>Premium</h3><p>Custom package</p></div></div></section>`;
+    }
+    if (f.faq) {
+      out += `<section><h2>FAQ</h2><div class="faq-card"><h3>How do I book?</h3><p>Use the contact page or call the business directly.</p><h3>Where are you based?</h3><p>${esc(d.address)}</p></div></section>`;
+    }
+    if (f.whatsapp) {
+      const tel = esc(d.phone.replace(/\s+/g, ""));
+      out += `<section><h2>Quick Message</h2><p>Customers can contact quickly using WhatsApp.</p><a class="btn" href="https://wa.me/${tel}">Message on WhatsApp</a></section>`;
+    }
+    return out;
   }
 
   function head(title, meta) {
     return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title><meta name="description" content="${meta}"><link rel="stylesheet" href="style.css"></head>`;
   }
 
-  function nav(d) {
-    return `<header><div class="logo">${esc(d.business)}</div><nav><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a href="contact.html">Contact</a></nav></header>`;
-  }
-
   function footer(d) {
-    return `<footer>© ${d.year} ${esc(d.business)}. Website by Vinctec.</footer>`;
+    return `<footer>© ${new Date().getFullYear()} ${esc(d.business)}. Website by Vinctec.</footer>`;
   }
 
-  function createFilesFinal() {
-    const d = getData();
-    const b = esc(d.business);
-    const type = esc(d.type);
-    const desc = esc(d.description);
-    const phone = esc(d.phone);
-    const email = esc(d.email);
-    const address = esc(d.address);
-    const serviceText = esc(d.services.join(", "));
-    const mainService = esc(d.services[0] || "professional service");
-
-    const heroOptions = [
-      `Professional ${type} services built around your needs.`,
-      `${b} helps customers get reliable ${type} support with a clear, simple and professional experience.`,
-      `Trusted ${type} solutions for customers who want quality, speed and clear communication.`
+  function createFiles() {
+    const d = data();
+    const pr = preset(d.style);
+    const heroLines = [
+      `Professional ${esc(d.type)} services built around your needs.`,
+      `${esc(d.business)} helps customers get reliable ${esc(d.type)} support.`,
+      `Trusted ${esc(d.type)} solutions with clear communication.`
     ];
-    const aboutOptions = [
-      desc,
-      `${b} is built around reliable service, clear communication and a ${esc(d.tone)} customer experience.`,
-      `We help customers understand services clearly, get in touch quickly and feel confident choosing ${b}.`
-    ];
+    const hero = heroLines[variants.hero % heroLines.length];
 
-    const hero = heroOptions[variant.hero % heroOptions.length];
-    const about = aboutOptions[variant.about % aboutOptions.length];
-    const servicesIntro = [
-      "Explore our main services below.",
-      "Choose the service that best matches your needs.",
-      "Our services are designed to make things simple, clear and reliable."
-    ][variant.services % 3];
-    const contactIntro = [
-      "Send an enquiry and we will get back to you as soon as possible.",
-      "Ready to get started? Contact us today.",
-      "Have a question? Use the details below and we will be happy to help."
-    ][variant.contact % 3];
+    const index = `${head(`${esc(d.business)} | Home`, `${esc(d.business)} offers ${esc(d.type)} services in ${esc(d.address)}.`)}<body>${header(d)}<section class="hero"><div class="hero-content"><p class="eyebrow">${esc(pr.label)} • ${esc(d.tone)}</p><h1>${hero}</h1><p>${esc(d.description)}</p><div class="actions"><a class="btn" href="contact.html">Get a Free Quote</a><a class="btn secondary" href="services.html">View Services</a></div></div>${heroVisual(d)}</section><section><h2>Services built around your needs</h2><p>Choose the service that best matches your needs.</p><div class="grid">${serviceCards(d)}</div></section>${gallerySection(d)}${videoSection(d)}${extraSections(d)}<section class="split"><div><h2>Why choose ${esc(d.business)}?</h2><p>${esc(d.business)} focuses on trust, service quality and making it easy for customers to get support.</p><ul><li>Clear service information</li><li>Mobile-friendly customer journey</li><li>Simple contact options</li><li>Professional and reliable presentation</li></ul></div><div class="highlight"><h3>Quick Contact</h3><p><strong>Phone:</strong> ${esc(d.phone)}</p><p><strong>Email:</strong> ${esc(d.email)}</p><p><strong>Area:</strong> ${esc(d.address)}</p></div></section>${footer(d)}</body></html>`;
 
-    const styleCSS = css(d);
-    const files = {};
+    const about = `${head(`About ${esc(d.business)}`, `Learn about ${esc(d.business)}.`)}<body>${header(d)}<section class="page-hero"><h1>About ${esc(d.business)}</h1><p>${esc(d.description)}</p></section><section><h2>Who we are</h2><p>${esc(d.business)} is built around reliable service, clear communication and a ${esc(d.tone)} customer experience.</p><p>Colour direction requested: ${esc(d.colours)}.</p></section>${extraFeatureFlags(d).testimonials ? extraSections({ ...d, features: "testimonials", extraFeatures: "" }) : ""}${footer(d)}</body></html>`;
 
-    files["index.html"] =
-      `${head(`${b} | Home`, `${b} offers ${type} services in ${address}. Contact us for ${serviceText}.`)}
-<body>
-${nav(d)}
-<section class="hero"><div class="hero-content"><p class="eyebrow">${esc(d.preset.label)} • ${esc(d.tone)}</p><h1>${hero}</h1><p>${about}</p><div class="actions"><a class="btn" href="contact.html">Get a Free Quote</a><a class="btn secondary" href="services.html">View Services</a></div></div></section>
-<section><h2>Services built around your needs</h2><p>${servicesIntro}</p><div class="grid">${serviceCards(d)}</div></section>
-<section class="split"><div><h2>Why choose ${b}?</h2><p>${b} focuses on trust, service quality and making it easy for customers to get support.</p><ul><li>Clear service information</li><li>Mobile-friendly customer journey</li><li>Simple contact options</li><li>Professional and reliable presentation</li></ul></div><div class="highlight"><h3>Quick Contact</h3><p><strong>Phone:</strong> ${phone}</p><p><strong>Email:</strong> ${email}</p><p><strong>Area:</strong> ${address}</p></div></section>
-${footer(d)}
-</body></html>`;
+    const services = `${head(`${esc(d.business)} Services`, `Explore services from ${esc(d.business)}.`)}<body>${header(d)}<section class="page-hero"><h1>Our Services</h1><p>Choose the service that best matches your needs.</p></section><section><div class="grid">${serviceCards(d)}</div></section>${gallerySection(d)}${videoSection(d)}<section class="highlight"><h2>Need help?</h2><p>Contact ${esc(d.business)} today to discuss your requirements.</p><a class="btn" href="contact.html">Request a Quote</a></section>${footer(d)}</body></html>`;
 
-    files["about.html"] =
-      `${head(`About ${b}`, `Learn about ${b}, a ${type} serving ${address}.`)}
-<body>
-${nav(d)}
-<section class="page-hero"><h1>About ${b}</h1><p>${about}</p></section>
-<section><h2>Who we are</h2><p>${desc}</p><p>Our website style uses ${esc(d.colours)} with a ${esc(d.tone)} tone.</p></section>
-<section class="highlight"><h2>Our mission</h2><p>To provide a simple, trustworthy and professional experience from first enquiry to completed service.</p></section>
-${footer(d)}
-</body></html>`;
+    const contact = `${head(`Contact ${esc(d.business)}`, `Contact ${esc(d.business)} in ${esc(d.address)}.`)}<body>${header(d)}<section class="page-hero"><h1>Contact ${esc(d.business)}</h1><p>Send an enquiry and we will get back to you as soon as possible.</p></section><section class="split"><div class="contact-card"><form><input type="text" placeholder="Your Name" required><input type="email" placeholder="Email Address" required><input type="tel" placeholder="Phone Number"><textarea placeholder="Tell us what you need" required></textarea><button type="submit">Send Enquiry</button></form></div><div class="highlight"><h2>Contact Details</h2><p><strong>Phone:</strong> <a href="tel:${esc(d.phone)}">${esc(d.phone)}</a></p><p><strong>Email:</strong> <a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p><p><strong>Address:</strong> ${esc(d.address)}</p></div></section>${footer(d)}</body></html>`;
 
-    files["services.html"] =
-      `${head(`${b} Services`, `Explore ${b} services including ${serviceText}.`)}
-<body>
-${nav(d)}
-<section class="page-hero"><h1>Our Services</h1><p>${servicesIntro}</p></section>
-<section><div class="grid">${serviceCards(d)}</div></section>
-<section class="highlight"><h2>Need ${mainService}?</h2><p>Contact ${b} today to discuss your requirements and get the right support.</p><ul>${serviceItems(d)}</ul><a class="btn" href="contact.html">Request a Quote</a></section>
-${footer(d)}
-</body></html>`;
-
-    files["contact.html"] =
-      `${head(`Contact ${b}`, `Contact ${b} in ${address}. Call ${phone} or email ${email}.`)}
-<body>
-${nav(d)}
-<section class="page-hero"><h1>Contact ${b}</h1><p>${contactIntro}</p></section>
-<section class="split"><div class="contact-card"><form onsubmit="event.preventDefault(); alert('Demo form only. Connect this to EmailJS, Firebase or Formspree later.');"><input type="text" placeholder="Your Name" required><input type="email" placeholder="Email Address" required><input type="tel" placeholder="Phone Number"><textarea placeholder="Tell us what you need" required></textarea><button type="submit">Send Enquiry</button></form></div><div class="highlight"><h2>Contact Details</h2><p><strong>Phone:</strong> <a href="tel:${phone}">${phone}</a></p><p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p><p><strong>Address:</strong> ${address}</p></div></section>
-${footer(d)}
-</body></html>`;
-
-    files["style.css"] = styleCSS;
-    return files;
+    return { "index.html": index, "about.html": about, "services.html": services, "contact.html": contact, "style.css": css(d) };
   }
 
-  function packageTextFinal(files) {
-    return "WEBSITE PACKAGE GENERATED BY VINCTEC\n\n" +
-      Object.entries(files).map(([name, content]) =>
-        "==============================\nFILE: " + name + "\n==============================\n" + content
-      ).join("\n\n") +
-      "\n\n==============================\nGITHUB SETUP NOTES\n==============================\n1. Create a GitHub repo for the client.\n2. Add index.html, about.html, services.html, contact.html and style.css.\n3. Copy each generated file into the matching file.\n4. Replace the demo contact form with Firebase, EmailJS, Formspree or another real form.\n5. Test mobile view before showing the client.";
+  function packageText(f) {
+    return "WEBSITE PACKAGE GENERATED BY VINCTEC\n\n" + Object.entries(f).map(([name, content]) =>
+      "==============================\nFILE: " + name + "\n==============================\n" + content
+    ).join("\n\n");
   }
 
-  function ensurePreviewTabs() {
+  function ensureTabs() {
     const iframe = $("websitePreview");
-    if (!iframe || $("previewPageTabs")) return;
-
+    if (!iframe || $("previewTabs")) return;
     const tabs = document.createElement("div");
-    tabs.id = "previewPageTabs";
+    tabs.id = "previewTabs";
     tabs.className = "builder-actions";
-    tabs.innerHTML = `
-      <button class="reply-btn" type="button" onclick="previewWebsite('index.html')">Preview Home</button>
-      <button class="reply-btn" type="button" onclick="previewWebsite('about.html')">Preview About</button>
-      <button class="reply-btn" type="button" onclick="previewWebsite('services.html')">Preview Services</button>
-      <button class="reply-btn" type="button" onclick="previewWebsite('contact.html')">Preview Contact</button>
-    `;
+    tabs.innerHTML = '<button class="reply-btn" type="button" onclick="previewWebsite(\'index.html\')">Preview Home</button><button class="reply-btn" type="button" onclick="previewWebsite(\'about.html\')">Preview About</button><button class="reply-btn" type="button" onclick="previewWebsite(\'services.html\')">Preview Services</button><button class="reply-btn" type="button" onclick="previewWebsite(\'contact.html\')">Preview Contact</button>';
     iframe.parentNode.insertBefore(tabs, iframe);
   }
 
   function hideCodeBox() {
-    const output = $("websiteBuilderOutput");
-    if (output) {
-      output.style.display = "none";
-      output.setAttribute("aria-hidden", "true");
+    const out = $("websiteBuilderOutput");
+    if (out) {
+      out.style.display = "none";
+      out.setAttribute("aria-hidden", "true");
     }
   }
 
-  function renderPreview(page) {
-    if (!vbFiles["index.html"]) vbFiles = createFilesFinal();
-    currentPreviewPage = page || currentPreviewPage || "index.html";
-
+  function render(page) {
+    if (!files["index.html"]) files = createFiles();
+    currentPage = page || currentPage || "index.html";
     const iframe = $("websitePreview");
     if (!iframe) return;
-
-    let html = vbFiles[currentPreviewPage] || vbFiles["index.html"];
-    html = html.replace('<link rel="stylesheet" href="style.css">', `<style>${vbFiles["style.css"]}</style>`);
-
-    const navScript = `
-<script>
-document.addEventListener('click', function(e) {
-  var link = e.target.closest('a');
-  if (!link) return;
-  var href = link.getAttribute('href') || '';
-  if (href === 'index.html' || href === 'about.html' || href === 'services.html' || href === 'contact.html') {
+    let html = files[currentPage] || files["index.html"];
+    html = html.replace('<link rel="stylesheet" href="style.css">', `<style>${files["style.css"]}</style>`);
+    html = html.replace("</body>", `<script>
+document.addEventListener('click', function(e){
+  var a = e.target.closest('a');
+  if(!a) return;
+  var href = a.getAttribute('href') || '';
+  if(href === 'index.html' || href === 'about.html' || href === 'services.html' || href === 'contact.html'){
     e.preventDefault();
-    parent.postMessage({ type: 'VINCTEC_PREVIEW_NAV', page: href }, '*');
+    parent.postMessage({type:'VINCTEC_PREVIEW_NAV', page: href}, '*');
   }
 });
-<\/script>`;
-
-    html = html.replace("</body>", navScript + "</body>");
+<\/script></body>`);
     iframe.srcdoc = html;
+  }
+
+  function installBuilder() {
+    ensureTabs();
+    hideCodeBox();
+
+    window.generateWebsiteStarter = function () {
+      ensureTabs();
+      hideCodeBox();
+      files = createFiles();
+      const out = $("websiteBuilderOutput");
+      if (out) out.value = packageText(files);
+      render("index.html");
+      const iframe = $("websitePreview");
+      if (iframe) iframe.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    window.previewWebsite = function (page) {
+      ensureTabs();
+      hideCodeBox();
+      if (!files["index.html"]) files = createFiles();
+      render(page || currentPage || "index.html");
+    };
+
+    window.downloadFile = function (filename) {
+      if (!files[filename]) files = createFiles();
+      const blob = new Blob([files[filename]], { type: filename.endsWith(".css") ? "text/css" : "text/html" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+
+    window.downloadWebsiteZip = async function () {
+      if (!files["index.html"]) files = createFiles();
+      if (typeof JSZip === "undefined") {
+        alert("ZIP tool is still loading. Try again in a few seconds.");
+        return;
+      }
+      const zip = new JSZip();
+      Object.entries(files).forEach(([name, content]) => zip.file(name, content));
+      const blob = await zip.generateAsync({ type: "blob" });
+      const business = get("siteBusiness", "client-website").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "client-website";
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = business + "-website.zip";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+
+    window.copyWebsiteStarter = function () {
+      if (!files["index.html"]) files = createFiles();
+      const txt = packageText(files);
+      if (navigator.clipboard) navigator.clipboard.writeText(txt);
+      alert("Website package copied!");
+    };
+
+    window.regenerateSection = function (section) {
+      variants[section] = (variants[section] || 0) + 1;
+      window.generateWebsiteStarter();
+    };
+
+    const styleSelect = $("siteStyle");
+    if (styleSelect && !styleSelect.dataset.vinctecPreviewInstalled) {
+      styleSelect.dataset.vinctecPreviewInstalled = "1";
+      styleSelect.addEventListener("change", function () {
+        if (files["index.html"]) window.generateWebsiteStarter();
+      });
+    }
   }
 
   window.addEventListener("message", function (event) {
     if (event.data && event.data.type === "VINCTEC_PREVIEW_NAV") {
-      renderPreview(event.data.page);
+      render(event.data.page);
     }
   });
 
-  window.generateWebsiteStarter = function () {
-    ensurePreviewTabs();
-    hideCodeBox();
-    vbFiles = createFilesFinal();
-
-    const output = $("websiteBuilderOutput");
-    if (output) output.value = packageTextFinal(vbFiles);
-
-    renderPreview("index.html");
-    const iframe = $("websitePreview");
-    if (iframe) iframe.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  window.previewWebsite = function (page) {
-    ensurePreviewTabs();
-    hideCodeBox();
-    if (!vbFiles["index.html"]) vbFiles = createFilesFinal();
-    renderPreview(page || currentPreviewPage || "index.html");
-  };
-
-  window.downloadFile = function (filename) {
-    if (!vbFiles[filename]) vbFiles = createFilesFinal();
-    const blob = new Blob([vbFiles[filename]], { type: filename.endsWith(".css") ? "text/css" : "text/html" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  };
-
-  window.downloadWebsiteZip = async function () {
-    if (!vbFiles["index.html"]) vbFiles = createFilesFinal();
-    if (typeof JSZip === "undefined") {
-      alert("ZIP tool is still loading. Try again in a few seconds.");
-      return;
-    }
-    const zip = new JSZip();
-    Object.entries(vbFiles).forEach(([name, content]) => zip.file(name, content));
-    const blob = await zip.generateAsync({ type: "blob" });
-    const business = val("siteBusiness", "client-website").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "client-website";
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = business + "-website.zip";
-    a.click();
-    URL.revokeObjectURL(a.href);
-  };
-
-  window.copyWebsiteStarter = function () {
-    if (!vbFiles["index.html"]) vbFiles = createFilesFinal();
-    const text = packageTextFinal(vbFiles);
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(() => alert("Website package copied!"));
-    } else {
-      const output = $("websiteBuilderOutput");
-      if (output) {
-        output.style.display = "block";
-        output.value = text;
-        output.select();
-        document.execCommand("copy");
-        output.style.display = "none";
-        alert("Website package copied!");
-      }
-    }
-  };
-
-  window.regenerateSection = function (section) {
-    variant[section] = (variant[section] || 0) + 1;
-    window.generateWebsiteStarter();
-  };
-
-  document.addEventListener("DOMContentLoaded", function () {
-    ensurePreviewTabs();
-    hideCodeBox();
-
-    const styleSelect = $("siteStyle");
-    if (styleSelect) {
-      styleSelect.addEventListener("change", function () {
-        if (vbFiles["index.html"]) window.generateWebsiteStarter();
-      });
-    }
-  });
+  // Run after the Firebase module has finished setting its own functions.
+  if (document.readyState === "complete") {
+    installBuilder();
+  } else {
+    window.addEventListener("load", installBuilder, { once: true });
+  }
+  setTimeout(installBuilder, 800);
 })();
 </script>
-
 </body>
 </html>
