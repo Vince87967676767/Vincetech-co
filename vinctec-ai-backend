@@ -1,1 +1,60 @@
+import OpenAI from "openai";
 
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+export default async function handler(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Use POST only" });
+
+  try {
+    const details = req.body;
+
+    const prompt = `
+Create a complete modern website for this business.
+
+Business details:
+${JSON.stringify(details, null, 2)}
+
+Return ONLY valid JSON in this format:
+{
+  "index.html": "...",
+  "about.html": "...",
+  "services.html": "...",
+  "contact.html": "...",
+  "style.css": "...",
+  "script.js": "..."
+}
+
+Rules:
+- No markdown
+- No explanations
+- Use modern responsive HTML/CSS
+- Include navigation on every page
+- Include contact form on contact page
+- Use the business name, services, colours, style, phone, email and address
+- Make it professional enough for a real client
+`;
+
+    const response = await client.responses.create({
+      model: "gpt-4.1-mini",
+      input: prompt
+    });
+
+    const text = response.output_text;
+    const files = JSON.parse(text);
+
+    return res.status(200).json({ files });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "AI website generation failed",
+      details: error.message
+    });
+  }
+}
