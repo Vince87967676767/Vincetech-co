@@ -1598,7 +1598,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const contact = `${head(`Contact ${esc(d.business)}`, `Contact ${esc(d.business)} in ${esc(d.address)}.`)}<body>${header(d)}<section class="page-hero"><h1>Contact ${esc(d.business)}</h1><p>Send an enquiry and we will get back to you as soon as possible.</p></section><section class="split"><div class="contact-card"><form><input type="text" placeholder="Your Name" required><input type="email" placeholder="Email Address" required><input type="tel" placeholder="Phone Number"><textarea placeholder="Tell us what you need" required></textarea><button type="submit">Send Enquiry</button></form></div><div><div class="highlight"><h2>Contact Details</h2><p><strong>Phone:</strong> <a href="tel:${esc(d.phone)}">${esc(d.phone)}</a></p><p><strong>Email:</strong> <a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p><p><strong>Address:</strong> ${esc(d.address)}</p></div>${openingHoursCard(d)}</div></section>${footer(d)}${websiteSearchScript()}</body></html>`;
 
-    return { "index.html": index, "about.html": about, "services.html": services, "contact.html": contact, "style.css": css(d) };
+    const cssText = css(d);
+    const inlineStyle = `<style>${cssText}</style>`;
+
+    const withInlineCSS = function (html) {
+      return html.replace('<link rel="stylesheet" href="style.css">', inlineStyle);
+    };
+
+    return {
+      "index.html": withInlineCSS(index),
+      "about.html": withInlineCSS(about),
+      "services.html": withInlineCSS(services),
+      "contact.html": withInlineCSS(contact),
+      "style.css": cssText
+    };
   }
 
   function packageText(f) {
