@@ -1469,14 +1469,14 @@ footer{text-align:center;padding:24px;background:#020617;color:#94a3b8;}
 
   function header(d) {
     const serviceLinks = d.services.map(function(service) {
-      return `<a href="./services.html">${esc(service)}</a>`;
+      return `<a href="services.html">${esc(service)}</a>`;
     }).join("");
 
     const servicesMenu = d.menuStyle === "dropdown"
-      ? `<span class="nav-dropdown"><a href="./services.html">Services ▾</a><span class="dropdown-menu">${serviceLinks}</span></span>`
-      : `<a href="./services.html">Services</a>`;
+      ? `<span class="nav-dropdown"><a href="services.html">Services ▾</a><span class="dropdown-menu">${serviceLinks}</span></span>`
+      : `<a href="services.html">Services</a>`;
 
-    return `<header><div class="logo">${esc(d.business)}</div><nav><a href="./index.html">Home</a><a href="./about.html">About</a>${servicesMenu}<a href="./contact.html">Contact</a><label class="search-box" aria-label="Search website">🔍<input id="siteSearch" type="search" placeholder="Search..." autocomplete="off"></label></nav></header>`;
+    return `<header><div class="logo">${esc(d.business)}</div><nav><a href="index.html">Home</a><a href="about.html">About</a>${servicesMenu}<a href="contact.html">Contact</a><label class="search-box" aria-label="Search website">🔍<input id="siteSearch" type="search" placeholder="Search..." autocomplete="off"></label></nav></header>`;
   }
 
   function heroVisual(d) {
@@ -1545,23 +1545,6 @@ footer{text-align:center;padding:24px;background:#020617;color:#94a3b8;}
     return `<footer>© ${new Date().getFullYear()} ${esc(d.business)}. Website by Vinctec.</footer>`;
   }
 
-  function localNavigationScript() {
-    return `<script>
-document.addEventListener("click", function (event) {
-  var link = event.target.closest("a");
-  if (!link) return;
-
-  var href = link.getAttribute("href") || "";
-  var page = href.replace(/^\.?\//, "");
-
-  if (["index.html", "about.html", "services.html", "contact.html"].includes(page)) {
-    event.preventDefault();
-    window.location.assign(new URL(page, window.location.href).href);
-  }
-});
-<\/script>`;
-  }
-
   function openingHoursCard(d) {
     const rows = String(d.openingHours || "").split(",").map(function(item) {
       return `<p>${esc(item.trim())}</p>`;
@@ -1607,13 +1590,13 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
     const hero = heroLines[variants.hero % heroLines.length];
 
-    const index = `${head(`${esc(d.business)} | Home`, `${esc(d.business)} offers ${esc(d.type)} services in ${esc(d.address)}.`)}<body>${header(d)}<section class="hero"><div class="hero-content"><p class="eyebrow">${esc(pr.label)} • ${esc(d.tone)}</p><h1>${hero}</h1><p>${esc(d.description)}</p><div class="actions"><a class="btn" href="./contact.html">Get a Free Quote</a><a class="btn secondary" href="./services.html">View Services</a></div></div>${heroVisual(d)}</section><section><h2>Services built around your needs</h2><p>Choose the service that best matches your needs.</p><div class="grid">${serviceCards(d)}</div></section>${gallerySection(d)}${videoSection(d)}${extraSections(d)}<section class="split"><div><h2>Why choose ${esc(d.business)}?</h2><p>${esc(d.business)} focuses on trust, service quality and making it easy for customers to get support.</p><ul><li>Clear service information</li><li>Mobile-friendly customer journey</li><li>Simple contact options</li><li>Professional and reliable presentation</li></ul></div><div><div class="highlight"><h3>Quick Contact</h3><p><strong>Phone:</strong> ${esc(d.phone)}</p><p><strong>Email:</strong> ${esc(d.email)}</p><p><strong>Area:</strong> ${esc(d.address)}</p></div>${openingHoursCard(d)}</div></section>${footer(d)}${websiteSearchScript()}${localNavigationScript()}</body></html>`;
+    const index = `${head(`${esc(d.business)} | Home`, `${esc(d.business)} offers ${esc(d.type)} services in ${esc(d.address)}.`)}<body>${header(d)}<section class="hero"><div class="hero-content"><p class="eyebrow">${esc(pr.label)} • ${esc(d.tone)}</p><h1>${hero}</h1><p>${esc(d.description)}</p><div class="actions"><a class="btn" href="contact.html">Get a Free Quote</a><a class="btn secondary" href="services.html">View Services</a></div></div>${heroVisual(d)}</section><section><h2>Services built around your needs</h2><p>Choose the service that best matches your needs.</p><div class="grid">${serviceCards(d)}</div></section>${gallerySection(d)}${videoSection(d)}${extraSections(d)}<section class="split"><div><h2>Why choose ${esc(d.business)}?</h2><p>${esc(d.business)} focuses on trust, service quality and making it easy for customers to get support.</p><ul><li>Clear service information</li><li>Mobile-friendly customer journey</li><li>Simple contact options</li><li>Professional and reliable presentation</li></ul></div><div><div class="highlight"><h3>Quick Contact</h3><p><strong>Phone:</strong> ${esc(d.phone)}</p><p><strong>Email:</strong> ${esc(d.email)}</p><p><strong>Area:</strong> ${esc(d.address)}</p></div>${openingHoursCard(d)}</div></section>${footer(d)}${websiteSearchScript()}</body></html>`;
 
-    const about = `${head(`About ${esc(d.business)}`, `Learn about ${esc(d.business)}.`)}<body>${header(d)}<section class="page-hero"><h1>About ${esc(d.business)}</h1><p>${esc(d.description)}</p></section><section><h2>Who we are</h2><p>${esc(d.business)} is built around reliable service, clear communication and a ${esc(d.tone)} customer experience.</p><p>Colour direction requested: ${esc(d.colours)}.</p></section>${extraFeatureFlags(d).testimonials ? extraSections({ ...d, features: "testimonials", extraFeatures: "" }) : ""}${footer(d)}${websiteSearchScript()}${localNavigationScript()}</body></html>`;
+    const about = `${head(`About ${esc(d.business)}`, `Learn about ${esc(d.business)}.`)}<body>${header(d)}<section class="page-hero"><h1>About ${esc(d.business)}</h1><p>${esc(d.description)}</p></section><section><h2>Who we are</h2><p>${esc(d.business)} is built around reliable service, clear communication and a ${esc(d.tone)} customer experience.</p><p>Colour direction requested: ${esc(d.colours)}.</p></section>${extraFeatureFlags(d).testimonials ? extraSections({ ...d, features: "testimonials", extraFeatures: "" }) : ""}${footer(d)}${websiteSearchScript()}</body></html>`;
 
-    const services = `${head(`${esc(d.business)} Services`, `Explore services from ${esc(d.business)}.`)}<body>${header(d)}<section class="page-hero"><h1>Our Services</h1><p>Choose the service that best matches your needs.</p></section><section><div class="grid">${serviceCards(d)}</div></section>${gallerySection(d)}${videoSection(d)}<section class="highlight"><h2>Need help?</h2><p>Contact ${esc(d.business)} today to discuss your requirements.</p><a class="btn" href="./contact.html">Request a Quote</a></section>${footer(d)}${websiteSearchScript()}${localNavigationScript()}</body></html>`;
+    const services = `${head(`${esc(d.business)} Services`, `Explore services from ${esc(d.business)}.`)}<body>${header(d)}<section class="page-hero"><h1>Our Services</h1><p>Choose the service that best matches your needs.</p></section><section><div class="grid">${serviceCards(d)}</div></section>${gallerySection(d)}${videoSection(d)}<section class="highlight"><h2>Need help?</h2><p>Contact ${esc(d.business)} today to discuss your requirements.</p><a class="btn" href="contact.html">Request a Quote</a></section>${footer(d)}${websiteSearchScript()}</body></html>`;
 
-    const contact = `${head(`Contact ${esc(d.business)}`, `Contact ${esc(d.business)} in ${esc(d.address)}.`)}<body>${header(d)}<section class="page-hero"><h1>Contact ${esc(d.business)}</h1><p>Send an enquiry and we will get back to you as soon as possible.</p></section><section class="split"><div class="contact-card"><form><input type="text" placeholder="Your Name" required><input type="email" placeholder="Email Address" required><input type="tel" placeholder="Phone Number"><textarea placeholder="Tell us what you need" required></textarea><button type="submit">Send Enquiry</button></form></div><div><div class="highlight"><h2>Contact Details</h2><p><strong>Phone:</strong> <a href="tel:${esc(d.phone)}">${esc(d.phone)}</a></p><p><strong>Email:</strong> <a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p><p><strong>Address:</strong> ${esc(d.address)}</p></div>${openingHoursCard(d)}</div></section>${footer(d)}${websiteSearchScript()}${localNavigationScript()}</body></html>`;
+    const contact = `${head(`Contact ${esc(d.business)}`, `Contact ${esc(d.business)} in ${esc(d.address)}.`)}<body>${header(d)}<section class="page-hero"><h1>Contact ${esc(d.business)}</h1><p>Send an enquiry and we will get back to you as soon as possible.</p></section><section class="split"><div class="contact-card"><form><input type="text" placeholder="Your Name" required><input type="email" placeholder="Email Address" required><input type="tel" placeholder="Phone Number"><textarea placeholder="Tell us what you need" required></textarea><button type="submit">Send Enquiry</button></form></div><div><div class="highlight"><h2>Contact Details</h2><p><strong>Phone:</strong> <a href="tel:${esc(d.phone)}">${esc(d.phone)}</a></p><p><strong>Email:</strong> <a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p><p><strong>Address:</strong> ${esc(d.address)}</p></div>${openingHoursCard(d)}</div></section>${footer(d)}${websiteSearchScript()}</body></html>`;
 
     const cssText = css(d);
     const inlineStyle = `<style>${cssText}</style>`;
@@ -1667,10 +1650,9 @@ document.addEventListener('click', function(e){
   var a = e.target.closest('a');
   if(!a) return;
   var href = a.getAttribute('href') || '';
-  var page = href.replace(/^\.\//, '');
-  if(page === 'index.html' || page === 'about.html' || page === 'services.html' || page === 'contact.html'){
+  if(href === 'index.html' || href === 'about.html' || href === 'services.html' || href === 'contact.html'){
     e.preventDefault();
-    parent.postMessage({type:'VINCTEC_PREVIEW_NAV', page: page}, '*');
+    parent.postMessage({type:'VINCTEC_PREVIEW_NAV', page: href}, '*');
   }
 });
 <\/script></body>`);
@@ -1700,7 +1682,7 @@ document.addEventListener('click', function(e){
     };
 
     window.downloadFile = function (filename) {
-      files = createFiles();
+      if (!files[filename]) files = createFiles();
       const blob = new Blob([files[filename]], { type: filename.endsWith(".css") ? "text/css" : "text/html" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -1710,7 +1692,7 @@ document.addEventListener('click', function(e){
     };
 
     window.downloadWebsiteZip = async function () {
-      files = createFiles();
+      if (!files["index.html"]) files = createFiles();
       if (typeof JSZip === "undefined") {
         alert("ZIP tool is still loading. Try again in a few seconds.");
         return;
