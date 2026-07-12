@@ -299,7 +299,7 @@ button:hover {
 
       <textarea id="websiteBuilderOutput" placeholder="Full custom website package will appear here: index.html, about.html, services.html, contact.html and style.css..."></textarea>
       <p class="small-note">Preview and download only work after you generate the website files.</p>
-      <iframe id="websitePreview" class="preview-frame" title="Website live preview" sandbox="allow-scripts allow-same-origin"></iframe>
+      <iframe id="websitePreview" class="preview-frame" title="Website live preview"></iframe>
     </div>
   </div>
 
@@ -1658,38 +1658,23 @@ document.addEventListener("DOMContentLoaded", function () {
   function render(page) {
     if (!files["index.html"]) files = createFiles();
     currentPage = page || currentPage || "index.html";
-
     const iframe = $("websitePreview");
     if (!iframe) return;
-
     let html = files[currentPage] || files["index.html"];
-    html = html.replace(
-      '<link rel="stylesheet" href="style.css">',
-      `<style>${files["style.css"]}</style>`
-    );
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    const previewPages = ["index.html", "about.html", "services.html", "contact.html"];
-
-    doc.querySelectorAll("a").forEach(function (link) {
-      const rawHref = (link.getAttribute("href") || "").trim();
-      const pageName = rawHref.replace(/^\.?\//, "");
-
-      if (previewPages.includes(pageName)) {
-        link.setAttribute("href", "#");
-        link.setAttribute(
-          "onclick",
-          "event.preventDefault(); event.stopPropagation(); parent.previewWebsite('" +
-          pageName +
-          "'); return false;"
-        );
-        link.removeAttribute("target");
-      }
-    });
-
-    iframe.removeAttribute("src");
-    iframe.srcdoc = "<!DOCTYPE html>\n" + doc.documentElement.outerHTML;
+    html = html.replace('<link rel="stylesheet" href="style.css">', `<style>${files["style.css"]}</style>`);
+    html = html.replace("</body>", `<script>
+document.addEventListener('click', function(e){
+  var a = e.target.closest('a');
+  if(!a) return;
+  var href = a.getAttribute('href') || '';
+  var page = href.replace(/^\.\//, '');
+  if(page === 'index.html' || page === 'about.html' || page === 'services.html' || page === 'contact.html'){
+    e.preventDefault();
+    parent.postMessage({type:'VINCTEC_PREVIEW_NAV', page: page}, '*');
+  }
+});
+<\/script></body>`);
+    iframe.srcdoc = html;
   }
 
   function installBuilder() {
