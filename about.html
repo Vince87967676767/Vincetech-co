@@ -123,13 +123,33 @@ body{
 }
 
 </style>
+
+<style>
+/* ===== VINCTEC CHAT WIDGET V1 ===== */
+#vinctecChatButton{position:fixed;right:22px;bottom:22px;width:62px;height:62px;border:none;border-radius:50%;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font-size:25px;cursor:pointer;z-index:100000;box-shadow:0 14px 35px rgba(37,99,235,.35);display:flex;align-items:center;justify-content:center;transition:transform .25s ease,box-shadow .25s ease}
+#vinctecChatButton:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 18px 42px rgba(124,58,237,.42)}
+#vinctecChatPanel{position:fixed;right:22px;bottom:96px;width:min(360px,calc(100vw - 28px));max-height:520px;background:#fff;color:#111827;border-radius:18px;overflow:hidden;z-index:100000;box-shadow:0 22px 60px rgba(15,23,42,.28);border:1px solid rgba(148,163,184,.25);display:none}
+#vinctecChatPanel.open{display:block}
+.vinctec-chat-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed)}
+.vinctec-chat-header strong{font-size:16px}
+.vinctec-chat-close{border:none;background:transparent;color:#fff;font-size:23px;cursor:pointer;margin:0;padding:0;box-shadow:none}
+.vinctec-chat-body{padding:16px;background:#f8fafc;max-height:390px;overflow-y:auto}
+.vinctec-message{background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:12px;line-height:1.5;box-shadow:0 5px 18px rgba(15,23,42,.06)}
+.vinctec-chat-options{display:grid;gap:9px}
+.vinctec-chat-option{width:100%;margin:0;padding:11px 13px;border:none;border-radius:11px;text-align:left;background:#e0e7ff;color:#1e1b4b;font-weight:700;cursor:pointer;box-shadow:none}
+.vinctec-chat-option:hover{background:#c7d2fe;transform:none;box-shadow:none}
+.vinctec-chat-answer{margin-top:12px;padding:12px 14px;border-radius:12px;background:#eef2ff;color:#312e81;line-height:1.5}
+.vinctec-chat-contact{display:inline-block;margin-top:10px;padding:10px 14px;border-radius:10px;background:#2563eb;color:#fff!important;text-decoration:none;font-weight:700}
+@media(max-width:520px){#vinctecChatButton{right:14px;bottom:14px}#vinctecChatPanel{right:14px;bottom:88px}}
+</style>
+
 </head>
 
 <body>
 
 <!-- ICON GRID -->
 <div class="icon-wrapper">
-  <a href="/" class="icon-box">
+  <a href="index.html" class="icon-box">
     <div class="icon"><i class="fa-solid fa-house"></i></div>
     <h3>Home</h3>
     <p>Back to main page</p>
@@ -157,6 +177,55 @@ body{
 </div>
 <br>
 <br>
+
+
+<!-- ===== VINCTEC CHAT WIDGET V1 ===== -->
+<button id="vinctecChatButton" type="button" aria-label="Open Vinctec chat">💬</button>
+<div id="vinctecChatPanel" role="dialog" aria-label="Vinctec chat assistant" aria-hidden="true">
+  <div class="vinctec-chat-header">
+    <strong>Vinctec Assistant</strong>
+    <button class="vinctec-chat-close" id="vinctecChatClose" type="button" aria-label="Close chat">×</button>
+  </div>
+  <div class="vinctec-chat-body">
+    <div class="vinctec-message">👋 Welcome to Vinctec! How can I help today?</div>
+    <div class="vinctec-chat-options">
+      <button class="vinctec-chat-option" type="button" data-chat-topic="website">🌐 Website Design</button>
+      <button class="vinctec-chat-option" type="button" data-chat-topic="software">💻 Software Development</button>
+      <button class="vinctec-chat-option" type="button" data-chat-topic="networking">🌐 Networking</button>
+      <button class="vinctec-chat-option" type="button" data-chat-topic="quote">💷 Get a Quote</button>
+    </div>
+    <div id="vinctecChatAnswer" class="vinctec-chat-answer" hidden></div>
+  </div>
+</div>
+<script>
+(function(){
+  const button=document.getElementById("vinctecChatButton");
+  const panel=document.getElementById("vinctecChatPanel");
+  const close=document.getElementById("vinctecChatClose");
+  const answer=document.getElementById("vinctecChatAnswer");
+  if(!button||!panel||!close||!answer)return;
+  const replies={
+    website:"We design modern, mobile-friendly websites for businesses, brands and professionals. This can include multiple pages, galleries, contact forms and custom features.",
+    software:"We can help with custom software ideas, web applications, dashboards and digital tools designed around your business needs.",
+    networking:"We provide networking support, setup guidance and practical IT solutions for small businesses and organisations.",
+    quote:'Tell us what you need and we will prepare a suitable quote.<br><a class="vinctec-chat-contact" href="contact.html">Go to Contact Page</a>'
+  };
+  function setOpen(open){
+    panel.classList.toggle("open",open);
+    panel.setAttribute("aria-hidden",String(!open));
+    button.setAttribute("aria-expanded",String(open));
+  }
+  button.addEventListener("click",()=>setOpen(!panel.classList.contains("open")));
+  close.addEventListener("click",()=>setOpen(false));
+  panel.addEventListener("click",function(event){
+    const option=event.target.closest("[data-chat-topic]");
+    if(!option)return;
+    const topic=option.getAttribute("data-chat-topic");
+    answer.innerHTML=replies[topic]||"Please use our contact page and we will be happy to help.";
+    answer.hidden=false;
+  });
+})();
+</script>
 
 </body>
 <br>
