@@ -1746,407 +1746,375 @@ document.addEventListener('click', function(e){
 </script>
 
 <script>
-/* === VINCTEC BUILDER PRO V3 SAFE FINAL LAYER ===
-   Added after the existing working builder. It only upgrades the website-builder controls
-   and replaces the generator functions after the page has loaded.
-*/
+/* VINCTEC BUILDER PRO V5 — EXPANDED DESIGN ENGINE */
 (function () {
   "use strict";
 
-  let proFiles = {};
-  let currentPage = "index.html";
-  let sectionSeed = { hero: 0, about: 0, services: 0, contact: 0 };
-
   const $ = id => document.getElementById(id);
-  const value = (id, fallback = "") => {
+  const val = (id, fallback = "") => {
     const el = $(id);
     return el && String(el.value).trim() ? String(el.value).trim() : fallback;
   };
-  const escapeHTML = input => String(input ?? "").replace(/[&<>"']/g, c => ({
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[c]);
-  const splitCSV = (input, fallback) =>
-    String(input || fallback).split(",").map(x => x.trim()).filter(Boolean);
+  const csv = (s, fallback) => String(s || fallback).split(",").map(x => x.trim()).filter(Boolean);
 
-  const themes = {
-    luxury:     {label:"Luxury Black & Gold", bg:"#090909", panel:"#171717", soft:"#222", text:"#fff", muted:"#d6d3d1", accent:"#d4af37", accent2:"#f5e7a1", button:"#111", gradient:"linear-gradient(135deg,#050505,#211b0b)", font:"Georgia,serif"},
-    corporate:  {label:"Corporate Blue", bg:"#f8fafc", panel:"#fff", soft:"#eaf2ff", text:"#0f172a", muted:"#475569", accent:"#2563eb", accent2:"#60a5fa", button:"#fff", gradient:"linear-gradient(135deg,#dbeafe,#ffffff)", font:"Arial,sans-serif"},
-    trades:     {label:"Bold Trades", bg:"#111827", panel:"#1f2937", soft:"#2b3546", text:"#fff", muted:"#d1d5db", accent:"#f97316", accent2:"#fbbf24", button:"#111", gradient:"linear-gradient(135deg,#111827,#7c2d12)", font:"Arial,sans-serif"},
-    restaurant: {label:"Restaurant Warm", bg:"#1c120d", panel:"#2a1a12", soft:"#3a2418", text:"#fff7ed", muted:"#fed7aa", accent:"#ef4444", accent2:"#fb923c", button:"#fff", gradient:"linear-gradient(135deg,#2a0f0f,#7f1d1d)", font:"Georgia,serif"},
-    futuristic: {label:"Futuristic Neon", bg:"#020617", panel:"#0f172a", soft:"#13233d", text:"#e0f2fe", muted:"#a5f3fc", accent:"#22d3ee", accent2:"#a855f7", button:"#001018", gradient:"linear-gradient(135deg,#020617,#164e63,#581c87)", font:"Arial,sans-serif"},
-    minimal:    {label:"Apple Minimal", bg:"#fff", panel:"#f5f5f7", soft:"#ececf0", text:"#111827", muted:"#52525b", accent:"#111827", accent2:"#6b7280", button:"#fff", gradient:"linear-gradient(135deg,#ffffff,#f4f4f5)", font:"Arial,sans-serif"},
-    glass:      {label:"Glassmorphism", bg:"#08111f", panel:"rgba(255,255,255,.10)", soft:"rgba(255,255,255,.07)", text:"#fff", muted:"#dbeafe", accent:"#38bdf8", accent2:"#c084fc", button:"#06121f", gradient:"linear-gradient(135deg,#0f172a,#1e3a8a,#581c87)", font:"Arial,sans-serif"},
-    creative:   {label:"Creative Agency", bg:"#fff7ed", panel:"#ffffff", soft:"#ffedd5", text:"#431407", muted:"#7c2d12", accent:"#ea580c", accent2:"#db2777", button:"#fff", gradient:"linear-gradient(135deg,#fff7ed,#fce7f3)", font:"Arial,sans-serif"},
-    fashion:    {label:"Fashion Editorial", bg:"#fafafa", panel:"#fff", soft:"#f1f1f1", text:"#111", muted:"#525252", accent:"#111", accent2:"#a3a3a3", button:"#fff", gradient:"linear-gradient(135deg,#fff,#e5e5e5)", font:"Georgia,serif"},
-    fitness:    {label:"Fitness Energy", bg:"#0a0a0a", panel:"#18181b", soft:"#27272a", text:"#fff", muted:"#d4d4d8", accent:"#84cc16", accent2:"#facc15", button:"#111", gradient:"linear-gradient(135deg,#09090b,#365314)", font:"Arial,sans-serif"},
-    medical:    {label:"Medical Clean", bg:"#f0fdfa", panel:"#fff", soft:"#ccfbf1", text:"#134e4a", muted:"#52706d", accent:"#0d9488", accent2:"#2dd4bf", button:"#fff", gradient:"linear-gradient(135deg,#ccfbf1,#ffffff)", font:"Arial,sans-serif"},
-    automotive: {label:"Automotive Performance", bg:"#09090b", panel:"#18181b", soft:"#27272a", text:"#fff", muted:"#d4d4d8", accent:"#ef4444", accent2:"#f97316", button:"#fff", gradient:"linear-gradient(135deg,#09090b,#450a0a)", font:"Arial,sans-serif"},
-    realestate: {label:"Real Estate Premium", bg:"#f8fafc", panel:"#fff", soft:"#e2e8f0", text:"#0f172a", muted:"#475569", accent:"#0f766e", accent2:"#d4af37", button:"#fff", gradient:"linear-gradient(135deg,#ccfbf1,#f8fafc)", font:"Georgia,serif"},
-    neon:       {label:"Cyber Neon", bg:"#05010d", panel:"#130629", soft:"#220b46", text:"#fff", muted:"#e9d5ff", accent:"#f0f", accent2:"#00ffff", button:"#05010d", gradient:"linear-gradient(135deg,#05010d,#3b0764,#083344)", font:"Arial,sans-serif"}
+  let files = {};
+  let currentPage = "index.html";
+  let variant = {hero:0,about:0,services:0,contact:0};
+
+  const THEMES = {
+    luxury:{label:"Luxury Black & Gold",bg:"#0a0a0a",surface:"#171717",surface2:"#252015",text:"#fff",muted:"#d4d4d4",accent:"#d4af37",accent2:"#f3df8f",button:"#111"},
+    corporate:{label:"Corporate Blue",bg:"#f7f9fc",surface:"#fff",surface2:"#eaf0f8",text:"#122033",muted:"#536176",accent:"#2463eb",accent2:"#60a5fa",button:"#fff"},
+    tech:{label:"Modern Tech",bg:"#06111f",surface:"#0d1b2a",surface2:"#15314a",text:"#eef9ff",muted:"#b8d7e8",accent:"#22d3ee",accent2:"#8b5cf6",button:"#041018"},
+    minimal:{label:"Apple Minimal",bg:"#fff",surface:"#f5f5f7",surface2:"#ebedf0",text:"#111827",muted:"#5f6368",accent:"#111827",accent2:"#71717a",button:"#fff"},
+    restaurant:{label:"Restaurant Warm",bg:"#1b100b",surface:"#2b1a12",surface2:"#3b2418",text:"#fff8ef",muted:"#f2c9a8",accent:"#f97316",accent2:"#ef4444",button:"#111"},
+    trades:{label:"Bold Trades",bg:"#101827",surface:"#1d2939",surface2:"#2a384c",text:"#fff",muted:"#d0d5dd",accent:"#ff7a1a",accent2:"#facc15",button:"#111"},
+    fitness:{label:"Fitness Energy",bg:"#090909",surface:"#181818",surface2:"#242424",text:"#fff",muted:"#d3d3d3",accent:"#a3e635",accent2:"#facc15",button:"#111"},
+    medical:{label:"Medical Clean",bg:"#effcf9",surface:"#fff",surface2:"#dff7f1",text:"#123b36",muted:"#52736d",accent:"#0f9f8c",accent2:"#2dd4bf",button:"#fff"},
+    fashion:{label:"Fashion Editorial",bg:"#fafafa",surface:"#fff",surface2:"#ededed",text:"#111",muted:"#555",accent:"#111",accent2:"#a3a3a3",button:"#fff"},
+    auto:{label:"Automotive Performance",bg:"#09090b",surface:"#18181b",surface2:"#27272a",text:"#fff",muted:"#d4d4d8",accent:"#ef4444",accent2:"#f97316",button:"#fff"},
+    glass:{label:"Glassmorphism",bg:"#071424",surface:"rgba(255,255,255,.10)",surface2:"rgba(255,255,255,.07)",text:"#fff",muted:"#dbeafe",accent:"#38bdf8",accent2:"#c084fc",button:"#05111d"},
+    startup:{label:"Purple Startup",bg:"#120826",surface:"#21113e",surface2:"#32175b",text:"#fff",muted:"#ddd6fe",accent:"#a78bfa",accent2:"#f472b6",button:"#180c2d"},
+    ocean:{label:"Ocean Blue",bg:"#031b2e",surface:"#082f49",surface2:"#0c4a6e",text:"#f0f9ff",muted:"#bae6fd",accent:"#38bdf8",accent2:"#2dd4bf",button:"#042235"},
+    nature:{label:"Nature & Wellness",bg:"#f4f7ee",surface:"#fff",surface2:"#e5ecd8",text:"#26351e",muted:"#607154",accent:"#65a30d",accent2:"#84cc16",button:"#fff"},
+    cyber:{label:"Cyber Neon",bg:"#05010d",surface:"#130629",surface2:"#220b46",text:"#fff",muted:"#e9d5ff",accent:"#ff00ff",accent2:"#00ffff",button:"#07010c"},
+    realestate:{label:"Real Estate Premium",bg:"#f8fafc",surface:"#fff",surface2:"#e8f3ef",text:"#0f172a",muted:"#475569",accent:"#0f766e",accent2:"#d4af37",button:"#fff"},
+    beauty:{label:"Beauty & Salon",bg:"#fff5f7",surface:"#fff",surface2:"#fce7ef",text:"#4a1d2f",muted:"#8b5267",accent:"#db2777",accent2:"#f9a8d4",button:"#fff"},
+    cafe:{label:"Café & Bakery",bg:"#25170f",surface:"#382419",surface2:"#4b3021",text:"#fff8ed",muted:"#e7c7a9",accent:"#f59e0b",accent2:"#fb923c",button:"#2a180b"},
+    education:{label:"Education Bright",bg:"#f6f9ff",surface:"#fff",surface2:"#e9f0ff",text:"#172554",muted:"#53678e",accent:"#4f46e5",accent2:"#06b6d4",button:"#fff"},
+    creative:{label:"Creative Studio",bg:"#fff7ed",surface:"#fff",surface2:"#ffedd5",text:"#431407",muted:"#7c2d12",accent:"#ea580c",accent2:"#db2777",button:"#fff"}
   };
 
-  function ensureControls() {
-    const anchor = $("siteStyle");
-    if (!anchor || $("proDesignControls")) return;
+  function addControls() {
+    const style = $("siteStyle");
+    if (!style || $("v5Controls")) return;
 
-    anchor.innerHTML = Object.entries(themes)
-      .map(([key,t]) => `<option value="${key}">${t.label}</option>`).join("");
+    const oldV4 = $("v4Controls");
+    if (oldV4) oldV4.remove();
 
-    const wrap = document.createElement("div");
-    wrap.id = "proDesignControls";
-    wrap.innerHTML = `
-      <select id="siteLayout">
-        <option value="classic">Classic sections</option>
-        <option value="split">Split-screen layout</option>
-        <option value="editorial">Editorial layout</option>
-        <option value="cards">Card-focused layout</option>
-        <option value="immersive">Immersive full-width layout</option>
-      </select>
-      <select id="siteHeroLayout">
-        <option value="split">Hero: text left / visual right</option>
-        <option value="centered">Hero: centred statement</option>
+    style.innerHTML = Object.entries(THEMES).map(([k,t]) =>
+      `<option value="${k}">${t.label}</option>`).join("");
+
+    const panel = document.createElement("div");
+    panel.id = "v5Controls";
+    panel.innerHTML = `
+      <select id="v4Hero">
+        <option value="split">Hero: split image</option>
+        <option value="center">Hero: centred statement</option>
         <option value="image">Hero: full background image</option>
-        <option value="cards">Hero: floating information cards</option>
-        <option value="minimal">Hero: minimal headline</option>
+        <option value="floating">Hero: floating cards</option>
+        <option value="stats">Hero: stats focused</option>
+        <option value="testimonial">Hero: customer quote</option>
+        <option value="booking">Hero: quick booking</option>
+        <option value="product">Hero: featured service</option>
+        <option value="minimal">Hero: ultra minimal</option>
+        <option value="diagonal">Hero: diagonal split</option>
       </select>
-      <select id="siteServicesLayout">
-        <option value="grid">Services: modern grid</option>
+      <select id="v4Services">
+        <option value="cards">Services: modern cards</option>
         <option value="list">Services: numbered list</option>
-        <option value="alternating">Services: alternating rows</option>
-        <option value="pillars">Services: large pillars</option>
+        <option value="feature">Services: feature blocks</option>
         <option value="glass">Services: glass cards</option>
+        <option value="timeline">Services: timeline</option>
+        <option value="alternating">Services: alternating rows</option>
+        <option value="icons">Services: large icons</option>
+        <option value="compact">Services: compact tiles</option>
+        <option value="steps">Services: process steps</option>
+        <option value="bordered">Services: bordered editorial</option>
       </select>
-      <select id="siteNavLayout">
-        <option value="standard">Navigation: standard</option>
-        <option value="floating">Navigation: floating pill</option>
-        <option value="glass">Navigation: glass</option>
-        <option value="minimal">Navigation: minimal</option>
-      </select>
-      <select id="siteFooterLayout">
+      <select id="v4Footer">
         <option value="simple">Footer: simple</option>
-        <option value="columns">Footer: multi-column</option>
-        <option value="cta">Footer: large CTA</option>
-        <option value="brand">Footer: oversized brand</option>
-      </select>
-      <select id="siteAnimation">
-        <option value="fade">Animation: fade up</option>
-        <option value="slide">Animation: slide in</option>
-        <option value="zoom">Animation: soft zoom</option>
-        <option value="none">Animation: none</option>
+        <option value="columns">Footer: columns</option>
+        <option value="cta">Footer: CTA</option>
       </select>
       <div class="builder-actions">
-        <button type="button" class="success-btn" id="surpriseDesignBtn">🎲 Surprise Me With A Design</button>
+        <button type="button" class="success-btn" id="v5Random">🎲 Random Professional Design</button>
       </div>`;
-    anchor.insertAdjacentElement("afterend", wrap);
-
-    $("surpriseDesignBtn").addEventListener("click", randomiseDesign);
+    style.insertAdjacentElement("afterend", panel);
+    $("v5Random").onclick = randomise;
   }
 
-  function randomKey(obj) {
-    const keys = Object.keys(obj);
-    return keys[Math.floor(Math.random() * keys.length)];
-  }
-
-  function randomiseDesign() {
-    $("siteStyle").value = randomKey(themes);
-    const pick = id => {
+  function randomise() {
+    const themeKeys = Object.keys(THEMES);
+    $("siteStyle").value = themeKeys[Math.floor(Math.random()*themeKeys.length)];
+    ["v4Hero","v4Services","v4Footer"].forEach(id => {
       const el = $(id);
-      el.selectedIndex = Math.floor(Math.random() * el.options.length);
-    };
-    ["siteLayout","siteHeroLayout","siteServicesLayout","siteNavLayout","siteFooterLayout","siteAnimation"].forEach(pick);
+      el.selectedIndex = Math.floor(Math.random()*el.options.length);
+    });
     generate();
   }
 
-  function getData() {
-    const style = value("siteStyle","luxury");
+  function data() {
+    const style = val("siteStyle","luxury");
     return {
-      business:value("siteBusiness","Your Business"),
-      type:value("siteType","local business"),
-      description:value("siteDescription","A professional business focused on quality, trust and an easy customer experience."),
-      services:splitCSV(value("siteServices","Main Service, Customer Support, Free Quote"),"Main Service, Customer Support, Free Quote"),
-      phone:value("sitePhone","01279 000000"),
-      email:value("siteEmail","info@example.co.uk"),
-      address:value("siteAddress","Harlow, Essex"),
-      style,
-      theme:themes[style] || themes.luxury,
-      layout:value("siteLayout","classic"),
-      heroLayout:value("siteHeroLayout","split"),
-      servicesLayout:value("siteServicesLayout","grid"),
-      navLayout:value("siteNavLayout","standard"),
-      footerLayout:value("siteFooterLayout","simple"),
-      animation:value("siteAnimation","fade"),
-      colours:value("siteColours",""),
-      tone:value("siteTone","professional and friendly"),
-      heroImage:value("siteHeroImage",""),
-      galleryImages:splitCSV(value("siteGalleryImages",""),""),
-      videoUrl:value("siteVideoUrl",""),
-      features:(value("siteFeatures","") + " " + value("siteExtraFeatures","")).toLowerCase(),
-      openingHours:value("siteOpeningHours","Mon-Fri 9am-5pm, Sat 10am-4pm, Sun Closed"),
-      menuStyle:value("siteMenuStyle","standard"),
+      business:val("siteBusiness","Your Business"),
+      type:val("siteType","local business"),
+      description:val("siteDescription","A professional business focused on quality, trust and an easy customer experience."),
+      services:csv(val("siteServices","Main Service, Customer Support, Free Quote"),"Main Service, Customer Support, Free Quote"),
+      phone:val("sitePhone","01279 000000"),
+      email:val("siteEmail","info@example.co.uk"),
+      address:val("siteAddress","Harlow, Essex"),
+      tone:val("siteTone","professional and friendly"),
+      heroImage:val("siteHeroImage",""),
+      opening:csv(val("siteOpeningHours","Mon-Fri 9am-5pm, Sat 10am-4pm, Sun Closed"),"Mon-Fri 9am-5pm, Sat 10am-4pm, Sun Closed"),
+      theme:THEMES[style] || THEMES.luxury,
+      hero:val("v4Hero","split"),
+      servicesLayout:val("v4Services","cards"),
+      footer:val("v4Footer","simple"),
       year:new Date().getFullYear()
     };
   }
 
   function nav(d) {
-    const services = d.menuStyle === "dropdown"
-      ? `<span class="drop"><a href="services.html">Services ▾</a><span class="drop-menu">${d.services.map(s=>`<a href="services.html">${escapeHTML(s)}</a>`).join("")}</span></span>`
-      : `<a href="services.html">Services</a>`;
-    return `<header class="nav-${d.navLayout}"><a class="logo" href="index.html">${escapeHTML(d.business)}</a><nav><a href="index.html">Home</a><a href="about.html">About</a>${services}<a href="contact.html">Contact</a></nav></header>`;
+    return `<header class="site-header"><div class="shell nav-shell"><a class="brand" href="index.html">${esc(d.business)}</a><nav class="site-nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a href="contact.html">Contact</a></nav></div></header>`;
   }
 
   function hero(d) {
-    const titleOptions = [
-      `${escapeHTML(d.business)} delivers trusted ${escapeHTML(d.type)} services.`,
-      `A better way to experience ${escapeHTML(d.type)} services.`,
-      `Quality, speed and service—built around you.`
+    const titles = [
+      `${esc(d.business)} delivers trusted ${esc(d.type)} services.`,
+      `A better way to experience ${esc(d.type)} services.`,
+      `Professional service, built around you.`,
+      `Make your next move with ${esc(d.business)}.`
     ];
-    const title = titleOptions[sectionSeed.hero % titleOptions.length];
-    const visual = d.heroImage
-      ? `<div class="hero-visual"><img src="${escapeHTML(d.heroImage)}" alt="${escapeHTML(d.business)}"></div>`
-      : `<div class="hero-visual placeholder"><span>${escapeHTML(d.theme.label)}</span></div>`;
-    const buttons = `<div class="actions"><a class="btn" href="contact.html">Get a Free Quote</a><a class="btn secondary" href="services.html">Explore Services</a></div>`;
-    if (d.heroLayout === "centered") return `<section class="hero hero-centered"><div><p class="eyebrow">${escapeHTML(d.theme.label)}</p><h1>${title}</h1><p>${escapeHTML(d.description)}</p>${buttons}</div></section>`;
-    if (d.heroLayout === "image") return `<section class="hero hero-image" style="${d.heroImage ? `background-image:linear-gradient(rgba(0,0,0,.48),rgba(0,0,0,.58)),url('${escapeHTML(d.heroImage)}')` : ""}"><div><p class="eyebrow">${escapeHTML(d.theme.label)}</p><h1>${title}</h1><p>${escapeHTML(d.description)}</p>${buttons}</div></section>`;
-    if (d.heroLayout === "cards") return `<section class="hero hero-cards"><div><p class="eyebrow">${escapeHTML(d.theme.label)}</p><h1>${title}</h1><p>${escapeHTML(d.description)}</p>${buttons}</div><div class="floating-stack"><div class="mini-card"><b>${escapeHTML(d.services[0] || "Quality")}</b><span>Customer-focused service</span></div><div class="mini-card"><b>${escapeHTML(d.address)}</b><span>Local support</span></div><div class="mini-card"><b>${escapeHTML(d.phone)}</b><span>Quick contact</span></div></div></section>`;
-    if (d.heroLayout === "minimal") return `<section class="hero hero-minimal"><div><p class="eyebrow">${escapeHTML(d.type)}</p><h1>${title}</h1>${buttons}</div></section>`;
-    return `<section class="hero hero-split"><div><p class="eyebrow">${escapeHTML(d.theme.label)} • ${escapeHTML(d.tone)}</p><h1>${title}</h1><p>${escapeHTML(d.description)}</p>${buttons}</div>${visual}</section>`;
+    const title = titles[variant.hero % titles.length];
+    const actions = `<div class="actions"><a class="btn" href="contact.html">Start an enquiry</a><a class="btn ghost" href="services.html">View services</a></div>`;
+    const image = d.heroImage
+      ? `<img src="${esc(d.heroImage)}" alt="${esc(d.business)}">`
+      : `<div class="visual-placeholder"><span>${esc(d.business)}</span><small>${esc(d.type)}</small></div>`;
+
+    if (d.hero === "center") {
+      return `<section class="hero hero-center"><div class="shell narrow"><span class="kicker">${esc(d.theme.label)}</span><h1>${title}</h1><p>${esc(d.description)}</p>${actions}</div></section>`;
+    }
+    if (d.hero === "image") {
+      const style = d.heroImage ? `style="background-image:linear-gradient(rgba(0,0,0,.52),rgba(0,0,0,.64)),url('${esc(d.heroImage)}')"` : "";
+      return `<section class="hero hero-image" ${style}><div class="shell narrow"><span class="kicker">${esc(d.theme.label)}</span><h1>${title}</h1><p>${esc(d.description)}</p>${actions}</div></section>`;
+    }
+    if (d.hero === "floating") {
+      return `<section class="hero"><div class="shell hero-grid"><div><span class="kicker">${esc(d.theme.label)}</span><h1>${title}</h1><p>${esc(d.description)}</p>${actions}</div><div class="float-stack"><article><b>${esc(d.services[0] || "Quality service")}</b><span>Built around your needs</span></article><article><b>${esc(d.address)}</b><span>Local and accessible</span></article><article><b>${esc(d.phone)}</b><span>Quick contact</span></article></div></div></section>`;
+    }
+    if (d.hero === "stats") {
+      return `<section class="hero hero-center"><div class="shell"><span class="kicker">${esc(d.theme.label)}</span><h1>${title}</h1><p class="center-copy">${esc(d.description)}</p>${actions}<div class="hero-stats"><article><b>100%</b><span>Customer focus</span></article><article><b>${d.services.length}+</b><span>Core services</span></article><article><b>Fast</b><span>Response times</span></article></div></div></section>`;
+    }
+    if (d.hero === "testimonial") {
+      return `<section class="hero"><div class="shell hero-grid"><div><span class="kicker">Customer trusted</span><h1>${title}</h1><p>${esc(d.description)}</p>${actions}</div><blockquote class="hero-quote">“Professional, reliable and easy to work with.”<cite>— Happy customer</cite></blockquote></div></section>`;
+    }
+    if (d.hero === "booking") {
+      return `<section class="hero"><div class="shell hero-grid"><div><span class="kicker">Book today</span><h1>${title}</h1><p>${esc(d.description)}</p>${actions}</div><form class="quick-book" onsubmit="event.preventDefault();alert('Demo booking form')"><h3>Quick enquiry</h3><input placeholder="Your name"><input placeholder="Phone or email"><select>${d.services.map(s=>`<option>${esc(s)}</option>`).join("")}</select><button class="btn">Request a callback</button></form></div></section>`;
+    }
+    if (d.hero === "product") {
+      return `<section class="hero"><div class="shell hero-grid"><div><span class="kicker">Featured service</span><h1>${esc(d.services[0] || d.type)}</h1><p>${esc(d.description)}</p>${actions}</div><div class="featured-service">${image}<div><span>Starting with</span><h3>${esc(d.services[0] || "Professional support")}</h3></div></div></div></section>`;
+    }
+    if (d.hero === "minimal") {
+      return `<section class="hero hero-minimal"><div class="shell"><span class="kicker">${esc(d.type)}</span><h1>${title}</h1>${actions}</div></section>`;
+    }
+    if (d.hero === "diagonal") {
+      return `<section class="hero diagonal-hero"><div class="shell hero-grid"><div><span class="kicker">${esc(d.theme.label)}</span><h1>${title}</h1><p>${esc(d.description)}</p>${actions}</div><div class="hero-visual diagonal-visual">${image}</div></div></section>`;
+    }
+    return `<section class="hero"><div class="shell hero-grid"><div><span class="kicker">${esc(d.theme.label)}</span><h1>${title}</h1><p>${esc(d.description)}</p>${actions}</div><div class="hero-visual">${image}</div></div></section>`;
   }
 
-  function servicesSection(d) {
-    const items = d.services.map((s,i) => {
-      const text = `Professional ${escapeHTML(s).toLowerCase()} with clear communication and dependable support.`;
-      if (d.servicesLayout === "list") return `<article class="service-list-item"><span>0${i+1}</span><div><h3>${escapeHTML(s)}</h3><p>${text}</p></div></article>`;
-      if (d.servicesLayout === "alternating") return `<article class="service-alt"><div class="service-number">0${i+1}</div><div><h3>${escapeHTML(s)}</h3><p>${text}</p></div></article>`;
-      if (d.servicesLayout === "pillars") return `<article class="service-pillar"><span>0${i+1}</span><h3>${escapeHTML(s)}</h3><p>${text}</p></article>`;
-      return `<article class="service-card ${d.servicesLayout === "glass" ? "glass-card" : ""}"><span class="service-icon">✦</span><h3>${escapeHTML(s)}</h3><p>${text}</p></article>`;
-    }).join("");
-    return `<section class="services-section"><div class="section-heading"><p class="eyebrow">What we do</p><h2>Services built around your needs</h2></div><div class="services-${d.servicesLayout}">${items}</div></section>`;
-  }
+  function services(d) {
+    const intro = ["Services designed to make things simple, clear and reliable.","Choose the support that best fits your needs.","Professional services with an easy customer journey."][variant.services % 3];
+    const description = s => `Professional ${esc(s).toLowerCase()} with clear communication and dependable support.`;
+    let body = "";
 
-  function optionalSections(d) {
-    let out = "";
-    if (d.features.includes("testimonial") || d.features.includes("review")) {
-      out += `<section><div class="section-heading"><p class="eyebrow">Reviews</p><h2>What customers say</h2></div><div class="review-grid"><blockquote>“Professional, reliable and easy to work with.”<cite>Happy Customer</cite></blockquote><blockquote>“The whole experience felt clear and simple.”<cite>Local Client</cite></blockquote><blockquote>“Excellent service from start to finish.”<cite>Returning Customer</cite></blockquote></div></section>`;
+    if (d.servicesLayout === "list") {
+      body = `<div class="service-list">${d.services.map((s,i)=>`<article><span>0${i+1}</span><div><h3>${esc(s)}</h3><p>${description(s)}</p></div></article>`).join("")}</div>`;
+    } else if (d.servicesLayout === "feature") {
+      body = `<div class="feature-grid">${d.services.map((s,i)=>`<article><div class="feature-no">0${i+1}</div><h3>${esc(s)}</h3><p>${description(s)}</p></article>`).join("")}</div>`;
+    } else if (d.servicesLayout === "glass") {
+      body = `<div class="card-grid glass-grid">${d.services.map(s=>`<article class="card glass-card"><span class="icon">✦</span><h3>${esc(s)}</h3><p>${description(s)}</p></article>`).join("")}</div>`;
+    } else if (d.servicesLayout === "timeline") {
+      body = `<div class="timeline">${d.services.map((s,i)=>`<article><span>${i+1}</span><div><h3>${esc(s)}</h3><p>${description(s)}</p></div></article>`).join("")}</div>`;
+    } else if (d.servicesLayout === "alternating") {
+      body = `<div class="alternating-services">${d.services.map((s,i)=>`<article><div class="alt-number">0${i+1}</div><div><h3>${esc(s)}</h3><p>${description(s)}</p></div></article>`).join("")}</div>`;
+    } else if (d.servicesLayout === "icons") {
+      body = `<div class="icon-services">${d.services.map((s,i)=>`<article><div class="big-icon">${["✦","◆","●","▲","■"][i%5]}</div><h3>${esc(s)}</h3><p>${description(s)}</p></article>`).join("")}</div>`;
+    } else if (d.servicesLayout === "compact") {
+      body = `<div class="compact-services">${d.services.map((s,i)=>`<article><span>0${i+1}</span><b>${esc(s)}</b></article>`).join("")}</div>`;
+    } else if (d.servicesLayout === "steps") {
+      body = `<div class="steps-services">${d.services.map((s,i)=>`<article><span>Step ${i+1}</span><h3>${esc(s)}</h3><p>${description(s)}</p></article>`).join("")}</div>`;
+    } else if (d.servicesLayout === "bordered") {
+      body = `<div class="bordered-services">${d.services.map((s,i)=>`<article><span>0${i+1}</span><h3>${esc(s)}</h3><p>${description(s)}</p></article>`).join("")}</div>`;
+    } else {
+      body = `<div class="card-grid">${d.services.map(s=>`<article class="card"><span class="icon">✦</span><h3>${esc(s)}</h3><p>${description(s)}</p></article>`).join("")}</div>`;
     }
-    if (d.features.includes("price")) {
-      out += `<section><div class="section-heading"><p class="eyebrow">Packages</p><h2>Simple pricing</h2></div><div class="price-grid"><div class="price-card"><h3>Starter</h3><strong>From £25</strong><p>Great for essential support.</p></div><div class="price-card featured"><h3>Professional</h3><strong>Custom quote</strong><p>Built around your exact needs.</p></div><div class="price-card"><h3>Premium</h3><strong>Contact us</strong><p>Complete service and support.</p></div></div></section>`;
-    }
-    if (d.features.includes("gallery") || d.galleryImages.filter(Boolean).length) {
-      const imgs = d.galleryImages.filter(Boolean);
-      const cards = imgs.length ? imgs.slice(0,6).map((url,i)=>`<div class="gallery-item"><img src="${escapeHTML(url)}" alt="Gallery ${i+1}"></div>`).join("") : `<div class="gallery-item placeholder">Project 01</div><div class="gallery-item placeholder">Project 02</div><div class="gallery-item placeholder">Project 03</div>`;
-      out += `<section><div class="section-heading"><p class="eyebrow">Our work</p><h2>Gallery</h2></div><div class="gallery-grid">${cards}</div></section>`;
-    }
-    if (d.features.includes("faq")) {
-      out += `<section><div class="section-heading"><p class="eyebrow">FAQ</p><h2>Common questions</h2></div><details open><summary>How do I get started?</summary><p>Use the contact page or call us directly.</p></details><details><summary>Where are you based?</summary><p>${escapeHTML(d.address)}</p></details><details><summary>Can I request a custom service?</summary><p>Yes. Contact us to discuss your needs.</p></details></section>`;
-    }
-    return out;
+
+    return `<section><div class="shell"><div class="section-head"><span class="kicker">What we do</span><h2>Services built around your needs</h2><p>${intro}</p></div>${body}</div></section>`;
   }
 
   function footer(d) {
-    if (d.footerLayout === "columns") return `<footer class="footer-columns"><div><a class="footer-logo">${escapeHTML(d.business)}</a><p>${escapeHTML(d.description)}</p></div><div><h4>Explore</h4><a href="about.html">About</a><a href="services.html">Services</a><a href="contact.html">Contact</a></div><div><h4>Contact</h4><span>${escapeHTML(d.phone)}</span><span>${escapeHTML(d.email)}</span><span>${escapeHTML(d.address)}</span></div><small>© ${d.year} ${escapeHTML(d.business)}. Website by Vinctec.</small></footer>`;
-    if (d.footerLayout === "cta") return `<footer class="footer-cta"><p class="eyebrow">Ready to begin?</p><h2>Let’s build something great together.</h2><a class="btn" href="contact.html">Contact ${escapeHTML(d.business)}</a><small>© ${d.year} ${escapeHTML(d.business)}. Website by Vinctec.</small></footer>`;
-    if (d.footerLayout === "brand") return `<footer class="footer-brand"><div class="giant-brand">${escapeHTML(d.business)}</div><div><span>${escapeHTML(d.phone)}</span><span>${escapeHTML(d.email)}</span><span>${escapeHTML(d.address)}</span></div><small>© ${d.year}. Website by Vinctec.</small></footer>`;
-    return `<footer class="footer-simple">© ${d.year} ${escapeHTML(d.business)}. Website by Vinctec.</footer>`;
+    if (d.footer === "columns") {
+      return `<footer><div class="shell footer-grid"><div><div class="footer-brand">${esc(d.business)}</div><p>${esc(d.description)}</p></div><div><h4>Explore</h4><a href="about.html">About</a><a href="services.html">Services</a><a href="contact.html">Contact</a></div><div><h4>Contact</h4><span>${esc(d.phone)}</span><span>${esc(d.email)}</span><span>${esc(d.address)}</span></div></div><div class="shell footer-bottom">© ${d.year} ${esc(d.business)}. Website by Vinctec.</div></footer>`;
+    }
+    if (d.footer === "cta") {
+      return `<footer><div class="shell footer-cta"><span class="kicker">Ready to begin?</span><h2>Let’s build something great together.</h2><a class="btn" href="contact.html">Contact ${esc(d.business)}</a><div class="footer-bottom">© ${d.year} ${esc(d.business)}. Website by Vinctec.</div></div></footer>`;
+    }
+    return `<footer><div class="shell footer-simple"><div class="footer-brand">${esc(d.business)}</div><div>© ${d.year} ${esc(d.business)}. Website by Vinctec.</div></div></footer>`;
+  }
+
+  function contactPage(d) {
+    const hours = d.opening.map(h=>`<li>${esc(h)}</li>`).join("");
+    return `${head(d,`Contact ${d.business}`,`Contact ${d.business}.`)}${nav(d)}
+      <section class="page-hero"><div class="shell narrow"><span class="kicker">Get in touch</span><h1>Let’s talk about what you need.</h1><p>Send an enquiry and ${esc(d.business)} will get back to you.</p></div></section>
+      <section><div class="shell contact-grid">
+        <form class="contact-form" onsubmit="event.preventDefault();alert('Demo form submitted. Connect EmailJS, Firebase or Formspree before launch.')">
+          <div class="field-row"><input type="text" placeholder="Your name" required><input type="email" placeholder="Email address" required></div>
+          <input type="tel" placeholder="Phone number">
+          <textarea placeholder="Tell us what you need" required></textarea>
+          <button class="btn" type="submit">Send enquiry</button>
+        </form>
+        <aside class="contact-card">
+          <span class="kicker">Contact information</span>
+          <h2>Contact details</h2>
+          <dl>
+            <div><dt>Phone</dt><dd><a href="tel:${esc(d.phone)}">${esc(d.phone)}</a></dd></div>
+            <div><dt>Email</dt><dd><a href="mailto:${esc(d.email)}">${esc(d.email)}</a></dd></div>
+            <div><dt>Address</dt><dd>${esc(d.address)}</dd></div>
+          </dl>
+          <div class="hours"><h3>Opening hours</h3><ul>${hours}</ul></div>
+        </aside>
+      </div></section>
+      ${footer(d)}${previewScript()}</body></html>`;
+  }
+
+  function head(d,title,desc) {
+    return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><style>${css(d)}</style></head><body>`;
+  }
+
+  function previewScript() {
+    return `<script>document.addEventListener("click",function(e){var a=e.target.closest("a");if(!a)return;var h=a.getAttribute("href");if(["index.html","about.html","services.html","contact.html"].includes(h)){e.preventDefault();parent.postMessage({type:"V4_NAV",page:h},"*")}})<\/script>`;
   }
 
   function css(d) {
     const t=d.theme;
-    const anim = d.animation === "none" ? "" : `
-section{animation:${d.animation === "slide" ? "slideIn" : d.animation === "zoom" ? "softZoom" : "fadeUp"} .7s ease both}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-@keyframes slideIn{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:none}}
-@keyframes softZoom{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}`;
     return `
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:${t.bg};color:${t.text};font-family:${t.font};line-height:1.65}a{color:inherit}img{max-width:100%;display:block}
-header{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 7%;background:${t.panel};border-bottom:1px solid rgba(127,127,127,.18)}
-.logo{text-decoration:none;font-size:1.35rem;font-weight:900;color:${t.accent}}nav{display:flex;align-items:center;gap:24px}nav a{text-decoration:none;font-weight:700}
-.nav-floating{width:min(1120px,92%);margin:14px auto 0;border-radius:999px;top:14px;box-shadow:0 16px 40px rgba(0,0,0,.18)}
-.nav-glass{background:rgba(15,23,42,.68);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-.nav-minimal{background:transparent;position:absolute;width:100%;border:0}
-.drop{position:relative}.drop-menu{display:none;position:absolute;top:100%;left:0;min-width:190px;padding:8px;background:${t.panel};border-radius:12px;box-shadow:0 16px 35px rgba(0,0,0,.22)}.drop:hover .drop-menu{display:block}.drop-menu a{display:block;padding:8px}
-section{padding:82px 7%}.eyebrow{color:${t.accent};font-weight:900;text-transform:uppercase;letter-spacing:.16em;font-size:.78rem}h1{font-size:clamp(3rem,7vw,6.7rem);line-height:.98;margin:.2em 0;letter-spacing:-.045em}h2{font-size:clamp(2.1rem,4vw,4rem);line-height:1.05;margin:.2em 0 .5em}h3{margin:.2em 0 .4em;color:${t.accent}}p{color:${t.muted};max-width:760px}
-.hero{min-height:86vh;background:${t.gradient};display:grid;align-items:center;gap:44px}.hero-split,.hero-cards{grid-template-columns:1.08fr .92fr}.hero-centered{text-align:center;display:flex;justify-content:center}.hero-centered p{margin-left:auto;margin-right:auto}.hero-image{background-size:cover;background-position:center;color:white}.hero-image p{color:#f4f4f5}.hero-minimal{display:flex;align-items:flex-end}.hero-visual{min-height:480px;border-radius:32px;overflow:hidden;background:${t.soft};border:1px solid rgba(255,255,255,.16);box-shadow:0 24px 70px rgba(0,0,0,.22)}.hero-visual img{width:100%;height:100%;object-fit:cover}.placeholder{display:grid;place-items:center;color:${t.muted}}
-.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-block;text-decoration:none;padding:14px 23px;border-radius:999px;background:${t.accent};color:${t.button};font-weight:900}.btn.secondary{background:transparent;border:1px solid ${t.accent};color:${t.text}}
-.floating-stack{display:grid;gap:18px}.mini-card{padding:25px;border-radius:22px;background:${t.panel};box-shadow:0 16px 45px rgba(0,0,0,.18);transform:rotate(-2deg)}.mini-card:nth-child(2){transform:translateX(35px) rotate(2deg)}.mini-card b,.mini-card span{display:block}.mini-card span{color:${t.muted}}
-.section-heading{max-width:760px;margin-bottom:35px}.services-grid,.services-glass{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}.service-card,.service-pillar,.price-card,blockquote{padding:28px;border-radius:24px;background:${t.panel};border:1px solid rgba(127,127,127,.16);box-shadow:0 16px 45px rgba(0,0,0,.10)}.glass-card{background:rgba(255,255,255,.08);backdrop-filter:blur(15px)}.service-icon{font-size:1.7rem;color:${t.accent2}}.services-list{display:grid}.service-list-item{display:grid;grid-template-columns:100px 1fr;padding:25px 0;border-top:1px solid rgba(127,127,127,.25)}.service-list-item span,.service-number{font-size:2rem;color:${t.accent}}.services-alternating{display:grid;gap:18px}.service-alt{display:grid;grid-template-columns:120px 1fr;padding:35px;background:${t.panel};border-radius:28px}.service-alt:nth-child(even){margin-left:10%}.services-pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:rgba(127,127,127,.25)}.service-pillar{border-radius:0;min-height:330px}
-.review-grid,.price-grid,.gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}blockquote{font-size:1.25rem;margin:0}blockquote cite{display:block;margin-top:18px;color:${t.accent};font-size:.9rem}.price-card strong{display:block;font-size:2rem;margin:14px 0}.price-card.featured{outline:2px solid ${t.accent};transform:translateY(-10px)}.gallery-item{min-height:280px;border-radius:24px;overflow:hidden;background:${t.soft}.gallery-item img{width:100%;height:100%;object-fit:cover}details{padding:20px 0;border-top:1px solid rgba(127,127,127,.24)}summary{font-weight:900;cursor:pointer}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:${t.bg};color:${t.text};font-family:Arial,sans-serif;line-height:1.6;overflow-x:hidden}a{color:inherit}img{display:block;max-width:100%}
+.shell{width:min(1120px,calc(100% - 40px));margin:auto}.narrow{max-width:800px}.site-header{position:sticky;top:0;z-index:20;background:${t.surface};border-bottom:1px solid rgba(127,127,127,.18)}.nav-shell{min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{text-decoration:none;font-size:1.35rem;font-weight:900;color:${t.accent};white-space:nowrap}.site-nav{display:flex;gap:24px;flex-wrap:wrap}.site-nav a{text-decoration:none;font-weight:700}
+.hero,.page-hero{background:linear-gradient(135deg,${t.bg},${t.surface2});padding:90px 0}.hero{min-height:78vh;display:flex;align-items:center}.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}.hero-center{text-align:center}.hero-center p,.hero-image p{margin-left:auto;margin-right:auto}.hero-image{background-size:cover;background-position:center;color:#fff}.hero-image p{color:#eee}.hero-visual{min-height:430px;border-radius:28px;overflow:hidden;background:${t.surface};border:1px solid rgba(127,127,127,.18);box-shadow:0 24px 60px rgba(0,0,0,.18)}.hero-visual img{width:100%;height:100%;object-fit:cover}.visual-placeholder{min-height:430px;display:grid;place-items:center;text-align:center;padding:30px}.visual-placeholder span{font-size:clamp(2rem,5vw,4.5rem);font-weight:900;color:${t.accent}}.visual-placeholder small{display:block;color:${t.muted};margin-top:10px}
+section{padding:78px 0}.kicker{display:inline-block;color:${t.accent};font-weight:900;text-transform:uppercase;letter-spacing:.15em;font-size:.78rem}.section-head{max-width:760px;margin-bottom:34px}h1{font-size:clamp(2.8rem,7vw,6rem);line-height:1;letter-spacing:-.04em;margin:.18em 0 .35em;overflow-wrap:anywhere}h2{font-size:clamp(2rem,4vw,3.7rem);line-height:1.08;margin:.2em 0 .45em;overflow-wrap:anywhere}h3{margin:.2em 0 .45em;color:${t.accent}}p{color:${t.muted};max-width:760px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-block;border:0;text-decoration:none;background:${t.accent};color:${t.button};font-weight:900;padding:14px 22px;border-radius:999px;cursor:pointer}.btn.ghost{background:transparent;color:${t.text};border:1px solid ${t.accent}}
+.card-grid,.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}.card,.feature-grid article{background:${t.surface};padding:28px;border-radius:22px;border:1px solid rgba(127,127,127,.16);box-shadow:0 14px 36px rgba(0,0,0,.09)}.icon{font-size:1.7rem;color:${t.accent}}.feature-no{font-size:2rem;font-weight:900;color:${t.accent}}.service-list article{display:grid;grid-template-columns:90px 1fr;gap:24px;padding:26px 0;border-top:1px solid rgba(127,127,127,.22)}.service-list article>span{font-size:2rem;font-weight:900;color:${t.accent}}
 
-/* Contact page */
-.contact-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:34px;align-items:start}
-.contact-layout>div{min-width:0}
-.contact-layout form{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:30px;background:${t.panel};border:1px solid rgba(127,127,127,.18);border-radius:28px;box-shadow:0 18px 55px rgba(0,0,0,.12)}
-.contact-layout form input,.contact-layout form textarea{width:100%;min-width:0;margin:0;padding:15px 17px;border:1px solid rgba(127,127,127,.28);border-radius:13px;background:${t.soft};color:${t.text};font:inherit;outline:none}
-.contact-layout form input::placeholder,.contact-layout form textarea::placeholder{color:${t.muted};opacity:.85}
-.contact-layout form input:focus,.contact-layout form textarea:focus{border-color:${t.accent};box-shadow:0 0 0 3px color-mix(in srgb,${t.accent} 18%,transparent)}
-.contact-layout form textarea{grid-column:1/-1;min-height:170px;resize:vertical}
-.contact-layout form button{grid-column:1/-1;justify-self:start;margin:0;border:0}
-.contact-layout>div:last-child{padding:30px;background:${t.panel};border:1px solid rgba(127,127,127,.18);border-radius:28px;box-shadow:0 18px 55px rgba(0,0,0,.10)}
-.contact-layout>div:last-child h2{font-size:clamp(2rem,4vw,3.3rem)}
-.contact-layout>div:last-child p{margin:14px 0;overflow-wrap:anywhere}
-.contact-layout>div:last-child ul{padding-left:20px;color:${t.muted}}
-
-/* Footers */
-.footer-simple,.footer-columns,.footer-cta,.footer-brand{padding:54px 7%;background:${t.panel};color:${t.muted};border-top:1px solid rgba(127,127,127,.18)}
-.footer-simple{display:flex;align-items:center;justify-content:center;text-align:center;min-height:120px}
-.footer-brand{display:grid;gap:26px}
-.footer-brand>div:nth-child(2){display:flex;align-items:center;gap:14px 28px;flex-wrap:wrap;padding-top:8px;border-top:1px solid rgba(127,127,127,.2)}
-.footer-brand>div:nth-child(2) span{display:inline-flex;align-items:center;overflow-wrap:anywhere}
-.footer-brand small{display:block;padding-top:16px;border-top:1px solid rgba(127,127,127,.2)}
-.footer-columns>div{min-width:0}
-.footer-columns p,.footer-columns span,.footer-columns a{overflow-wrap:anywhere}.footer-columns{display:grid;grid-template-columns:2fr 1fr 1fr;gap:35px}.footer-columns a,.footer-columns span{display:block;text-decoration:none;margin:5px 0}.footer-columns small{grid-column:1/-1}.footer-logo{font-size:1.4rem;font-weight:900;color:${t.accent}}.footer-cta{text-align:center;padding:90px 7%}.footer-cta h2{margin-left:auto;margin-right:auto}.footer-cta small{display:block;margin-top:45px}.giant-brand{font-size:clamp(3.5rem,12vw,10rem);font-weight:900;line-height:.85;color:${t.accent};overflow:hidden}.footer-brand>div:nth-child(2){display:flex;gap:20px;flex-wrap:wrap;margin:35px 0}
-.layout-editorial .services-section{display:grid;grid-template-columns:.7fr 1.3fr;gap:45px}.layout-cards section{margin:22px 4%;border-radius:34px;background:${t.panel}}.layout-immersive section{min-height:75vh;display:flex;flex-direction:column;justify-content:center}.layout-split section:not(.hero){display:grid;grid-template-columns:.7fr 1.3fr;gap:40px}
-${anim}
-@media(max-width:800px){header{display:block}.nav-floating{border-radius:22px}nav{gap:12px;flex-wrap:wrap;margin-top:12px}.hero-split,.hero-cards,.layout-editorial .services-section,.layout-split section:not(.hero),.contact-layout{grid-template-columns:1fr}.hero-visual{min-height:300px}.service-alt:nth-child(even){margin-left:0}.footer-columns{grid-template-columns:1fr}.actions{display:grid}.btn{text-align:center}section{padding:62px 6%}.contact-layout form{grid-template-columns:1fr;padding:22px}.contact-layout form textarea,.contact-layout form button{grid-column:1}.contact-layout form button{width:100%;text-align:center}.contact-layout>div:last-child{padding:22px}.footer-brand>div:nth-child(2){display:grid;gap:8px}h1{font-size:clamp(2.7rem,14vw,4.5rem)}}`;
-  }
-
-  function head(d,title,description) {
-    return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHTML(title)}</title><meta name="description" content="${escapeHTML(description)}"><link rel="stylesheet" href="style.css"></head><body class="layout-${d.layout}">`;
-  }
-
-  function scriptForPreview() {
-    return `<script>document.addEventListener("click",function(e){var a=e.target.closest("a");if(!a)return;var h=a.getAttribute("href");if(["index.html","about.html","services.html","contact.html"].includes(h)){e.preventDefault();parent.postMessage({type:"VINCTEC_PRO_NAV",page:h},"*")}})<\/script>`;
+.float-stack{display:grid;gap:18px}.float-stack article{padding:24px;border-radius:22px;background:${t.surface};border:1px solid rgba(127,127,127,.18);box-shadow:0 18px 45px rgba(0,0,0,.16);transform:rotate(-2deg)}.float-stack article:nth-child(2){transform:translateX(30px) rotate(2deg)}.float-stack article b,.float-stack article span{display:block}.float-stack article span{color:${t.muted};margin-top:5px}
+.center-copy{margin-left:auto;margin-right:auto}.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px}.hero-stats article{padding:22px;border-radius:20px;background:${t.surface};border:1px solid rgba(127,127,127,.18)}.hero-stats b,.hero-stats span{display:block}.hero-stats b{font-size:2rem;color:${t.accent}}.hero-stats span{color:${t.muted}}
+.hero-quote{margin:0;padding:38px;border-radius:28px;background:${t.surface};font-size:clamp(1.5rem,3vw,2.5rem);line-height:1.3;box-shadow:0 18px 50px rgba(0,0,0,.14)}.hero-quote cite{display:block;font-size:.95rem;color:${t.accent};margin-top:22px}
+.quick-book{display:grid;gap:14px;padding:28px;border-radius:26px;background:${t.surface};border:1px solid rgba(127,127,127,.18);box-shadow:0 18px 50px rgba(0,0,0,.14)}.quick-book input,.quick-book select{width:100%;padding:14px 15px;border-radius:12px;border:1px solid rgba(127,127,127,.25);background:${t.surface2};color:${t.text};font:inherit}.quick-book .btn{width:100%}
+.featured-service{border-radius:28px;overflow:hidden;background:${t.surface};border:1px solid rgba(127,127,127,.18);box-shadow:0 20px 55px rgba(0,0,0,.16)}.featured-service>img,.featured-service>.visual-placeholder{height:330px;width:100%;object-fit:cover;min-height:330px}.featured-service>div:last-child{padding:22px}.featured-service span{color:${t.muted}}
+.hero-minimal{min-height:74vh;align-items:flex-end}.diagonal-hero{position:relative;overflow:hidden}.diagonal-hero:after{content:"";position:absolute;right:-10%;top:-15%;width:45%;height:140%;background:${t.accent};opacity:.12;transform:skewX(-12deg)}.diagonal-visual{transform:rotate(2deg)}
+.glass-grid{position:relative}.glass-card{background:rgba(255,255,255,.08);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.timeline{position:relative;display:grid;gap:0}.timeline:before{content:"";position:absolute;left:22px;top:10px;bottom:10px;width:2px;background:${t.accent};opacity:.5}.timeline article{position:relative;display:grid;grid-template-columns:50px 1fr;gap:20px;padding:0 0 28px}.timeline article>span{position:relative;z-index:1;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;background:${t.accent};color:${t.button};font-weight:900}
+.alternating-services{display:grid;gap:18px}.alternating-services article{display:grid;grid-template-columns:110px 1fr;gap:25px;padding:30px;border-radius:24px;background:${t.surface};border:1px solid rgba(127,127,127,.18)}.alternating-services article:nth-child(even){margin-left:10%}.alt-number{font-size:2.4rem;font-weight:900;color:${t.accent}}
+.icon-services{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;text-align:center}.icon-services article{padding:32px 24px;border-radius:22px;background:${t.surface};border:1px solid rgba(127,127,127,.18)}.big-icon{font-size:3rem;color:${t.accent};margin-bottom:16px}
+.compact-services{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.compact-services article{display:flex;gap:14px;align-items:center;padding:18px 20px;border-radius:16px;background:${t.surface};border:1px solid rgba(127,127,127,.18)}.compact-services span{color:${t.accent};font-weight:900}
+.steps-services{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;counter-reset:steps}.steps-services article{position:relative;padding:30px;border-radius:24px;background:${t.surface};border:1px solid rgba(127,127,127,.18)}.steps-services article>span{display:inline-block;margin-bottom:18px;color:${t.accent};font-weight:900}
+.bordered-services{display:grid;border-top:1px solid rgba(127,127,127,.25)}.bordered-services article{display:grid;grid-template-columns:80px 220px 1fr;gap:24px;padding:24px 0;border-bottom:1px solid rgba(127,127,127,.25)}.bordered-services article>span{color:${t.accent};font-weight:900}
+.contact-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);gap:30px;align-items:start}.contact-form,.contact-card{background:${t.surface};border:1px solid rgba(127,127,127,.18);border-radius:26px;padding:28px;box-shadow:0 16px 45px rgba(0,0,0,.10)}.contact-form{display:grid;gap:16px}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.contact-form input,.contact-form textarea{width:100%;min-width:0;border:1px solid rgba(127,127,127,.28);background:${t.surface2};color:${t.text};padding:15px 16px;border-radius:12px;font:inherit;outline:none}.contact-form textarea{min-height:180px;resize:vertical}.contact-form input:focus,.contact-form textarea:focus{border-color:${t.accent}}.contact-form .btn{justify-self:start}.contact-card dl{display:grid;gap:18px;margin:26px 0}.contact-card dl div{padding-bottom:16px;border-bottom:1px solid rgba(127,127,127,.18)}.contact-card dt{font-weight:900;color:${t.text}}.contact-card dd{margin:5px 0 0;color:${t.muted};overflow-wrap:anywhere}.hours{margin-top:24px}.hours ul{padding-left:20px;color:${t.muted};display:grid;gap:7px}
+footer{background:${t.surface};border-top:1px solid rgba(127,127,127,.18);padding:54px 0}.footer-simple{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.footer-brand{font-size:1.35rem;font-weight:900;color:${t.accent}}.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:34px}.footer-grid a,.footer-grid span{display:block;text-decoration:none;margin:6px 0;overflow-wrap:anywhere}.footer-bottom{margin-top:32px;padding-top:20px;border-top:1px solid rgba(127,127,127,.18);color:${t.muted}}.footer-cta{text-align:center}.footer-cta h2{max-width:760px;margin-left:auto;margin-right:auto}.footer-cta .footer-bottom{margin-top:40px}
+@media(max-width:800px){.nav-shell{align-items:flex-start;flex-direction:column;padding:18px 0}.site-nav{gap:13px}.hero-grid,.contact-grid,.footer-grid,.hero-stats{grid-template-columns:1fr}.hero{min-height:auto}.hero-visual,.visual-placeholder{min-height:300px}.field-row{grid-template-columns:1fr}.alternating-services article{grid-template-columns:1fr;margin-left:0!important}.bordered-services article{grid-template-columns:50px 1fr}.bordered-services article p{grid-column:1/-1}.float-stack article:nth-child(2){transform:none}.contact-form .btn{width:100%;text-align:center}.footer-simple{display:grid}.actions{display:grid}.btn{text-align:center}.shell{width:min(100% - 28px,1120px)}section{padding:58px 0}.hero,.page-hero{padding:70px 0}}
+`;
   }
 
   function buildFiles() {
-    const d=getData();
-    const sharedNav=nav(d), sharedFooter=footer(d), style=css(d);
+    const d=data();
+    const commonNav=nav(d), commonFooter=footer(d);
 
-    const index = `${head(d,`${d.business} | Home`,`${d.business} provides ${d.type} services in ${d.address}.`)}${sharedNav}${hero(d)}${servicesSection(d)}${optionalSections(d)}<section><div class="section-heading"><p class="eyebrow">Why choose us</p><h2>Clear service. Strong results.</h2></div><p>${escapeHTML(d.business)} focuses on quality, communication and an easy customer journey from first enquiry to completed service.</p><div class="actions"><a class="btn" href="contact.html">Start an enquiry</a></div></section>${sharedFooter}${scriptForPreview()}</body></html>`;
+    const home = `${head(d,`${d.business} | Home`,`${d.business} provides ${d.type} services.`)}${commonNav}${hero(d)}${services(d)}
+      <section><div class="shell"><div class="section-head"><span class="kicker">Why choose us</span><h2>Clear service. Strong results.</h2><p>${esc(d.business)} focuses on quality, communication and an easy customer journey from first enquiry to completed service.</p></div><a class="btn" href="contact.html">Start an enquiry</a></div></section>
+      ${commonFooter}${previewScript()}</body></html>`;
 
     const aboutText = [
       `${d.business} is built around reliable service, clear communication and a ${d.tone} customer experience.`,
-      `We help customers understand their options, make confident decisions and receive dependable support.`,
-      `Our goal is to make every stage feel straightforward, professional and personal.`
-    ][sectionSeed.about % 3];
-    const about = `${head(d,`About ${d.business}`,`Learn about ${d.business}.`)}${sharedNav}<section class="hero hero-centered"><div><p class="eyebrow">Our story</p><h1>About ${escapeHTML(d.business)}</h1><p>${escapeHTML(d.description)}</p></div></section><section><div class="section-heading"><p class="eyebrow">Who we are</p><h2>Built on trust and quality</h2></div><p>${escapeHTML(aboutText)}</p></section><section><div class="section-heading"><p class="eyebrow">Our approach</p><h2>What customers can expect</h2></div><div class="services-grid"><article class="service-card"><h3>Clear communication</h3><p>Simple information and honest support.</p></article><article class="service-card"><h3>Reliable delivery</h3><p>A professional experience from start to finish.</p></article><article class="service-card"><h3>Customer focus</h3><p>Solutions shaped around real needs.</p></article></div></section>${sharedFooter}${scriptForPreview()}</body></html>`;
+      `We help customers understand their options and feel confident choosing the right service.`,
+      `Our goal is to make every stage straightforward, professional and personal.`
+    ][variant.about % 3];
 
-    const services = `${head(d,`${d.business} Services`,`Explore services from ${d.business}.`)}${sharedNav}<section class="hero hero-minimal"><div><p class="eyebrow">What we offer</p><h1>Our Services</h1><p>${escapeHTML(d.description)}</p></div></section>${servicesSection(d)}${optionalSections(d)}<section><div class="section-heading"><p class="eyebrow">Next step</p><h2>Need a custom solution?</h2></div><a class="btn" href="contact.html">Request a quote</a></section>${sharedFooter}${scriptForPreview()}</body></html>`;
+    const about = `${head(d,`About ${d.business}`,`Learn about ${d.business}.`)}${commonNav}
+      <section class="page-hero"><div class="shell narrow"><span class="kicker">Our story</span><h1>About ${esc(d.business)}</h1><p>${esc(d.description)}</p></div></section>
+      <section><div class="shell"><div class="section-head"><span class="kicker">Who we are</span><h2>Built on trust and quality</h2><p>${esc(aboutText)}</p></div><div class="card-grid"><article class="card"><h3>Clear communication</h3><p>Simple information and honest support.</p></article><article class="card"><h3>Reliable delivery</h3><p>A professional experience from start to finish.</p></article><article class="card"><h3>Customer focus</h3><p>Solutions shaped around real needs.</p></article></div></div></section>
+      ${commonFooter}${previewScript()}</body></html>`;
 
-    const hours = d.openingHours.split(",").map(x=>`<li>${escapeHTML(x.trim())}</li>`).join("");
-    const contact = `${head(d,`Contact ${d.business}`,`Contact ${d.business} in ${d.address}.`)}${sharedNav}
-<section class="hero hero-centered"><div><p class="eyebrow">Get in touch</p><h1>Let’s talk about what you need.</h1><p>Send an enquiry and ${escapeHTML(d.business)} will get back to you.</p></div></section>
-<section style="padding:72px 7%;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:32px;align-items:start">
-  <div style="min-width:0">
-    <form onsubmit="event.preventDefault();alert('Demo form submitted. Connect EmailJS, Firebase or Formspree before launch.')" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:30px;background:${d.theme.panel};border:1px solid rgba(127,127,127,.22);border-radius:28px;box-shadow:0 18px 55px rgba(0,0,0,.14)">
-      <input type="text" placeholder="Your name" required style="width:100%;min-width:0;margin:0;padding:15px 17px;border:1px solid rgba(127,127,127,.30);border-radius:13px;background:${d.theme.soft};color:${d.theme.text};font:inherit">
-      <input type="email" placeholder="Email address" required style="width:100%;min-width:0;margin:0;padding:15px 17px;border:1px solid rgba(127,127,127,.30);border-radius:13px;background:${d.theme.soft};color:${d.theme.text};font:inherit">
-      <input type="tel" placeholder="Phone number" style="grid-column:1/-1;width:100%;min-width:0;margin:0;padding:15px 17px;border:1px solid rgba(127,127,127,.30);border-radius:13px;background:${d.theme.soft};color:${d.theme.text};font:inherit">
-      <textarea placeholder="Tell us what you need" required style="grid-column:1/-1;width:100%;min-width:0;min-height:180px;margin:0;padding:15px 17px;border:1px solid rgba(127,127,127,.30);border-radius:13px;background:${d.theme.soft};color:${d.theme.text};font:inherit;resize:vertical"></textarea>
-      <button class="btn" type="submit" style="grid-column:1/-1;justify-self:start;margin:0;border:0">Send enquiry</button>
-    </form>
-  </div>
-  <aside style="min-width:0;padding:30px;background:${d.theme.panel};border:1px solid rgba(127,127,127,.22);border-radius:28px;box-shadow:0 18px 55px rgba(0,0,0,.12)">
-    <p class="eyebrow">Contact information</p>
-    <h2 style="font-size:clamp(2rem,4vw,3.2rem);margin-top:6px">Contact details</h2>
-    <div style="display:grid;gap:16px;margin-top:24px">
-      <p style="margin:0;overflow-wrap:anywhere"><strong>Phone</strong><br><a href="tel:${escapeHTML(d.phone)}">${escapeHTML(d.phone)}</a></p>
-      <p style="margin:0;overflow-wrap:anywhere"><strong>Email</strong><br><a href="mailto:${escapeHTML(d.email)}">${escapeHTML(d.email)}</a></p>
-      <p style="margin:0;overflow-wrap:anywhere"><strong>Address</strong><br>${escapeHTML(d.address)}</p>
-    </div>
-    <div style="margin-top:30px;padding-top:24px;border-top:1px solid rgba(127,127,127,.22)">
-      <h3 style="margin-top:0">Opening hours</h3>
-      <ul style="margin:12px 0 0;padding-left:20px;color:${d.theme.muted};display:grid;gap:7px">${hours}</ul>
-    </div>
-  </aside>
-</section>
-<style>
-@media(max-width:800px){
-  body section[style*="grid-template-columns:minmax(0,1.15fr)"]{grid-template-columns:1fr!important;padding:54px 6%!important}
-  body section[style*="grid-template-columns:minmax(0,1.15fr)"] form{grid-template-columns:1fr!important;padding:22px!important}
-  body section[style*="grid-template-columns:minmax(0,1.15fr)"] form input,
-  body section[style*="grid-template-columns:minmax(0,1.15fr)"] form textarea,
-  body section[style*="grid-template-columns:minmax(0,1.15fr)"] form button{grid-column:1!important}
-  body section[style*="grid-template-columns:minmax(0,1.15fr)"] form button{width:100%;text-align:center}
-}
-</style>
-${sharedFooter}${scriptForPreview()}</body></html>`;
+    const servicesPage = `${head(d,`${d.business} Services`,`Explore services from ${d.business}.`)}${commonNav}
+      <section class="page-hero"><div class="shell narrow"><span class="kicker">What we offer</span><h1>Our services</h1><p>${esc(d.description)}</p></div></section>
+      ${services(d)}
+      <section><div class="shell"><div class="section-head"><span class="kicker">Next step</span><h2>Need something more specific?</h2><p>Contact us for a tailored quote based on your exact requirements.</p></div><a class="btn" href="contact.html">Request a quote</a></div></section>
+      ${commonFooter}${previewScript()}</body></html>`;
 
-    const inline = doc => doc.replace('<link rel="stylesheet" href="style.css">',`<style>${style}</style>`);
     return {
-      "index.html":inline(index),
-      "about.html":inline(about),
-      "services.html":inline(services),
-      "contact.html":inline(contact),
-      "style.css":style
+      "index.html":home,
+      "about.html":about,
+      "services.html":servicesPage,
+      "contact.html":contactPage(d),
+      "style.css":css(d)
     };
   }
 
-  function packageText(files) {
-    return "WEBSITE PACKAGE GENERATED BY VINCTEC BUILDER PRO V3\n\n" +
-      Object.entries(files).map(([name,content]) =>
+  function packageText(f) {
+    return "WEBSITE PACKAGE GENERATED BY VINCTEC BUILDER PRO V5\n\n" +
+      Object.entries(f).map(([name,content]) =>
         "==============================\nFILE: "+name+"\n==============================\n"+content
       ).join("\n\n");
   }
 
   function render(page="index.html") {
-    if (!proFiles["index.html"]) proFiles=buildFiles();
+    if (!files["index.html"]) files=buildFiles();
     currentPage=page;
     const frame=$("websitePreview");
-    if (frame) frame.srcdoc=proFiles[page] || proFiles["index.html"];
+    if (frame) frame.srcdoc=files[page] || files["index.html"];
   }
 
   function generate() {
-    proFiles=buildFiles();
-    const box=$("websiteBuilderOutput");
-    if (box) {
-      box.value=packageText(proFiles);
-      box.style.display="none";
+    files=buildFiles();
+    const out=$("websiteBuilderOutput");
+    if (out) {
+      out.value=packageText(files);
+      out.style.display="none";
     }
     render("index.html");
   }
 
   function install() {
-    ensureControls();
+    addControls();
 
     const frame=$("websitePreview");
-    if (frame && !$("proPreviewTabs")) {
+    if (frame && !$("v4Tabs")) {
       const tabs=document.createElement("div");
-      tabs.id="proPreviewTabs";
+      tabs.id="v4Tabs";
       tabs.className="builder-actions";
-      tabs.innerHTML=`<button type="button" class="reply-btn" data-page="index.html">Preview Home</button><button type="button" class="reply-btn" data-page="about.html">Preview About</button><button type="button" class="reply-btn" data-page="services.html">Preview Services</button><button type="button" class="reply-btn" data-page="contact.html">Preview Contact</button>`;
-      tabs.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b)render(b.dataset.page)});
+      tabs.innerHTML=`<button type="button" class="reply-btn" data-page="index.html">Home preview</button><button type="button" class="reply-btn" data-page="about.html">About preview</button><button type="button" class="reply-btn" data-page="services.html">Services preview</button><button type="button" class="reply-btn" data-page="contact.html">Contact preview</button>`;
+      tabs.onclick=e=>{const b=e.target.closest("[data-page]");if(b)render(b.dataset.page)};
       frame.parentNode.insertBefore(tabs,frame);
     }
 
     window.generateWebsiteStarter=generate;
-    window.previewWebsite=page=>render(page || currentPage);
-    window.regenerateSection=section=>{
-      sectionSeed[section]=(sectionSeed[section]||0)+1;
-      generate();
-    };
+    window.previewWebsite=()=>render(currentPage);
+    window.regenerateSection=section=>{variant[section]=(variant[section]||0)+1;generate()};
     window.copyWebsiteStarter=async()=>{
-      if(!proFiles["index.html"])proFiles=buildFiles();
-      const txt=packageText(proFiles);
+      if(!files["index.html"])files=buildFiles();
+      const txt=packageText(files);
       try{await navigator.clipboard.writeText(txt)}catch(e){
         const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
       }
       alert("Website package copied!");
     };
-    window.downloadFile=filename=>{
-      if(!proFiles[filename])proFiles=buildFiles();
-      const blob=new Blob([proFiles[filename]],{type:filename.endsWith(".css")?"text/css":"text/html"});
-      const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    window.downloadFile=name=>{
+      if(!files[name])files=buildFiles();
+      const blob=new Blob([files[name]],{type:name.endsWith(".css")?"text/css":"text/html"});
+      const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),800);
     };
     window.downloadWebsiteZip=async()=>{
-      if(!proFiles["index.html"])proFiles=buildFiles();
+      if(!files["index.html"])files=buildFiles();
       if(typeof JSZip==="undefined"){alert("ZIP tool is still loading. Try again in a few seconds.");return}
-      const zip=new JSZip();Object.entries(proFiles).forEach(([n,c])=>zip.file(n,c));
+      const zip=new JSZip();Object.entries(files).forEach(([n,c])=>zip.file(n,c));
       const blob=await zip.generateAsync({type:"blob"});
-      const name=value("siteBusiness","client-website").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"client-website";
-      const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name+"-website.zip";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+      const safe=val("siteBusiness","client-website").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"client-website";
+      const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=safe+"-website.zip";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),800);
     };
-
-    ["siteStyle","siteLayout","siteHeroLayout","siteServicesLayout","siteNavLayout","siteFooterLayout","siteAnimation"].forEach(id=>{
-      const el=$(id);
-      if(el && !el.dataset.proLive){
-        el.dataset.proLive="1";
-        el.addEventListener("change",()=>{ if(proFiles["index.html"]) generate(); });
-      }
-    });
   }
 
   window.addEventListener("message",e=>{
-    if(e.data && e.data.type==="VINCTEC_PRO_NAV") render(e.data.page);
+    if(e.data && e.data.type==="V4_NAV") render(e.data.page);
   });
 
   window.addEventListener("load",()=>setTimeout(install,1200),{once:true});
