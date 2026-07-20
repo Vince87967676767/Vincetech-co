@@ -1744,5 +1744,356 @@ document.addEventListener('click', function(e){
   setTimeout(installBuilder, 800);
 })();
 </script>
+
+<script>
+/* === VINCTEC BUILDER PRO V3 SAFE FINAL LAYER ===
+   Added after the existing working builder. It only upgrades the website-builder controls
+   and replaces the generator functions after the page has loaded.
+*/
+(function () {
+  "use strict";
+
+  let proFiles = {};
+  let currentPage = "index.html";
+  let sectionSeed = { hero: 0, about: 0, services: 0, contact: 0 };
+
+  const $ = id => document.getElementById(id);
+  const value = (id, fallback = "") => {
+    const el = $(id);
+    return el && String(el.value).trim() ? String(el.value).trim() : fallback;
+  };
+  const escapeHTML = input => String(input ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+  const splitCSV = (input, fallback) =>
+    String(input || fallback).split(",").map(x => x.trim()).filter(Boolean);
+
+  const themes = {
+    luxury:     {label:"Luxury Black & Gold", bg:"#090909", panel:"#171717", soft:"#222", text:"#fff", muted:"#d6d3d1", accent:"#d4af37", accent2:"#f5e7a1", button:"#111", gradient:"linear-gradient(135deg,#050505,#211b0b)", font:"Georgia,serif"},
+    corporate:  {label:"Corporate Blue", bg:"#f8fafc", panel:"#fff", soft:"#eaf2ff", text:"#0f172a", muted:"#475569", accent:"#2563eb", accent2:"#60a5fa", button:"#fff", gradient:"linear-gradient(135deg,#dbeafe,#ffffff)", font:"Arial,sans-serif"},
+    trades:     {label:"Bold Trades", bg:"#111827", panel:"#1f2937", soft:"#2b3546", text:"#fff", muted:"#d1d5db", accent:"#f97316", accent2:"#fbbf24", button:"#111", gradient:"linear-gradient(135deg,#111827,#7c2d12)", font:"Arial,sans-serif"},
+    restaurant: {label:"Restaurant Warm", bg:"#1c120d", panel:"#2a1a12", soft:"#3a2418", text:"#fff7ed", muted:"#fed7aa", accent:"#ef4444", accent2:"#fb923c", button:"#fff", gradient:"linear-gradient(135deg,#2a0f0f,#7f1d1d)", font:"Georgia,serif"},
+    futuristic: {label:"Futuristic Neon", bg:"#020617", panel:"#0f172a", soft:"#13233d", text:"#e0f2fe", muted:"#a5f3fc", accent:"#22d3ee", accent2:"#a855f7", button:"#001018", gradient:"linear-gradient(135deg,#020617,#164e63,#581c87)", font:"Arial,sans-serif"},
+    minimal:    {label:"Apple Minimal", bg:"#fff", panel:"#f5f5f7", soft:"#ececf0", text:"#111827", muted:"#52525b", accent:"#111827", accent2:"#6b7280", button:"#fff", gradient:"linear-gradient(135deg,#ffffff,#f4f4f5)", font:"Arial,sans-serif"},
+    glass:      {label:"Glassmorphism", bg:"#08111f", panel:"rgba(255,255,255,.10)", soft:"rgba(255,255,255,.07)", text:"#fff", muted:"#dbeafe", accent:"#38bdf8", accent2:"#c084fc", button:"#06121f", gradient:"linear-gradient(135deg,#0f172a,#1e3a8a,#581c87)", font:"Arial,sans-serif"},
+    creative:   {label:"Creative Agency", bg:"#fff7ed", panel:"#ffffff", soft:"#ffedd5", text:"#431407", muted:"#7c2d12", accent:"#ea580c", accent2:"#db2777", button:"#fff", gradient:"linear-gradient(135deg,#fff7ed,#fce7f3)", font:"Arial,sans-serif"},
+    fashion:    {label:"Fashion Editorial", bg:"#fafafa", panel:"#fff", soft:"#f1f1f1", text:"#111", muted:"#525252", accent:"#111", accent2:"#a3a3a3", button:"#fff", gradient:"linear-gradient(135deg,#fff,#e5e5e5)", font:"Georgia,serif"},
+    fitness:    {label:"Fitness Energy", bg:"#0a0a0a", panel:"#18181b", soft:"#27272a", text:"#fff", muted:"#d4d4d8", accent:"#84cc16", accent2:"#facc15", button:"#111", gradient:"linear-gradient(135deg,#09090b,#365314)", font:"Arial,sans-serif"},
+    medical:    {label:"Medical Clean", bg:"#f0fdfa", panel:"#fff", soft:"#ccfbf1", text:"#134e4a", muted:"#52706d", accent:"#0d9488", accent2:"#2dd4bf", button:"#fff", gradient:"linear-gradient(135deg,#ccfbf1,#ffffff)", font:"Arial,sans-serif"},
+    automotive: {label:"Automotive Performance", bg:"#09090b", panel:"#18181b", soft:"#27272a", text:"#fff", muted:"#d4d4d8", accent:"#ef4444", accent2:"#f97316", button:"#fff", gradient:"linear-gradient(135deg,#09090b,#450a0a)", font:"Arial,sans-serif"},
+    realestate: {label:"Real Estate Premium", bg:"#f8fafc", panel:"#fff", soft:"#e2e8f0", text:"#0f172a", muted:"#475569", accent:"#0f766e", accent2:"#d4af37", button:"#fff", gradient:"linear-gradient(135deg,#ccfbf1,#f8fafc)", font:"Georgia,serif"},
+    neon:       {label:"Cyber Neon", bg:"#05010d", panel:"#130629", soft:"#220b46", text:"#fff", muted:"#e9d5ff", accent:"#f0f", accent2:"#00ffff", button:"#05010d", gradient:"linear-gradient(135deg,#05010d,#3b0764,#083344)", font:"Arial,sans-serif"}
+  };
+
+  function ensureControls() {
+    const anchor = $("siteStyle");
+    if (!anchor || $("proDesignControls")) return;
+
+    anchor.innerHTML = Object.entries(themes)
+      .map(([key,t]) => `<option value="${key}">${t.label}</option>`).join("");
+
+    const wrap = document.createElement("div");
+    wrap.id = "proDesignControls";
+    wrap.innerHTML = `
+      <select id="siteLayout">
+        <option value="classic">Classic sections</option>
+        <option value="split">Split-screen layout</option>
+        <option value="editorial">Editorial layout</option>
+        <option value="cards">Card-focused layout</option>
+        <option value="immersive">Immersive full-width layout</option>
+      </select>
+      <select id="siteHeroLayout">
+        <option value="split">Hero: text left / visual right</option>
+        <option value="centered">Hero: centred statement</option>
+        <option value="image">Hero: full background image</option>
+        <option value="cards">Hero: floating information cards</option>
+        <option value="minimal">Hero: minimal headline</option>
+      </select>
+      <select id="siteServicesLayout">
+        <option value="grid">Services: modern grid</option>
+        <option value="list">Services: numbered list</option>
+        <option value="alternating">Services: alternating rows</option>
+        <option value="pillars">Services: large pillars</option>
+        <option value="glass">Services: glass cards</option>
+      </select>
+      <select id="siteNavLayout">
+        <option value="standard">Navigation: standard</option>
+        <option value="floating">Navigation: floating pill</option>
+        <option value="glass">Navigation: glass</option>
+        <option value="minimal">Navigation: minimal</option>
+      </select>
+      <select id="siteFooterLayout">
+        <option value="simple">Footer: simple</option>
+        <option value="columns">Footer: multi-column</option>
+        <option value="cta">Footer: large CTA</option>
+        <option value="brand">Footer: oversized brand</option>
+      </select>
+      <select id="siteAnimation">
+        <option value="fade">Animation: fade up</option>
+        <option value="slide">Animation: slide in</option>
+        <option value="zoom">Animation: soft zoom</option>
+        <option value="none">Animation: none</option>
+      </select>
+      <div class="builder-actions">
+        <button type="button" class="success-btn" id="surpriseDesignBtn">🎲 Surprise Me With A Design</button>
+      </div>`;
+    anchor.insertAdjacentElement("afterend", wrap);
+
+    $("surpriseDesignBtn").addEventListener("click", randomiseDesign);
+  }
+
+  function randomKey(obj) {
+    const keys = Object.keys(obj);
+    return keys[Math.floor(Math.random() * keys.length)];
+  }
+
+  function randomiseDesign() {
+    $("siteStyle").value = randomKey(themes);
+    const pick = id => {
+      const el = $(id);
+      el.selectedIndex = Math.floor(Math.random() * el.options.length);
+    };
+    ["siteLayout","siteHeroLayout","siteServicesLayout","siteNavLayout","siteFooterLayout","siteAnimation"].forEach(pick);
+    generate();
+  }
+
+  function getData() {
+    const style = value("siteStyle","luxury");
+    return {
+      business:value("siteBusiness","Your Business"),
+      type:value("siteType","local business"),
+      description:value("siteDescription","A professional business focused on quality, trust and an easy customer experience."),
+      services:splitCSV(value("siteServices","Main Service, Customer Support, Free Quote"),"Main Service, Customer Support, Free Quote"),
+      phone:value("sitePhone","01279 000000"),
+      email:value("siteEmail","info@example.co.uk"),
+      address:value("siteAddress","Harlow, Essex"),
+      style,
+      theme:themes[style] || themes.luxury,
+      layout:value("siteLayout","classic"),
+      heroLayout:value("siteHeroLayout","split"),
+      servicesLayout:value("siteServicesLayout","grid"),
+      navLayout:value("siteNavLayout","standard"),
+      footerLayout:value("siteFooterLayout","simple"),
+      animation:value("siteAnimation","fade"),
+      colours:value("siteColours",""),
+      tone:value("siteTone","professional and friendly"),
+      heroImage:value("siteHeroImage",""),
+      galleryImages:splitCSV(value("siteGalleryImages",""),""),
+      videoUrl:value("siteVideoUrl",""),
+      features:(value("siteFeatures","") + " " + value("siteExtraFeatures","")).toLowerCase(),
+      openingHours:value("siteOpeningHours","Mon-Fri 9am-5pm, Sat 10am-4pm, Sun Closed"),
+      menuStyle:value("siteMenuStyle","standard"),
+      year:new Date().getFullYear()
+    };
+  }
+
+  function nav(d) {
+    const services = d.menuStyle === "dropdown"
+      ? `<span class="drop"><a href="services.html">Services ▾</a><span class="drop-menu">${d.services.map(s=>`<a href="services.html">${escapeHTML(s)}</a>`).join("")}</span></span>`
+      : `<a href="services.html">Services</a>`;
+    return `<header class="nav-${d.navLayout}"><a class="logo" href="index.html">${escapeHTML(d.business)}</a><nav><a href="index.html">Home</a><a href="about.html">About</a>${services}<a href="contact.html">Contact</a></nav></header>`;
+  }
+
+  function hero(d) {
+    const titleOptions = [
+      `${escapeHTML(d.business)} delivers trusted ${escapeHTML(d.type)} services.`,
+      `A better way to experience ${escapeHTML(d.type)} services.`,
+      `Quality, speed and service—built around you.`
+    ];
+    const title = titleOptions[sectionSeed.hero % titleOptions.length];
+    const visual = d.heroImage
+      ? `<div class="hero-visual"><img src="${escapeHTML(d.heroImage)}" alt="${escapeHTML(d.business)}"></div>`
+      : `<div class="hero-visual placeholder"><span>${escapeHTML(d.theme.label)}</span></div>`;
+    const buttons = `<div class="actions"><a class="btn" href="contact.html">Get a Free Quote</a><a class="btn secondary" href="services.html">Explore Services</a></div>`;
+    if (d.heroLayout === "centered") return `<section class="hero hero-centered"><div><p class="eyebrow">${escapeHTML(d.theme.label)}</p><h1>${title}</h1><p>${escapeHTML(d.description)}</p>${buttons}</div></section>`;
+    if (d.heroLayout === "image") return `<section class="hero hero-image" style="${d.heroImage ? `background-image:linear-gradient(rgba(0,0,0,.48),rgba(0,0,0,.58)),url('${escapeHTML(d.heroImage)}')` : ""}"><div><p class="eyebrow">${escapeHTML(d.theme.label)}</p><h1>${title}</h1><p>${escapeHTML(d.description)}</p>${buttons}</div></section>`;
+    if (d.heroLayout === "cards") return `<section class="hero hero-cards"><div><p class="eyebrow">${escapeHTML(d.theme.label)}</p><h1>${title}</h1><p>${escapeHTML(d.description)}</p>${buttons}</div><div class="floating-stack"><div class="mini-card"><b>${escapeHTML(d.services[0] || "Quality")}</b><span>Customer-focused service</span></div><div class="mini-card"><b>${escapeHTML(d.address)}</b><span>Local support</span></div><div class="mini-card"><b>${escapeHTML(d.phone)}</b><span>Quick contact</span></div></div></section>`;
+    if (d.heroLayout === "minimal") return `<section class="hero hero-minimal"><div><p class="eyebrow">${escapeHTML(d.type)}</p><h1>${title}</h1>${buttons}</div></section>`;
+    return `<section class="hero hero-split"><div><p class="eyebrow">${escapeHTML(d.theme.label)} • ${escapeHTML(d.tone)}</p><h1>${title}</h1><p>${escapeHTML(d.description)}</p>${buttons}</div>${visual}</section>`;
+  }
+
+  function servicesSection(d) {
+    const items = d.services.map((s,i) => {
+      const text = `Professional ${escapeHTML(s).toLowerCase()} with clear communication and dependable support.`;
+      if (d.servicesLayout === "list") return `<article class="service-list-item"><span>0${i+1}</span><div><h3>${escapeHTML(s)}</h3><p>${text}</p></div></article>`;
+      if (d.servicesLayout === "alternating") return `<article class="service-alt"><div class="service-number">0${i+1}</div><div><h3>${escapeHTML(s)}</h3><p>${text}</p></div></article>`;
+      if (d.servicesLayout === "pillars") return `<article class="service-pillar"><span>0${i+1}</span><h3>${escapeHTML(s)}</h3><p>${text}</p></article>`;
+      return `<article class="service-card ${d.servicesLayout === "glass" ? "glass-card" : ""}"><span class="service-icon">✦</span><h3>${escapeHTML(s)}</h3><p>${text}</p></article>`;
+    }).join("");
+    return `<section class="services-section"><div class="section-heading"><p class="eyebrow">What we do</p><h2>Services built around your needs</h2></div><div class="services-${d.servicesLayout}">${items}</div></section>`;
+  }
+
+  function optionalSections(d) {
+    let out = "";
+    if (d.features.includes("testimonial") || d.features.includes("review")) {
+      out += `<section><div class="section-heading"><p class="eyebrow">Reviews</p><h2>What customers say</h2></div><div class="review-grid"><blockquote>“Professional, reliable and easy to work with.”<cite>Happy Customer</cite></blockquote><blockquote>“The whole experience felt clear and simple.”<cite>Local Client</cite></blockquote><blockquote>“Excellent service from start to finish.”<cite>Returning Customer</cite></blockquote></div></section>`;
+    }
+    if (d.features.includes("price")) {
+      out += `<section><div class="section-heading"><p class="eyebrow">Packages</p><h2>Simple pricing</h2></div><div class="price-grid"><div class="price-card"><h3>Starter</h3><strong>From £25</strong><p>Great for essential support.</p></div><div class="price-card featured"><h3>Professional</h3><strong>Custom quote</strong><p>Built around your exact needs.</p></div><div class="price-card"><h3>Premium</h3><strong>Contact us</strong><p>Complete service and support.</p></div></div></section>`;
+    }
+    if (d.features.includes("gallery") || d.galleryImages.filter(Boolean).length) {
+      const imgs = d.galleryImages.filter(Boolean);
+      const cards = imgs.length ? imgs.slice(0,6).map((url,i)=>`<div class="gallery-item"><img src="${escapeHTML(url)}" alt="Gallery ${i+1}"></div>`).join("") : `<div class="gallery-item placeholder">Project 01</div><div class="gallery-item placeholder">Project 02</div><div class="gallery-item placeholder">Project 03</div>`;
+      out += `<section><div class="section-heading"><p class="eyebrow">Our work</p><h2>Gallery</h2></div><div class="gallery-grid">${cards}</div></section>`;
+    }
+    if (d.features.includes("faq")) {
+      out += `<section><div class="section-heading"><p class="eyebrow">FAQ</p><h2>Common questions</h2></div><details open><summary>How do I get started?</summary><p>Use the contact page or call us directly.</p></details><details><summary>Where are you based?</summary><p>${escapeHTML(d.address)}</p></details><details><summary>Can I request a custom service?</summary><p>Yes. Contact us to discuss your needs.</p></details></section>`;
+    }
+    return out;
+  }
+
+  function footer(d) {
+    if (d.footerLayout === "columns") return `<footer class="footer-columns"><div><a class="footer-logo">${escapeHTML(d.business)}</a><p>${escapeHTML(d.description)}</p></div><div><h4>Explore</h4><a href="about.html">About</a><a href="services.html">Services</a><a href="contact.html">Contact</a></div><div><h4>Contact</h4><span>${escapeHTML(d.phone)}</span><span>${escapeHTML(d.email)}</span><span>${escapeHTML(d.address)}</span></div><small>© ${d.year} ${escapeHTML(d.business)}. Website by Vinctec.</small></footer>`;
+    if (d.footerLayout === "cta") return `<footer class="footer-cta"><p class="eyebrow">Ready to begin?</p><h2>Let’s build something great together.</h2><a class="btn" href="contact.html">Contact ${escapeHTML(d.business)}</a><small>© ${d.year} ${escapeHTML(d.business)}. Website by Vinctec.</small></footer>`;
+    if (d.footerLayout === "brand") return `<footer class="footer-brand"><div class="giant-brand">${escapeHTML(d.business)}</div><div><span>${escapeHTML(d.phone)}</span><span>${escapeHTML(d.email)}</span><span>${escapeHTML(d.address)}</span></div><small>© ${d.year}. Website by Vinctec.</small></footer>`;
+    return `<footer class="footer-simple">© ${d.year} ${escapeHTML(d.business)}. Website by Vinctec.</footer>`;
+  }
+
+  function css(d) {
+    const t=d.theme;
+    const anim = d.animation === "none" ? "" : `
+section{animation:${d.animation === "slide" ? "slideIn" : d.animation === "zoom" ? "softZoom" : "fadeUp"} .7s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:none}}
+@keyframes softZoom{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}`;
+    return `
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:${t.bg};color:${t.text};font-family:${t.font};line-height:1.65}a{color:inherit}img{max-width:100%;display:block}
+header{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 7%;background:${t.panel};border-bottom:1px solid rgba(127,127,127,.18)}
+.logo{text-decoration:none;font-size:1.35rem;font-weight:900;color:${t.accent}}nav{display:flex;align-items:center;gap:24px}nav a{text-decoration:none;font-weight:700}
+.nav-floating{width:min(1120px,92%);margin:14px auto 0;border-radius:999px;top:14px;box-shadow:0 16px 40px rgba(0,0,0,.18)}
+.nav-glass{background:rgba(15,23,42,.68);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.nav-minimal{background:transparent;position:absolute;width:100%;border:0}
+.drop{position:relative}.drop-menu{display:none;position:absolute;top:100%;left:0;min-width:190px;padding:8px;background:${t.panel};border-radius:12px;box-shadow:0 16px 35px rgba(0,0,0,.22)}.drop:hover .drop-menu{display:block}.drop-menu a{display:block;padding:8px}
+section{padding:82px 7%}.eyebrow{color:${t.accent};font-weight:900;text-transform:uppercase;letter-spacing:.16em;font-size:.78rem}h1{font-size:clamp(3rem,7vw,6.7rem);line-height:.98;margin:.2em 0;letter-spacing:-.045em}h2{font-size:clamp(2.1rem,4vw,4rem);line-height:1.05;margin:.2em 0 .5em}h3{margin:.2em 0 .4em;color:${t.accent}}p{color:${t.muted};max-width:760px}
+.hero{min-height:86vh;background:${t.gradient};display:grid;align-items:center;gap:44px}.hero-split,.hero-cards{grid-template-columns:1.08fr .92fr}.hero-centered{text-align:center;display:flex;justify-content:center}.hero-centered p{margin-left:auto;margin-right:auto}.hero-image{background-size:cover;background-position:center;color:white}.hero-image p{color:#f4f4f5}.hero-minimal{display:flex;align-items:flex-end}.hero-visual{min-height:480px;border-radius:32px;overflow:hidden;background:${t.soft};border:1px solid rgba(255,255,255,.16);box-shadow:0 24px 70px rgba(0,0,0,.22)}.hero-visual img{width:100%;height:100%;object-fit:cover}.placeholder{display:grid;place-items:center;color:${t.muted}}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-block;text-decoration:none;padding:14px 23px;border-radius:999px;background:${t.accent};color:${t.button};font-weight:900}.btn.secondary{background:transparent;border:1px solid ${t.accent};color:${t.text}}
+.floating-stack{display:grid;gap:18px}.mini-card{padding:25px;border-radius:22px;background:${t.panel};box-shadow:0 16px 45px rgba(0,0,0,.18);transform:rotate(-2deg)}.mini-card:nth-child(2){transform:translateX(35px) rotate(2deg)}.mini-card b,.mini-card span{display:block}.mini-card span{color:${t.muted}}
+.section-heading{max-width:760px;margin-bottom:35px}.services-grid,.services-glass{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}.service-card,.service-pillar,.price-card,blockquote{padding:28px;border-radius:24px;background:${t.panel};border:1px solid rgba(127,127,127,.16);box-shadow:0 16px 45px rgba(0,0,0,.10)}.glass-card{background:rgba(255,255,255,.08);backdrop-filter:blur(15px)}.service-icon{font-size:1.7rem;color:${t.accent2}}.services-list{display:grid}.service-list-item{display:grid;grid-template-columns:100px 1fr;padding:25px 0;border-top:1px solid rgba(127,127,127,.25)}.service-list-item span,.service-number{font-size:2rem;color:${t.accent}}.services-alternating{display:grid;gap:18px}.service-alt{display:grid;grid-template-columns:120px 1fr;padding:35px;background:${t.panel};border-radius:28px}.service-alt:nth-child(even){margin-left:10%}.services-pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:rgba(127,127,127,.25)}.service-pillar{border-radius:0;min-height:330px}
+.review-grid,.price-grid,.gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}blockquote{font-size:1.25rem;margin:0}blockquote cite{display:block;margin-top:18px;color:${t.accent};font-size:.9rem}.price-card strong{display:block;font-size:2rem;margin:14px 0}.price-card.featured{outline:2px solid ${t.accent};transform:translateY(-10px)}.gallery-item{min-height:280px;border-radius:24px;overflow:hidden;background:${t.soft}.gallery-item img{width:100%;height:100%;object-fit:cover}details{padding:20px 0;border-top:1px solid rgba(127,127,127,.24)}summary{font-weight:900;cursor:pointer}
+.footer-simple,.footer-columns,.footer-cta,.footer-brand{padding:54px 7%;background:${t.panel};color:${t.muted}}.footer-columns{display:grid;grid-template-columns:2fr 1fr 1fr;gap:35px}.footer-columns a,.footer-columns span{display:block;text-decoration:none;margin:5px 0}.footer-columns small{grid-column:1/-1}.footer-logo{font-size:1.4rem;font-weight:900;color:${t.accent}}.footer-cta{text-align:center;padding:90px 7%}.footer-cta h2{margin-left:auto;margin-right:auto}.footer-cta small{display:block;margin-top:45px}.giant-brand{font-size:clamp(3.5rem,12vw,10rem);font-weight:900;line-height:.85;color:${t.accent};overflow:hidden}.footer-brand>div:nth-child(2){display:flex;gap:20px;flex-wrap:wrap;margin:35px 0}
+.layout-editorial .services-section{display:grid;grid-template-columns:.7fr 1.3fr;gap:45px}.layout-cards section{margin:22px 4%;border-radius:34px;background:${t.panel}}.layout-immersive section{min-height:75vh;display:flex;flex-direction:column;justify-content:center}.layout-split section:not(.hero){display:grid;grid-template-columns:.7fr 1.3fr;gap:40px}
+${anim}
+@media(max-width:800px){header{display:block}.nav-floating{border-radius:22px}nav{gap:12px;flex-wrap:wrap;margin-top:12px}.hero-split,.hero-cards,.layout-editorial .services-section,.layout-split section:not(.hero){grid-template-columns:1fr}.hero-visual{min-height:300px}.service-alt:nth-child(even){margin-left:0}.footer-columns{grid-template-columns:1fr}.actions{display:grid}.btn{text-align:center}section{padding:62px 6%}h1{font-size:clamp(2.7rem,14vw,4.5rem)}}`;
+  }
+
+  function head(d,title,description) {
+    return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHTML(title)}</title><meta name="description" content="${escapeHTML(description)}"><link rel="stylesheet" href="style.css"></head><body class="layout-${d.layout}">`;
+  }
+
+  function scriptForPreview() {
+    return `<script>document.addEventListener("click",function(e){var a=e.target.closest("a");if(!a)return;var h=a.getAttribute("href");if(["index.html","about.html","services.html","contact.html"].includes(h)){e.preventDefault();parent.postMessage({type:"VINCTEC_PRO_NAV",page:h},"*")}})<\/script>`;
+  }
+
+  function buildFiles() {
+    const d=getData();
+    const sharedNav=nav(d), sharedFooter=footer(d), style=css(d);
+
+    const index = `${head(d,`${d.business} | Home`,`${d.business} provides ${d.type} services in ${d.address}.`)}${sharedNav}${hero(d)}${servicesSection(d)}${optionalSections(d)}<section><div class="section-heading"><p class="eyebrow">Why choose us</p><h2>Clear service. Strong results.</h2></div><p>${escapeHTML(d.business)} focuses on quality, communication and an easy customer journey from first enquiry to completed service.</p><div class="actions"><a class="btn" href="contact.html">Start an enquiry</a></div></section>${sharedFooter}${scriptForPreview()}</body></html>`;
+
+    const aboutText = [
+      `${d.business} is built around reliable service, clear communication and a ${d.tone} customer experience.`,
+      `We help customers understand their options, make confident decisions and receive dependable support.`,
+      `Our goal is to make every stage feel straightforward, professional and personal.`
+    ][sectionSeed.about % 3];
+    const about = `${head(d,`About ${d.business}`,`Learn about ${d.business}.`)}${sharedNav}<section class="hero hero-centered"><div><p class="eyebrow">Our story</p><h1>About ${escapeHTML(d.business)}</h1><p>${escapeHTML(d.description)}</p></div></section><section><div class="section-heading"><p class="eyebrow">Who we are</p><h2>Built on trust and quality</h2></div><p>${escapeHTML(aboutText)}</p></section><section><div class="section-heading"><p class="eyebrow">Our approach</p><h2>What customers can expect</h2></div><div class="services-grid"><article class="service-card"><h3>Clear communication</h3><p>Simple information and honest support.</p></article><article class="service-card"><h3>Reliable delivery</h3><p>A professional experience from start to finish.</p></article><article class="service-card"><h3>Customer focus</h3><p>Solutions shaped around real needs.</p></article></div></section>${sharedFooter}${scriptForPreview()}</body></html>`;
+
+    const services = `${head(d,`${d.business} Services`,`Explore services from ${d.business}.`)}${sharedNav}<section class="hero hero-minimal"><div><p class="eyebrow">What we offer</p><h1>Our Services</h1><p>${escapeHTML(d.description)}</p></div></section>${servicesSection(d)}${optionalSections(d)}<section><div class="section-heading"><p class="eyebrow">Next step</p><h2>Need a custom solution?</h2></div><a class="btn" href="contact.html">Request a quote</a></section>${sharedFooter}${scriptForPreview()}</body></html>`;
+
+    const hours = d.openingHours.split(",").map(x=>`<li>${escapeHTML(x.trim())}</li>`).join("");
+    const contact = `${head(d,`Contact ${d.business}`,`Contact ${d.business} in ${d.address}.`)}${sharedNav}<section class="hero hero-centered"><div><p class="eyebrow">Get in touch</p><h1>Let’s talk about what you need.</h1><p>Send an enquiry and ${escapeHTML(d.business)} will get back to you.</p></div></section><section class="contact-layout"><div><form onsubmit="event.preventDefault();alert('Demo form submitted. Connect EmailJS, Firebase or Formspree before launch.')"><input type="text" placeholder="Your name" required><input type="email" placeholder="Email address" required><input type="tel" placeholder="Phone number"><textarea placeholder="Tell us what you need" required></textarea><button class="btn" type="submit">Send enquiry</button></form></div><div><h2>Contact details</h2><p><strong>Phone:</strong> <a href="tel:${escapeHTML(d.phone)}">${escapeHTML(d.phone)}</a></p><p><strong>Email:</strong> <a href="mailto:${escapeHTML(d.email)}">${escapeHTML(d.email)}</a></p><p><strong>Address:</strong> ${escapeHTML(d.address)}</p><h3>Opening hours</h3><ul>${hours}</ul></div></section>${sharedFooter}${scriptForPreview()}</body></html>`;
+
+    const inline = doc => doc.replace('<link rel="stylesheet" href="style.css">',`<style>${style}</style>`);
+    return {
+      "index.html":inline(index),
+      "about.html":inline(about),
+      "services.html":inline(services),
+      "contact.html":inline(contact),
+      "style.css":style
+    };
+  }
+
+  function packageText(files) {
+    return "WEBSITE PACKAGE GENERATED BY VINCTEC BUILDER PRO V3\n\n" +
+      Object.entries(files).map(([name,content]) =>
+        "==============================\nFILE: "+name+"\n==============================\n"+content
+      ).join("\n\n");
+  }
+
+  function render(page="index.html") {
+    if (!proFiles["index.html"]) proFiles=buildFiles();
+    currentPage=page;
+    const frame=$("websitePreview");
+    if (frame) frame.srcdoc=proFiles[page] || proFiles["index.html"];
+  }
+
+  function generate() {
+    proFiles=buildFiles();
+    const box=$("websiteBuilderOutput");
+    if (box) {
+      box.value=packageText(proFiles);
+      box.style.display="none";
+    }
+    render("index.html");
+  }
+
+  function install() {
+    ensureControls();
+
+    const frame=$("websitePreview");
+    if (frame && !$("proPreviewTabs")) {
+      const tabs=document.createElement("div");
+      tabs.id="proPreviewTabs";
+      tabs.className="builder-actions";
+      tabs.innerHTML=`<button type="button" class="reply-btn" data-page="index.html">Preview Home</button><button type="button" class="reply-btn" data-page="about.html">Preview About</button><button type="button" class="reply-btn" data-page="services.html">Preview Services</button><button type="button" class="reply-btn" data-page="contact.html">Preview Contact</button>`;
+      tabs.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b)render(b.dataset.page)});
+      frame.parentNode.insertBefore(tabs,frame);
+    }
+
+    window.generateWebsiteStarter=generate;
+    window.previewWebsite=page=>render(page || currentPage);
+    window.regenerateSection=section=>{
+      sectionSeed[section]=(sectionSeed[section]||0)+1;
+      generate();
+    };
+    window.copyWebsiteStarter=async()=>{
+      if(!proFiles["index.html"])proFiles=buildFiles();
+      const txt=packageText(proFiles);
+      try{await navigator.clipboard.writeText(txt)}catch(e){
+        const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
+      }
+      alert("Website package copied!");
+    };
+    window.downloadFile=filename=>{
+      if(!proFiles[filename])proFiles=buildFiles();
+      const blob=new Blob([proFiles[filename]],{type:filename.endsWith(".css")?"text/css":"text/html"});
+      const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    };
+    window.downloadWebsiteZip=async()=>{
+      if(!proFiles["index.html"])proFiles=buildFiles();
+      if(typeof JSZip==="undefined"){alert("ZIP tool is still loading. Try again in a few seconds.");return}
+      const zip=new JSZip();Object.entries(proFiles).forEach(([n,c])=>zip.file(n,c));
+      const blob=await zip.generateAsync({type:"blob"});
+      const name=value("siteBusiness","client-website").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"client-website";
+      const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name+"-website.zip";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    };
+
+    ["siteStyle","siteLayout","siteHeroLayout","siteServicesLayout","siteNavLayout","siteFooterLayout","siteAnimation"].forEach(id=>{
+      const el=$(id);
+      if(el && !el.dataset.proLive){
+        el.dataset.proLive="1";
+        el.addEventListener("change",()=>{ if(proFiles["index.html"]) generate(); });
+      }
+    });
+  }
+
+  window.addEventListener("message",e=>{
+    if(e.data && e.data.type==="VINCTEC_PRO_NAV") render(e.data.page);
+  });
+
+  window.addEventListener("load",()=>setTimeout(install,1200),{once:true});
+  setTimeout(install,1800);
+})();
+</script>
+
 </body>
 </html>
