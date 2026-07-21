@@ -2122,5 +2122,167 @@ footer{background:${t.surface};border-top:1px solid rgba(127,127,127,.18);paddin
 })();
 </script>
 
+
+
+<style id="v61BuilderStyles">
+.architecture-panel{margin:16px 0;padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:#111827}
+.architecture-panel h4{margin:0 0 10px;font-size:17px}
+.architecture-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.architecture-card{display:block;position:relative;padding:15px;border:1px solid #334155;border-radius:12px;background:#0f172a;cursor:pointer;transition:.2s ease}
+.architecture-card:hover{transform:translateY(-2px);border-color:#38bdf8}
+.architecture-card input{position:absolute;opacity:0;pointer-events:none}
+.architecture-card strong{display:block;font-size:15px;margin-bottom:5px}
+.architecture-card span{display:block;color:#94a3b8;font-size:13px;line-height:1.45}
+.architecture-card:has(input:checked){border-color:#22d3ee;box-shadow:0 0 0 2px rgba(34,211,238,.22);background:#102236}
+.preview-device-bar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.preview-shell{margin:auto;transition:max-width .25s ease;width:100%}
+.preview-shell.tablet{max-width:820px}
+.preview-shell.mobile{max-width:390px}
+.preview-shell.mobile .preview-frame{height:760px}
+</style>
+
+<script id="v61ArchitectureEngine">
+/* === VINCTEC BUILDER PRO V6.1 — ACTIVE ARCHITECTURE ENGINE ===
+   Keeps the working dashboard intact and replaces only the final active
+   website-builder functions. Existing earlier builder code remains dormant
+   as a safe fallback, while this final engine owns generation and preview.
+*/
+(function(){
+  "use strict";
+
+  let files={};
+  let currentPage="index.html";
+  let variants={hero:0,about:0,services:0,contact:0};
+
+  const $=id=>document.getElementById(id);
+  const value=(id,fallback)=>{const el=$(id);return el&&String(el.value).trim()?String(el.value).trim():fallback};
+  const escapeHTML=v=>String(v||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+  const split=(v,fallback)=>String(v||fallback).split(",").map(x=>x.trim()).filter(Boolean);
+
+  function architecture(){
+    const selected=document.querySelector('input[name="siteArchitecture"]:checked');
+    return selected?selected.value:"classic";
+  }
+
+  function collect(){
+    return {
+      business:value("siteBusiness","Your Business"),
+      type:value("siteType","local business"),
+      description:value("siteDescription","A professional local business focused on reliable service and excellent customer care."),
+      services:split(value("siteServices","Main Service, Customer Support, Free Quote"),"Main Service, Customer Support, Free Quote"),
+      phone:value("sitePhone","01279 000000"),
+      email:value("siteEmail","info@example.co.uk"),
+      address:value("siteAddress","Harlow, Essex"),
+      tone:value("siteTone","professional and friendly"),
+      colours:value("siteColours","black, white and blue"),
+      heroImage:value("siteHeroImage",""),
+      openingHours:value("siteOpeningHours","Mon–Fri 9am–5pm, Sat 10am–4pm"),
+      architecture:architecture(),
+      year:new Date().getFullYear()
+    };
+  }
+
+  function common(d){
+    const b=escapeHTML(d.business), phone=escapeHTML(d.phone), email=escapeHTML(d.email);
+    return {
+      head:(title,description)=>`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHTML(title)}</title><meta name="description" content="${escapeHTML(description)}"><link rel="stylesheet" href="style.css"></head>`,
+      footer:`<footer><div><strong>${b}</strong><p>${escapeHTML(d.address)}</p></div><div><a href="tel:${phone}">${phone}</a><a href="mailto:${email}">${email}</a></div><small>© ${d.year} ${b}. Website by Vinctec.</small></footer>`
+    };
+  }
+
+  function classicFiles(d){
+    const c=common(d),b=escapeHTML(d.business),type=escapeHTML(d.type),desc=escapeHTML(d.description),phone=escapeHTML(d.phone),email=escapeHTML(d.email),address=escapeHTML(d.address);
+    const cards=d.services.map(s=>`<article class="service-card"><h3>${escapeHTML(s)}</h3><p>Reliable ${escapeHTML(s).toLowerCase()} with clear communication and customer-focused support.</p></article>`).join("");
+    const nav=`<header class="site-header"><a class="brand" href="index.html">${b}</a><nav><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a href="contact.html">Contact</a></nav></header>`;
+    const css=`*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,sans-serif;background:#0f172a;color:#fff;line-height:1.6}a{color:inherit}.site-header{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:20px 7%;background:rgba(15,23,42,.94);backdrop-filter:blur(12px)}.brand{font-weight:900;text-decoration:none;font-size:23px;color:#38bdf8}nav a{text-decoration:none;margin-left:18px;font-weight:700}.hero{min-height:78vh;display:grid;align-items:center;padding:80px 7%;background:linear-gradient(135deg,#0f172a,#1e3a8a)}.hero-inner{max-width:900px}.eyebrow{color:#7dd3fc;text-transform:uppercase;letter-spacing:.18em;font-weight:800}.hero h1,.page-hero h1{font-size:clamp(42px,7vw,78px);line-height:1.02;margin:12px 0}.hero p,.page-hero p,section p{color:#cbd5e1;font-size:18px;max-width:760px}.buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}.btn{display:inline-block;padding:13px 20px;border-radius:10px;text-decoration:none;background:#38bdf8;color:#082f49;font-weight:900}.btn.outline{background:transparent;color:#fff;border:1px solid #7dd3fc}section{padding:72px 7%}.section-title{font-size:38px;margin:0 0 10px}.service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:28px}.service-card,.panel{padding:25px;border-radius:18px;background:#1e293b;border:1px solid #334155}.service-card h3{color:#7dd3fc}.split{display:grid;grid-template-columns:1.2fr .8fr;gap:24px}.page-hero{padding:90px 7%;background:linear-gradient(135deg,#111827,#172554)}form input,form textarea{width:100%;padding:14px;margin:8px 0;border:0;border-radius:10px}form textarea{min-height:150px}button{padding:13px 20px;border:0;border-radius:10px;background:#38bdf8;font-weight:900}footer{display:grid;grid-template-columns:1fr auto;gap:14px;padding:35px 7%;background:#020617;color:#94a3b8}footer a{display:block;text-decoration:none}@media(max-width:720px){.site-header{display:block}.site-header nav{margin-top:10px}.site-header nav a{display:inline-block;margin:5px 12px 0 0}.split{grid-template-columns:1fr}footer{grid-template-columns:1fr}}`;
+    return {
+      "index.html":`${c.head(`${d.business} | Home`,d.description)}<body>${nav}<main><section class="hero"><div class="hero-inner"><p class="eyebrow">${escapeHTML(d.tone)}</p><h1>${variants.hero%2?`Trusted ${type} support in ${address}.`:`Professional ${type} services built around you.`}</h1><p>${desc}</p><div class="buttons"><a class="btn" href="contact.html">Get a free quote</a><a class="btn outline" href="services.html">View services</a></div></div></section><section><h2 class="section-title">Our services</h2><p>Clear options, dependable delivery and an easy customer journey.</p><div class="service-grid">${cards}</div></section><section class="split"><div><h2 class="section-title">Why choose ${b}?</h2><p>We focus on quality, communication and making every enquiry simple.</p></div><aside class="panel"><h3>Quick contact</h3><p>${phone}<br>${email}<br>${address}</p></aside></section></main>${c.footer}</body></html>`,
+      "about.html":`${c.head(`About ${d.business}`,d.description)}<body>${nav}<main><section class="page-hero"><h1>About ${b}</h1><p>${desc}</p></section><section class="split"><div><h2 class="section-title">Who we are</h2><p>${desc}</p></div><aside class="panel"><h3>Our promise</h3><p>Reliable work, honest communication and a professional experience.</p></aside></section></main>${c.footer}</body></html>`,
+      "services.html":`${c.head(`${d.business} Services`,d.services.join(", "))}<body>${nav}<main><section class="page-hero"><h1>Services</h1><p>Choose the support that fits your needs.</p></section><section><div class="service-grid">${cards}</div></section></main>${c.footer}</body></html>`,
+      "contact.html":`${c.head(`Contact ${d.business}`,`Contact ${d.business}`)}<body>${nav}<main><section class="page-hero"><h1>Let’s talk</h1><p>Tell us what you need and we’ll get back to you.</p></section><section class="split"><form class="panel"><input placeholder="Your name" required><input type="email" placeholder="Email address" required><input placeholder="Phone number"><textarea placeholder="How can we help?" required></textarea><button>Send enquiry</button></form><aside class="panel"><h2>Contact details</h2><p>${phone}<br>${email}<br>${address}</p><p>${escapeHTML(d.openingHours)}</p></aside></section></main>${c.footer}</body></html>`,
+      "style.css":css
+    };
+  }
+
+  function appleFiles(d){
+    const c=common(d),b=escapeHTML(d.business),type=escapeHTML(d.type),desc=escapeHTML(d.description),phone=escapeHTML(d.phone),email=escapeHTML(d.email),address=escapeHTML(d.address);
+    const image=d.heroImage?`<div class="hero-visual"><img src="${escapeHTML(d.heroImage)}" alt="${b}"></div>`:`<div class="hero-visual abstract"><span></span><span></span><span></span></div>`;
+    const featureCards=d.services.map((s,i)=>`<article class="feature ${i===0?'feature-wide':''}"><span class="number">0${i+1}</span><h3>${escapeHTML(s)}</h3><p>Thoughtful ${escapeHTML(s).toLowerCase()} designed to feel effortless from the first enquiry.</p></article>`).join("");
+    const nav=`<header class="apple-nav"><a class="apple-brand" href="index.html">${b}</a><nav><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a class="nav-cta" href="contact.html">Contact</a></nav></header>`;
+    const css=`*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Arial,sans-serif;background:#f5f5f7;color:#1d1d1f;-webkit-font-smoothing:antialiased}a{color:inherit}.apple-nav{position:sticky;top:0;z-index:20;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;background:rgba(255,255,255,.78);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.06)}.apple-brand{text-decoration:none;font-size:18px;font-weight:700;letter-spacing:-.03em}.apple-nav nav{display:flex;align-items:center;gap:25px}.apple-nav nav a{text-decoration:none;font-size:13px}.nav-cta{padding:7px 13px;border-radius:999px;background:#1d1d1f;color:#fff}.apple-hero{min-height:calc(100vh - 54px);padding:85px 6% 65px;text-align:center;overflow:hidden}.kicker{font-size:18px;font-weight:650;margin:0 0 14px}.apple-hero h1,.page-intro h1{font-size:clamp(54px,9vw,112px);line-height:.92;letter-spacing:-.07em;margin:0 auto;max-width:1150px}.apple-hero .lead,.page-intro .lead{font-size:clamp(20px,2.2vw,29px);line-height:1.3;color:#6e6e73;max-width:790px;margin:27px auto}.hero-links{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin:28px 0 45px}.hero-links a{font-size:18px;color:#06c;text-decoration:none}.hero-links a:after{content:" ›"}.hero-visual{max-width:1120px;height:420px;margin:auto;border-radius:42px;overflow:hidden;background:#000;box-shadow:0 35px 90px rgba(0,0,0,.16)}.hero-visual img{width:100%;height:100%;object-fit:cover}.hero-visual.abstract{position:relative;background:radial-gradient(circle at 70% 20%,#92bfff,transparent 30%),radial-gradient(circle at 25% 75%,#cf9fff,transparent 34%),linear-gradient(145deg,#050505,#1c1c1e)}.hero-visual.abstract span{position:absolute;border-radius:50%;filter:blur(2px);background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(255,255,255,.08));box-shadow:inset -20px -20px 45px rgba(0,0,0,.35)}.hero-visual.abstract span:nth-child(1){width:230px;height:230px;left:12%;top:22%}.hero-visual.abstract span:nth-child(2){width:150px;height:150px;right:18%;top:14%}.hero-visual.abstract span:nth-child(3){width:95px;height:95px;right:34%;bottom:12%}.content-section{padding:105px 6%}.section-head{max-width:800px;margin-bottom:45px}.section-head small{font-weight:700}.section-head h2{font-size:clamp(42px,6vw,72px);line-height:1;letter-spacing:-.055em;margin:8px 0 14px}.section-head p{font-size:22px;color:#6e6e73}.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.feature{min-height:340px;padding:34px;border-radius:32px;background:#fff;box-shadow:0 3px 25px rgba(0,0,0,.045);display:flex;flex-direction:column;justify-content:flex-end}.feature-wide{grid-column:span 2;min-height:420px;background:#000;color:#fff}.feature .number{margin-bottom:auto;font-size:13px;color:#86868b}.feature h3{font-size:34px;letter-spacing:-.04em;margin:12px 0}.feature p{font-size:18px;color:#6e6e73;max-width:560px}.feature-wide p{color:#a1a1a6}.statement{padding:130px 8%;text-align:center;background:#000;color:#f5f5f7}.statement h2{font-size:clamp(45px,7vw,88px);line-height:1;letter-spacing:-.06em;margin:0 auto;max-width:1050px}.statement p{font-size:22px;color:#a1a1a6;max-width:700px;margin:25px auto}.page-intro{padding:130px 6% 90px;text-align:center;background:#fff}.story{max-width:900px;margin:auto;padding:110px 6%}.story h2{font-size:50px;letter-spacing:-.05em}.story p{font-size:23px;line-height:1.5;color:#6e6e73}.contact-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;padding:70px 6% 110px}.contact-panel{background:#fff;border-radius:32px;padding:40px}.contact-panel h2{font-size:40px;letter-spacing:-.045em}.contact-panel p{font-size:18px;color:#6e6e73}.contact-panel input,.contact-panel textarea{width:100%;padding:15px 0;margin:4px 0;border:0;border-bottom:1px solid #d2d2d7;background:transparent;font:inherit}.contact-panel textarea{min-height:130px}.contact-panel button{margin-top:25px;padding:12px 20px;border:0;border-radius:999px;background:#0071e3;color:#fff;font-weight:650}footer{display:grid;grid-template-columns:1fr auto;gap:25px;padding:40px 6%;background:#f5f5f7;border-top:1px solid #d2d2d7;color:#6e6e73;font-size:13px}footer strong{color:#1d1d1f}footer p{margin:5px 0}footer a{display:block;text-decoration:none}@media(max-width:760px){.apple-nav nav a:not(.nav-cta){display:none}.apple-hero{padding-top:65px}.hero-visual{height:330px;border-radius:28px}.feature-grid{grid-template-columns:1fr}.feature-wide{grid-column:auto}.contact-layout{grid-template-columns:1fr}.apple-hero h1,.page-intro h1{font-size:55px}footer{grid-template-columns:1fr}}`;
+    return {
+      "index.html":`${c.head(`${d.business} | ${d.type}`,d.description)}<body>${nav}<main><section class="apple-hero"><p class="kicker">${escapeHTML(d.tone)}</p><h1>${variants.hero%2?`${b}. Simply better ${type}.`:`Designed around what matters.`}</h1><p class="lead">${desc}</p><div class="hero-links"><a href="services.html">Explore our services</a><a href="contact.html">Start a conversation</a></div>${image}</section><section class="content-section"><div class="section-head"><small>What we do</small><h2>Big standards.<br>Simple experience.</h2><p>Every service is presented clearly so customers can choose with confidence.</p></div><div class="feature-grid">${featureCards}</div></section><section class="statement"><h2>Quality you notice. Service you remember.</h2><p>${b} combines thoughtful work with clear communication in ${address}.</p></section></main>${c.footer}</body></html>`,
+      "about.html":`${c.head(`About ${d.business}`,d.description)}<body>${nav}<main><section class="page-intro"><p class="kicker">Our story</p><h1>Care in every detail.</h1><p class="lead">${desc}</p></section><section class="story"><h2>Built to feel effortless.</h2><p>${b} helps customers access dependable ${type} services without unnecessary complexity. We believe professionalism should be visible in every detail—from the first click to the final result.</p></section><section class="statement"><h2>Clear communication. Thoughtful service. No friction.</h2></section></main>${c.footer}</body></html>`,
+      "services.html":`${c.head(`${d.business} Services`,d.services.join(", "))}<body>${nav}<main><section class="page-intro"><p class="kicker">Services</p><h1>Everything you need.<br>Nothing you don’t.</h1><p class="lead">Professional support shaped around real customer needs.</p></section><section class="content-section"><div class="feature-grid">${featureCards}</div></section></main>${c.footer}</body></html>`,
+      "contact.html":`${c.head(`Contact ${d.business}`,`Contact ${d.business}`)}<body>${nav}<main><section class="page-intro"><p class="kicker">Contact</p><h1>Let’s create something great.</h1><p class="lead">Share what you need and we’ll guide you through the next step.</p></section><section class="contact-layout"><form class="contact-panel"><h2>Send an enquiry</h2><input placeholder="Your name" required><input type="email" placeholder="Email address" required><input placeholder="Phone number"><textarea placeholder="Tell us about your project" required></textarea><button>Send enquiry</button></form><aside class="contact-panel"><h2>Details</h2><p><strong>Phone</strong><br>${phone}</p><p><strong>Email</strong><br>${email}</p><p><strong>Location</strong><br>${address}</p><p><strong>Hours</strong><br>${escapeHTML(d.openingHours)}</p></aside></section></main>${c.footer}</body></html>`,
+      "style.css":css
+    };
+  }
+
+  function build(){
+    const d=collect();
+    return d.architecture==="apple"?appleFiles(d):classicFiles(d);
+  }
+
+  function packageText(){
+    return "WEBSITE PACKAGE GENERATED BY VINCTEC BUILDER PRO V6.1\nARCHITECTURE: "+architecture().toUpperCase()+"\n\n"+Object.entries(files).map(([name,content])=>`==============================\nFILE: ${name}\n==============================\n${content}`).join("\n\n");
+  }
+
+  function preview(page=currentPage){
+    if(!files["index.html"]) files=build();
+    currentPage=files[page]?page:"index.html";
+    const frame=$("websitePreview");
+    if(!frame)return;
+    const css=files["style.css"]||"";
+    let html=files[currentPage].replace('<link rel="stylesheet" href="style.css">',`<style>${css}</style>`);
+    html=html.replace("</body>",`<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href$=".html"]');if(a){e.preventDefault();parent.postMessage({type:'V61_NAV',page:a.getAttribute('href')},'*')}});<\/script></body>`);
+    frame.srcdoc=html;
+  }
+
+  function generate(){
+    files=build();
+    const out=$("websiteBuilderOutput");
+    if(out){out.value=packageText();out.style.display="none"}
+    preview("index.html");
+  }
+
+  function installUI(){
+    const box=document.querySelector(".builder-pro-box");
+    const styleSelect=$("siteStyle");
+    if(box&&!$("v61ArchitecturePanel")){
+      const panel=document.createElement("div");
+      panel.id="v61ArchitecturePanel";
+      panel.className="architecture-panel";
+      panel.innerHTML=`<h4>Website architecture</h4><div class="architecture-grid"><label class="architecture-card"><input type="radio" name="siteArchitecture" value="classic" checked><strong>Classic Business</strong><span>Your current reliable structure with a bold hero, service cards and contact sections.</span></label><label class="architecture-card"><input type="radio" name="siteArchitecture" value="apple"><strong>Apple Minimal</strong><span>Large typography, spacious layouts, premium feature panels and a completely different page flow.</span></label></div>`;
+      (styleSelect||box.firstElementChild).insertAdjacentElement(styleSelect?"afterend":"afterend",panel);
+      panel.addEventListener("change",generate);
+    }
+    const frame=$("websitePreview");
+    if(frame&&!$("v61DeviceBar")){
+      const shell=document.createElement("div");shell.id="v61PreviewShell";shell.className="preview-shell";
+      frame.parentNode.insertBefore(shell,frame);shell.appendChild(frame);
+      const bar=document.createElement("div");bar.id="v61DeviceBar";bar.className="preview-device-bar builder-actions";
+      bar.innerHTML='<button type="button" class="reply-btn" data-device="desktop">Desktop</button><button type="button" class="pin-btn" data-device="tablet">Tablet</button><button type="button" class="read-btn" data-device="mobile">Mobile</button>';
+      shell.parentNode.insertBefore(bar,shell);
+      bar.addEventListener("click",e=>{const b=e.target.closest("[data-device]");if(!b)return;shell.className="preview-shell "+(b.dataset.device==="desktop"?"":b.dataset.device)});
+    }
+  }
+
+  function install(){
+    installUI();
+    window.generateWebsiteStarter=generate;
+    window.previewWebsite=()=>preview(currentPage);
+    window.regenerateSection=section=>{variants[section]=(variants[section]||0)+1;generate()};
+    window.copyWebsiteStarter=async()=>{if(!files["index.html"])files=build();const txt=packageText();try{await navigator.clipboard.writeText(txt)}catch(e){const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}alert("Website package copied!")};
+    window.downloadFile=name=>{if(!files[name])files=build();const blob=new Blob([files[name]],{type:name.endsWith(".css")?"text/css":"text/html"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),700)};
+    window.downloadWebsiteZip=async()=>{if(!files["index.html"])files=build();if(typeof JSZip==="undefined"){alert("ZIP tool is still loading. Try again in a few seconds.");return}const zip=new JSZip();Object.entries(files).forEach(([n,c])=>zip.file(n,c));const blob=await zip.generateAsync({type:"blob"});const safe=value("siteBusiness","client-website").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"client-website";const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=safe+"-v6-website.zip";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),700)};
+  }
+
+  window.addEventListener("message",e=>{if(e.data&&e.data.type==="V61_NAV")preview(e.data.page)});
+  window.addEventListener("load",()=>setTimeout(install,2100),{once:true});
+  setTimeout(install,2600);
+})();
+</script>
+
 </body>
 </html>
