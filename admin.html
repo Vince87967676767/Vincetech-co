@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vinctec Admin V7.1</title>
-<!-- Vinctec Admin v7.1 Single File: original dashboard preserved; V7.0 Core plus inline AI Design Studio. -->
+<title>Vinctec Admin V7.2</title>
+<!-- Vinctec Admin v7.2 Single File: original dashboard preserved; V7.0 Core plus inline AI Design Studio. -->
 
 <style>
 body {
@@ -2610,6 +2610,88 @@ window.addEventListener('load',()=>setTimeout(install,5600),{once:true});setTime
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
 })();
 
+</script>
+
+
+<style id="vinctec-v72-style">
+/* === VINCTEC V7.2 AI WEBSITE STUDIO === */
+.v72-studio{margin:14px 0 18px;background:linear-gradient(145deg,#111827,#182235);border:1px solid rgba(34,211,238,.25);border-radius:16px;overflow:hidden;box-shadow:0 18px 45px rgba(0,0,0,.2)}
+.v72-studio summary{cursor:pointer;list-style:none;padding:16px 18px;display:flex;justify-content:space-between;gap:14px;align-items:center}.v72-studio summary::-webkit-details-marker{display:none}.v72-studio h4{margin:0 0 4px;font-size:18px}.v72-studio p{margin:0;color:#9ca3af;font-size:13px}.v72-badge{font-size:12px;font-weight:800;background:#0891b2;padding:6px 10px;border-radius:999px;white-space:nowrap}
+.v72-body{padding:0 16px 16px}.v72-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.v72-panel{background:rgba(15,23,42,.78);border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:14px}.v72-panel h5{margin:0 0 9px;font-size:15px}.v72-panel input,.v72-panel select,.v72-panel textarea{width:100%;box-sizing:border-box;margin:5px 0;padding:10px;border:0;border-radius:8px}.v72-panel textarea{height:92px}.v72-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.v72-actions button{margin:0}.v72-result{margin-top:9px;padding:10px;background:#0b1220;border-radius:9px;color:#cbd5e1;font-size:13px;white-space:pre-wrap}.v72-score{font-size:28px;font-weight:900;color:#22d3ee}.v72-meter{height:8px;background:#334155;border-radius:999px;overflow:hidden;margin:5px 0 10px}.v72-meter span{display:block;height:100%;background:linear-gradient(90deg,#06b6d4,#22c55e);width:0;transition:width .35s}.v72-devicebar{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.v72-devicebar button{margin:0;background:#334155}.v72-devicebar button.active{background:#0891b2}.preview-frame.v72-tablet{width:768px;max-width:100%;display:block;margin-left:auto;margin-right:auto}.preview-frame.v72-mobile{width:390px;max-width:100%;display:block;margin-left:auto;margin-right:auto}.v72-status{margin-top:10px;color:#a5f3fc;font-size:13px}
+</style>
+<script id="vinctec-v72-script">
+(function(){
+'use strict';
+const VERSION='7.2';
+const $=id=>document.getElementById(id);
+const value=(id,fallback='')=>($(id)?.value||'').trim()||fallback;
+const setValue=(id,v)=>{const e=$(id);if(e){e.value=v;e.dispatchEvent(new Event('input',{bubbles:true}));}};
+const industries={
+ barber:{services:'Haircuts, Skin Fades, Beard Trims, Kids Cuts',tone:'confident, modern and welcoming',tag:'Sharp cuts. Easy bookings. Proper service.'},
+ restaurant:{services:'Dine In, Takeaway, Private Events, Online Booking',tone:'warm, inviting and premium',tag:'Fresh flavour, memorable moments.'},
+ builder:{services:'Extensions, Renovations, Roofing, Free Quotes',tone:'reliable, practical and professional',tag:'Quality work built to last.'},
+ roofing:{services:'Roof Repairs, New Roofs, Guttering, Emergency Callouts',tone:'trusted, direct and reassuring',tag:'Protecting your property in every season.'},
+ gym:{services:'Memberships, Personal Training, Classes, Nutrition Support',tone:'energetic, motivating and bold',tag:'Train stronger. Move better. Feel ready.'},
+ law:{services:'Legal Advice, Consultations, Case Support, Business Law',tone:'clear, authoritative and trustworthy',tag:'Clear advice when it matters most.'},
+ property:{services:'Sales, Lettings, Valuations, Property Management',tone:'polished, confident and trustworthy',tag:'Better property decisions start here.'},
+ saas:{services:'Platform Access, Integrations, Analytics, Customer Support',tone:'clear, modern and conversion-focused',tag:'Work smarter with one connected platform.'},
+ healthcare:{services:'Consultations, Assessments, Treatment Plans, Aftercare',tone:'calm, caring and professional',tag:'Care designed around you.'},
+ fashion:{services:'New Collection, Personal Styling, Delivery, Returns',tone:'editorial, expressive and premium',tag:'Designed to be noticed.'}
+};
+function detect(){const t=(value('siteType')+' '+value('siteBusiness')).toLowerCase();return Object.keys(industries).find(k=>t.includes(k))||'saas';}
+function generateContent(){
+ const key=detect(),p=industries[key],business=value('siteBusiness','Your Business'),type=value('siteType',key+' business');
+ setValue('siteServices',p.services);setValue('siteTone',p.tone);
+ setValue('siteDescription',`${business} is a ${p.tone} ${type} helping customers through ${p.services.toLowerCase()}. We focus on clear communication, dependable service and a simple experience from first enquiry to completion.`);
+ setValue('siteFeatures','testimonials, FAQ, gallery, prices, contact form, strong calls-to-action');
+ setValue('siteExtraFeatures','FAQ, testimonials, WhatsApp, trust badges, social proof, local SEO');
+ const res=$('v72ContentResult');if(res)res.textContent=`Headline: ${p.tag}\nAbout: ${business} combines specialist service with a clear and customer-friendly experience.\nCTA: Get Started Today\nFAQ ideas: pricing, availability, service area and what happens next.`;
+ flash('AI content fields generated. Review them, then generate the website.');
+}
+const brandPresets={
+ luxury:{palette:'obsidian',font:'serif',effect:'luxury',accent:'#d8b86a'},
+ modern:{palette:'cloud',font:'modern',effect:'minimal',accent:'#2563eb'},
+ bold:{palette:'midnight',font:'fashion',effect:'gradient',accent:'#f97316'},
+ natural:{palette:'emerald',font:'serif',effect:'soft',accent:'#2a9d8f'},
+ editorial:{palette:'ivory',font:'editorial',effect:'minimal',accent:'#111111'}
+};
+function brandKit(){
+ const mood=$('v72BrandMood')?.value||'modern',p=brandPresets[mood],business=value('siteBusiness','Your Business');
+ const sel=(id,v)=>{const e=$(id);if(e&&[...e.options].some(o=>o.value===v))e.value=v;};
+ sel('v70Palette',p.palette);sel('v30Typography',p.font);sel('v30Effect',p.effect);if($('v30Accent'))$('v30Accent').value=p.accent;
+ const out=$('v72BrandResult');if(out)out.textContent=`${business.toUpperCase()}\nMood: ${mood}\nPrimary accent: ${p.accent}\nTypography: ${p.font}\nUI treatment: ${p.effect}\nLogo direction: clean wordmark with a simple recognisable symbol.`;
+ flash('Brand kit applied to the active builder controls.');
+}
+function score(){
+ let seo=60,design=65,access=72,conversion=58;
+ if(value('siteDescription').length>80)seo+=10;if(value('siteAddress'))seo+=6;if(value('siteServices').split(',').length>=3)seo+=8;if(value('sitePhone')&&value('siteEmail'))conversion+=15;if(value('siteHeroImage'))design+=8;if(value('siteGalleryImages'))design+=6;if(value('siteOpeningHours'))conversion+=7;if(value('siteExtraFeatures').toLowerCase().includes('faq'))seo+=7;if(value('siteExtraFeatures').toLowerCase().includes('testimonial'))conversion+=7;if(value('siteTone'))access+=5;
+ seo=Math.min(98,seo);design=Math.min(98,design);access=Math.min(98,access);conversion=Math.min(98,conversion);const overall=Math.round((seo+design+access+conversion)/4);const grade=overall>=90?'A+':overall>=85?'A':overall>=75?'B':overall>=65?'C':'D';
+ $('v72Score').textContent=overall+'% '+grade;[['Seo',seo],['Design',design],['Access',access],['Conversion',conversion]].forEach(([n,v])=>{const t=$('v72'+n);if(t)t.textContent=v+'%';const m=$('v72'+n+'Meter');if(m)m.style.width=v+'%';});flash('Website quality check complete.');
+}
+function device(mode,button){const f=$('websitePreview');if(!f)return;f.classList.remove('v72-tablet','v72-mobile');if(mode!=='desktop')f.classList.add('v72-'+mode);document.querySelectorAll('.v72-devicebar button').forEach(b=>b.classList.remove('active'));button?.classList.add('active');}
+function another(){
+ const radios=[...document.querySelectorAll('input[name="v70Architecture"]')].filter(r=>r.value!=='auto');if(radios.length)radios[Math.floor(Math.random()*radios.length)].checked=true;
+ ['v70Palette','v30Typography','v30Effect','v30Spacing','v30Radius','v30Button','v70Motion','v70Nav'].forEach(id=>{const e=$(id);if(e)e.selectedIndex=Math.floor(Math.random()*e.options.length)});
+ if(typeof window.generateWebsiteStarter==='function')window.generateWebsiteStarter();score();flash('A different design version was generated from the same business details.');
+}
+function flash(msg){const e=$('v72Status');if(e)e.textContent=msg;}
+function install(){
+ const anchor=$('v71Studio')||$('v70Studio')||$('siteStyle');if(!anchor||$('v72Studio'))return false;
+ const d=document.createElement('details');d.id='v72Studio';d.className='v72-studio';d.open=true;d.innerHTML=`<summary><div><h4>🚀 V7.2 AI Website Studio</h4><p>Content, brand kit, quality scoring and responsive preview controls.</p></div><span class="v72-badge">V7.2</span></summary><div class="v72-body">
+ <div class="v72-grid">
+  <div class="v72-panel"><h5>📝 AI Content Generator</h5><p>Create stronger business wording from the details already entered.</p><div class="v72-actions"><button type="button" class="reply-btn" id="v72Content">Generate Content</button></div><div class="v72-result" id="v72ContentResult">Ready to create a headline, description, services and FAQ direction.</div></div>
+  <div class="v72-panel"><h5>🎨 Brand Kit Generator</h5><select id="v72BrandMood"><option value="modern">Modern & clear</option><option value="luxury">Luxury & premium</option><option value="bold">Bold & energetic</option><option value="natural">Natural & calm</option><option value="editorial">Editorial & refined</option></select><div class="v72-actions"><button type="button" class="pin-btn" id="v72Brand">Generate Brand Kit</button></div><div class="v72-result" id="v72BrandResult">Choose a mood to apply a coordinated palette, font and UI treatment.</div></div>
+  <div class="v72-panel"><h5>⭐ Website Quality Score</h5><div class="v72-score" id="v72Score">--</div><div>SEO <span id="v72Seo">--</span></div><div class="v72-meter"><span id="v72SeoMeter"></span></div><div>Design <span id="v72Design">--</span></div><div class="v72-meter"><span id="v72DesignMeter"></span></div><div>Accessibility <span id="v72Access">--</span></div><div class="v72-meter"><span id="v72AccessMeter"></span></div><div>Conversion <span id="v72Conversion">--</span></div><div class="v72-meter"><span id="v72ConversionMeter"></span></div><div class="v72-actions"><button type="button" class="success-btn" id="v72Check">Check Website</button></div></div>
+ </div>
+ <div class="v72-devicebar"><button type="button" class="active" data-device="desktop">💻 Desktop</button><button type="button" data-device="tablet">📟 Tablet</button><button type="button" data-device="mobile">📱 Mobile</button><button type="button" class="reply-btn" id="v72Refresh">↻ Refresh Preview</button><button type="button" class="pin-btn" id="v72Another">🎲 Generate Another Version</button></div><div class="v72-status" id="v72Status">V7.2 is ready. Your V7.1 and V7.0 systems remain active underneath.</div></div>`;
+ anchor.insertAdjacentElement('afterend',d);
+ $('v72Content').onclick=generateContent;$('v72Brand').onclick=brandKit;$('v72Check').onclick=score;$('v72Refresh').onclick=()=>{if(typeof window.previewWebsite==='function')window.previewWebsite();flash('Preview refreshed.');};$('v72Another').onclick=another;document.querySelectorAll('.v72-devicebar [data-device]').forEach(b=>b.onclick=()=>device(b.dataset.device,b));
+ const original=window.generateWebsiteStarter;window.generateWebsiteStarter=function(){const r=original?.apply(this,arguments);setTimeout(score,50);return r;};
+ window.VinctecV72={version:VERSION,generateContent,brandKit,score,another};return true;
+}
+function boot(){let tries=0;const timer=setInterval(()=>{tries++;if(install()||tries>50)clearInterval(timer)},150)}
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
+})();
 </script>
 </body>
 </html>
