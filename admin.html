@@ -172,6 +172,8 @@ button:hover {
 .builder-pro-box{grid-column:1 / -1;}
 .builder-pro-box .preview-frame{min-height:760px;}
 .builder-pro-box textarea#websiteBuilderOutput{height:220px;}
+/* Hide generated source output before JavaScript loads to prevent a white flash on refresh. */
+#websiteBuilderOutput{display:none!important;}
 .small-note{font-size:13px;color:#9ca3af;margin-top:8px;}
 .download-btn{background:#0ea5e9;}
 .success-btn{background:#16a34a;}
