@@ -506,6 +506,110 @@ document.addEventListener('DOMContentLoaded',function(){
   if(headerTitle) headerTitle.textContent='Vinctec Admin Studio';
 });
 </script>
+
+<!-- V10.1 FINAL STABLE BUILDER OVERRIDE -->
+<script>
+(function(){
+  'use strict';
+  var files = {};
+  var currentPage = 'index.html';
+  var variants = {hero:0, about:0, services:0, contact:0};
+  function $(id){ return document.getElementById(id); }
+  function val(id, fallback){ var e=$(id); return e && String(e.value||'').trim() ? String(e.value).trim() : fallback; }
+  function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function csv(v, fallback){ var a=String(v||fallback||'').split(',').map(function(x){return x.trim();}).filter(Boolean); return a.length?a:String(fallback||'').split(',').map(function(x){return x.trim();}).filter(Boolean); }
+  function activeColour(id){ var e=$(id); return e && e.dataset.active==='1' ? e.value : ''; }
+  function selectedArchitecture(){ var e=document.querySelector('input[name="v70Architecture"]:checked'); return e ? e.value : 'signature'; }
+  function data(){
+    var paletteName=val('v70Palette','obsidian');
+    var palettes={
+      auto:{bg:'#070709',surface:'#111116',text:'#f8f8fa',muted:'#aaaab5',accent:'#d8b86a',hero:'#15120c'},
+      obsidian:{bg:'#070709',surface:'#111116',text:'#f8f8fa',muted:'#aaaab5',accent:'#d8b86a',hero:'#15120c'},
+      ivory:{bg:'#f7f3ea',surface:'#fffdfa',text:'#171411',muted:'#756d64',accent:'#8b5e34',hero:'#eee5d8'},
+      midnight:{bg:'#070b16',surface:'#101829',text:'#f7f9ff',muted:'#9aa8bf',accent:'#7dd3fc',hero:'#17243a'},
+      emerald:{bg:'#07110e',surface:'#10201a',text:'#f3fff9',muted:'#a4bdb1',accent:'#8ee3b6',hero:'#173126'},
+      royal:{bg:'#0b0714',surface:'#171023',text:'#fbf8ff',muted:'#b7aac7',accent:'#c7a7ff',hero:'#241735'},
+      blush:{bg:'#fbf5f1',surface:'#fffdfb',text:'#2b201c',muted:'#7d6a63',accent:'#c98773',hero:'#f0dfd8'},
+      stone:{bg:'#151513',surface:'#23231f',text:'#f8f4ea',muted:'#b7b0a0',accent:'#d4a64d',hero:'#323129'},
+      cloud:{bg:'#f5f7f8',surface:'#ffffff',text:'#172027',muted:'#68747d',accent:'#315c72',hero:'#e4eaed'},
+      rose:{bg:'#160d12',surface:'#25151e',text:'#fff5f8',muted:'#c7aab5',accent:'#ef9fbd',hero:'#321b28'},
+      ocean:{bg:'#06131a',surface:'#0d2530',text:'#eefbff',muted:'#9cb9c4',accent:'#4dd7e8',hero:'#123441'},
+      forest:{bg:'#09120b',surface:'#122018',text:'#f2fbf4',muted:'#a7b9ab',accent:'#8bcf92',hero:'#1b3020'},
+      ruby:{bg:'#18090b',surface:'#2b1116',text:'#fff4f5',muted:'#c9a0a6',accent:'#ff6378',hero:'#3a171e'},
+      champagne:{bg:'#f6f0e5',surface:'#fffaf1',text:'#241d15',muted:'#817363',accent:'#b58b52',hero:'#eadfcd'},
+      mono:{bg:'#050505',surface:'#121212',text:'#ffffff',muted:'#a5a5a5',accent:'#ffffff',hero:'#202020'},
+      azure:{bg:'#eef6ff',surface:'#ffffff',text:'#102036',muted:'#637286',accent:'#276ef1',hero:'#dbeafe'},
+      terracotta:{bg:'#fbf3ed',surface:'#fffaf6',text:'#2d1e18',muted:'#806b61',accent:'#c96545',hero:'#f0ddd2'},
+      lilac:{bg:'#f7f3ff',surface:'#ffffff',text:'#211830',muted:'#746a80',accent:'#9367d8',hero:'#e9def8'},
+      copper:{bg:'#120d0a',surface:'#211711',text:'#fff6ed',muted:'#bfa999',accent:'#d78652',hero:'#302018'},
+      solar:{bg:'#151006',surface:'#251d0e',text:'#fff9e9',muted:'#c2b18a',accent:'#f4c542',hero:'#34280f'},
+      clinical:{bg:'#f4fbfb',surface:'#ffffff',text:'#102828',muted:'#637979',accent:'#2a9d8f',hero:'#def1ef'}
+    };
+    var p=Object.assign({},palettes[paletteName]||palettes.obsidian);
+    var oldBg=$('v89Background');
+    var customBg=activeColour('v90Background');
+    if(customBg) p.bg=customBg; else if(oldBg && oldBg.dataset.userChanged==='1') p.bg=oldBg.value;
+    if(activeColour('v90Hero')) p.hero=activeColour('v90Hero');
+    if(activeColour('v90Surface')) p.surface=activeColour('v90Surface');
+    if(activeColour('v90Accent')) p.accent=activeColour('v90Accent'); else if($('v30Accent')) p.accent=$('v30Accent').value;
+    if(activeColour('v90Text')) p.text=activeColour('v90Text');
+    if(activeColour('v90Muted')) p.muted=activeColour('v90Muted');
+    return {
+      business:val('siteBusiness','Your Business'), type:val('siteType','premium local business'),
+      description:val('siteDescription','A trusted business delivering thoughtful service, clear communication and exceptional attention to detail.'),
+      services:csv(val('siteServices','Signature Service, Personal Support, Bespoke Solutions'),'Signature Service, Personal Support, Bespoke Solutions'),
+      phone:val('sitePhone','01279 000000'), email:val('siteEmail','hello@example.co.uk'), address:val('siteAddress','Harlow, Essex'),
+      tone:val('siteTone','refined, confident and welcoming'), hours:val('siteOpeningHours','Mon–Fri 9am–5pm'),
+      heroImage:val('siteHeroImage',''), gallery:csv(val('siteGalleryImages',''),''), video:val('siteVideoUrl',''),
+      architecture:selectedArchitecture(), p:p, typography:val('v30Typography','modern'), radius:val('v30Radius','24'), button:val('v30Button','pill'), year:new Date().getFullYear()
+    };
+  }
+  function font(d){ return d.typography==='serif'?'Georgia,Times New Roman,serif':d.typography==='editorial'?'Arial Narrow,Arial,sans-serif':'Inter,Arial,Helvetica,sans-serif'; }
+  function style(d){
+    var p=d.p, radius=parseInt(d.radius,10)||0, btnRadius=d.button==='pill'?'999px':d.button==='square'?'4px':Math.max(10,radius-8)+'px';
+    return [
+      '*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:'+p.bg+';color:'+p.text+';font-family:'+font(d)+';line-height:1.6}a{color:inherit}',
+      '.site-nav{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:20px 6%;background:color-mix(in srgb,'+p.bg+' 88%,transparent);backdrop-filter:blur(18px);border-bottom:1px solid color-mix(in srgb,'+p.text+' 12%,transparent)}',
+      '.brand{font-size:1.3rem;font-weight:900;text-decoration:none;letter-spacing:-.03em}.site-nav nav{display:flex;gap:24px;align-items:center}.site-nav nav a{text-decoration:none;font-weight:700}.nav-cta,.button,button{background:'+p.accent+';color:'+p.bg+';padding:12px 20px;border-radius:'+btnRadius+';font-weight:900;text-decoration:none;border:0;display:inline-block}',
+      '.hero{min-height:78vh;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding:110px 7%;background:linear-gradient(135deg,'+p.hero+','+p.bg+')} .hero-copy{max-width:760px}.eyebrow{color:'+p.accent+';text-transform:uppercase;letter-spacing:.18em;font-size:.78rem;font-weight:900}.hero h1,.page-hero h1{font-size:clamp(3rem,7vw,6.6rem);line-height:.95;letter-spacing:-.055em;margin:.25em 0}.hero p,.page-hero p,.section p,.story p,.contact p{color:'+p.muted+';font-size:1.08rem}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.button.secondary{background:transparent;color:'+p.text+';border:1px solid color-mix(in srgb,'+p.text+' 22%,transparent)}',
+      '.hero-media{min-height:440px;border-radius:'+radius+'px;background:'+p.surface+';overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.28)}.hero-media img,.hero-media video{width:100%;height:100%;object-fit:cover;position:absolute}.hero-media.art{display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,'+p.accent+'55,transparent 40%),'+p.surface+'}.hero-media.art b{font-size:12rem;color:'+p.accent+';opacity:.9}',
+      '.section,.story,.contact,.values,.wide-cta{padding:90px 7%}.section-head{display:flex;justify-content:space-between;gap:40px;align-items:end}.section h2,.story h2,.wide-cta h2{font-size:clamp(2.2rem,5vw,4.5rem);line-height:1;letter-spacing:-.04em;margin:.2em 0}.service-grid,.values{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.service,.values article,.contact form,.contact aside{background:'+p.surface+';border:1px solid color-mix(in srgb,'+p.text+' 10%,transparent);border-radius:'+radius+'px;padding:28px;box-shadow:0 18px 55px rgba(0,0,0,.14)}.service span{color:'+p.accent+';font-weight:900}.service h3{font-size:1.5rem}.service a{color:'+p.accent+';font-weight:800}',
+      '.page-hero{padding:140px 7% 90px;background:linear-gradient(135deg,'+p.hero+','+p.bg+')}.page-hero p{max-width:760px}.story{display:grid;grid-template-columns:1fr 1fr;gap:60px}.wide-cta{text-align:center;background:'+p.surface+'}.contact{display:grid;grid-template-columns:1.2fr .8fr;gap:22px}.contact input,.contact textarea{width:100%;padding:15px 16px;margin:7px 0;background:'+p.bg+';color:'+p.text+';border:1px solid color-mix(in srgb,'+p.text+' 14%,transparent);border-radius:'+Math.max(10,radius-10)+'px}.contact textarea{min-height:150px}.footer-minimal{padding:45px 7%;display:flex;justify-content:space-between;gap:35px;background:'+p.surface+';color:'+p.muted+'}.footer-minimal strong{color:'+p.text+'}',
+      '@media(max-width:850px){.site-nav{align-items:flex-start}.site-nav nav{gap:12px;flex-wrap:wrap;justify-content:flex-end}.hero{grid-template-columns:1fr;padding-top:80px}.hero-media{min-height:330px}.service-grid,.values,.story,.contact{grid-template-columns:1fr}.footer-minimal{display:block}.hero h1,.page-hero h1{font-size:clamp(2.7rem,14vw,4.5rem)}}'
+    ].join('');
+  }
+  function head(d,title,desc){ return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><link rel="stylesheet" href="style.css"></head>'; }
+  function nav(d){ return '<header class="site-nav"><a class="brand" href="index.html">'+esc(d.business)+'</a><nav><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Services</a><a class="nav-cta" href="contact.html">Start a project</a></nav></header>'; }
+  function footer(d){ return '<footer class="footer-minimal"><div><strong>'+esc(d.business)+'</strong><p>'+esc(d.description)+'</p></div><small>© '+d.year+' '+esc(d.business)+' · Designed with Vinctec</small></footer>'; }
+  function media(d){ if(d.video) return '<div class="hero-media"><video autoplay muted loop playsinline src="'+esc(d.video)+'"></video></div>'; if(d.heroImage) return '<div class="hero-media"><img src="'+esc(d.heroImage)+'" alt="'+esc(d.business)+'"></div>'; return '<div class="hero-media art"><b>'+esc(d.business.charAt(0))+'</b></div>'; }
+  function cards(d){ return '<div class="service-grid">'+d.services.map(function(s,i){return '<article class="service reveal"><span>0'+(i+1)+'</span><h3>'+esc(s)+'</h3><p>Premium '+esc(s).toLowerCase()+' shaped around your goals and delivered with care.</p><a href="contact.html">Discover more →</a></article>';}).join('')+'</div>'; }
+  function build(){
+    var d=data(), css=style(d), n=nav(d), f=footer(d), heroLines=['Exceptional '+d.type+', thoughtfully delivered.','A better standard for '+d.type+'.',d.business+' — refined service, real results.'], hero=heroLines[variants.hero%heroLines.length];
+    var index='<body>'+n+'<main><section class="hero"><div class="hero-copy"><p class="eyebrow">'+esc(d.architecture)+' experience</p><h1>'+esc(hero)+'</h1><p>'+esc(d.description)+'</p><div class="actions"><a class="button" href="contact.html">Start a project</a><a class="button secondary" href="services.html">Explore services</a></div></div>'+media(d)+'</section><section class="section"><div class="section-head"><div><p class="eyebrow">Our expertise</p><h2>Services shaped around you.</h2></div><p>Clear support, thoughtful execution and a premium customer experience.</p></div>'+cards(d)+'</section><section class="wide-cta"><p class="eyebrow">Let’s work together</p><h2>Ready to begin?</h2><a class="button" href="contact.html">Contact '+esc(d.business)+'</a></section></main>'+f+'<script src="script.js"><\/script></body></html>';
+    var about='<body>'+n+'<main><section class="page-hero"><p class="eyebrow">Our story</p><h1>Standards you can feel.</h1><p>'+esc(d.description)+'</p></section><section class="story"><div><p class="eyebrow">Our approach</p><h2>Personal service. Precise delivery.</h2></div><p>'+esc(d.business)+' serves clients with a '+esc(d.tone)+' experience. Every step is designed to feel considered, effortless and trustworthy.</p></section><section class="values"><article><b>01</b><h3>Clarity</h3><p>Simple communication and transparent next steps.</p></article><article><b>02</b><h3>Craft</h3><p>Every detail receives professional attention.</p></article><article><b>03</b><h3>Care</h3><p>A customer experience designed around people.</p></article></section></main>'+f+'<script src="script.js"><\/script></body></html>';
+    var services='<body>'+n+'<main><section class="page-hero"><p class="eyebrow">Our expertise</p><h1>Services without compromise.</h1><p>Explore specialist support created around your requirements.</p></section><section class="section">'+cards(d)+'</section><section class="wide-cta"><p>Need something more specific?</p><h2>Let’s shape the right solution.</h2><a class="button" href="contact.html">Speak with us</a></section></main>'+f+'<script src="script.js"><\/script></body></html>';
+    var contact='<body>'+n+'<main><section class="page-hero"><p class="eyebrow">Private consultation</p><h1>Begin with a conversation.</h1><p>Tell us what you need and we’ll guide you through the next step.</p></section><section class="contact"><form><input placeholder="Your name" required><input type="email" placeholder="Email address" required><input placeholder="Phone number"><textarea placeholder="Tell us about your project" required></textarea><button type="submit">Send enquiry</button></form><aside><p class="eyebrow">Contact</p><h2>'+esc(d.business)+'</h2><p><b>Phone</b><br>'+esc(d.phone)+'</p><p><b>Email</b><br>'+esc(d.email)+'</p><p><b>Location</b><br>'+esc(d.address)+'</p><p><b>Hours</b><br>'+esc(d.hours)+'</p></aside></section></main>'+f+'<script src="script.js"><\/script></body></html>';
+    return {'index.html':head(d,d.business+' | '+d.type,d.description)+index,'about.html':head(d,'About '+d.business,d.description)+about,'services.html':head(d,d.business+' Services',d.services.join(', '))+services,'contact.html':head(d,'Contact '+d.business,'Contact '+d.business)+contact,'style.css':css,'script.js':'document.querySelectorAll(\'a[href$=".html"]\').forEach(function(a){a.addEventListener(\'click\',function(e){if(window.parent!==window){e.preventDefault();window.parent.postMessage({type:\'V10_NAV\',page:a.getAttribute(\'href\')},\'*\');}});});'};
+  }
+  function preview(page){ if(!files['index.html']) files=build(); currentPage=page||currentPage; var iframe=$('websitePreview'); if(!iframe)return; var html=files[currentPage]||files['index.html']; html=html.replace('<link rel="stylesheet" href="style.css">','<style>'+files['style.css']+'</style>').replace('<script src="script.js"><\/script>','<script>'+files['script.js']+'<\/script>'); iframe.srcdoc=html; }
+  function packageText(){ return Object.keys(files).map(function(name){return '==============================\nFILE: '+name+'\n==============================\n'+files[name];}).join('\n\n'); }
+  function install(){
+    window.generateWebsiteStarter=function(){files=build();preview('index.html');};
+    window.previewWebsite=function(){preview(currentPage);};
+    window.regenerateSection=function(section){variants[section]=(variants[section]||0)+1;files=build();preview(currentPage);};
+    window.copyWebsiteStarter=async function(){if(!files['index.html'])files=build();var text=packageText();try{await navigator.clipboard.writeText(text);}catch(e){var t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();}alert('Website package copied!');};
+    window.downloadFile=function(name){if(!files[name])files=build();var b=new Blob([files[name]],{type:name.endsWith('.css')?'text/css':name.endsWith('.js')?'text/javascript':'text/html'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},700);};
+    window.downloadWebsiteZip=async function(){if(!files['index.html'])files=build();if(typeof JSZip==='undefined'){alert('ZIP tool is still loading. Try again in a few seconds.');return;}var z=new JSZip();Object.keys(files).forEach(function(n){z.file(n,files[n]);});var blob=await z.generateAsync({type:'blob'}),a=document.createElement('a'),safe=val('siteBusiness','client').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'client';a.href=URL.createObjectURL(blob);a.download=safe+'-vinctec-premium-site.zip';a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},700);};
+    var old=$('v89Background'); if(old){old.addEventListener('input',function(){old.dataset.userChanged='1';}); var label=old.closest('label'); if(label)label.style.display='none';}
+    var observer=new MutationObserver(function(){var bg=$('v89Background');if(bg){var l=bg.closest('label');if(l)l.style.display='none';}}); observer.observe(document.body,{childList:true,subtree:true});
+    files=build(); preview('index.html');
+  }
+  window.addEventListener('message',function(e){if(e.data&&e.data.type==='V10_NAV')preview(e.data.page);});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(install,50);});else setTimeout(install,50);
+  setTimeout(install,5500);
+})();
+
+</script>
 </body>\n</html>`,
     'about.html': `${head(`About ${b}`, `Learn about ${b}, a ${type} serving ${address}.`)}\n<body>\n${nav}\n<section class="page-hero"><h1>About ${b}</h1><p>${about}</p></section>\n<section><h2>Who we are</h2><p>${desc}</p><p>Our website style uses ${htmlEscape(d.colours)} with a ${htmlEscape(d.tone)} tone.</p></section><section class="highlight"><h2>Our mission</h2><p>To provide a simple, trustworthy and professional experience from first enquiry to completed service.</p></section>\n${footer}\n</body>\n</html>`,
     'services.html': `${head(`${b} Services`, `Explore ${b} services including ${htmlEscape(d.services.join(', '))}.`)}\n<body>\n${nav}\n<section class="page-hero"><h1>Our Services</h1><p>${servicesIntro}</p></section>\n<section><div class="grid">${services}</div></section><section class="highlight"><h2>Services available</h2><ul>${list}</ul><a class="btn" href="contact.html">Request a Quote</a></section>\n${footer}\n</body>\n</html>`,
