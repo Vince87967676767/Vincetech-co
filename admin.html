@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vinctec Admin V7.2 Navigation Fix</title>
+<title>Vinctec Admin V10 — Premium Website Studio</title>
 <!-- Vinctec Admin v7.2 Navigation Fix: professional top navigation remains visible on every device. -->
 
 <style>
@@ -177,6 +177,83 @@ button:hover {
 .small-note{font-size:13px;color:#9ca3af;margin-top:8px;}
 .download-btn{background:#0ea5e9;}
 .success-btn{background:#16a34a;}
+
+
+/* === VINCTEC V10 PREMIUM UI — SAFE CSS-ONLY UPGRADE === */
+:root{
+  --v10-bg:#070b14;--v10-panel:rgba(15,23,42,.78);--v10-panel-2:rgba(17,27,48,.92);
+  --v10-border:rgba(148,163,184,.14);--v10-text:#f8fafc;--v10-muted:#94a3b8;
+  --v10-accent:#38bdf8;--v10-accent-2:#8b5cf6;--v10-success:#22c55e;
+  --v10-shadow:0 24px 70px rgba(0,0,0,.28);--v10-radius:22px;
+}
+html{scroll-behavior:smooth;background:var(--v10-bg)}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(56,189,248,.13),transparent 32%),
+    radial-gradient(circle at 92% 12%,rgba(139,92,246,.11),transparent 28%),
+    linear-gradient(180deg,#07101f 0%,#070b14 42%,#050811 100%)!important;
+  color:var(--v10-text)!important;min-height:100vh;
+}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.75),transparent 80%)}
+.header{
+  position:sticky;top:0;z-index:100;padding:18px 28px!important;text-align:left!important;
+  background:rgba(7,11,20,.76)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--v10-border);display:grid;grid-template-columns:1fr auto;align-items:center;gap:18px;
+}
+.header h2{margin:0!important;font-size:20px!important;letter-spacing:-.02em}
+.header h2:before{content:"V";display:inline-grid;place-items:center;width:34px;height:34px;margin-right:10px;border-radius:11px;background:linear-gradient(135deg,var(--v10-accent),var(--v10-accent-2));box-shadow:0 10px 28px rgba(56,189,248,.25);font-size:16px;color:white}
+.header p{margin:5px 0 0!important;color:var(--v10-muted)!important;font-size:12px;grid-column:1}
+.header button{grid-column:2;grid-row:1 / span 2;margin:0!important;background:rgba(248,113,113,.12)!important;color:#fecaca!important;border:1px solid rgba(248,113,113,.22)!important}
+.container{max-width:1440px!important;padding:28px!important}
+#search{height:48px!important;padding:0 16px!important;border:1px solid var(--v10-border)!important;background:rgba(15,23,42,.72)!important;color:var(--v10-text)!important;box-shadow:0 12px 35px rgba(0,0,0,.14)!important}
+#search::placeholder,input::placeholder,textarea::placeholder{color:#64748b!important}
+#counter{font-size:12px!important;letter-spacing:.08em;text-transform:uppercase;color:var(--v10-accent)!important}
+.stats-grid{gap:16px!important;margin:20px 0 24px!important}
+.stat-box,.tool-box,.card,.reply-card{
+  border:1px solid var(--v10-border)!important;background:linear-gradient(145deg,rgba(18,28,49,.92),rgba(10,17,31,.9))!important;
+  box-shadow:var(--v10-shadow)!important;border-radius:var(--v10-radius)!important;
+}
+.stat-box{position:relative;overflow:hidden;padding:20px!important;min-height:120px;display:flex;flex-direction:column;justify-content:flex-end}
+.stat-box:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-28px;top:-34px;background:radial-gradient(circle,rgba(56,189,248,.25),transparent 68%)}
+.stat-number{font-size:34px!important;line-height:1;color:#f8fafc!important;letter-spacing:-.04em;margin-bottom:10px}
+.stat-box>div:last-child{font-size:12px;color:var(--v10-muted);text-transform:uppercase;letter-spacing:.08em}
+.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:20px!important;margin-top:22px!important}
+.tool-box{padding:22px!important;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.tool-box:hover{transform:translateY(-2px);border-color:rgba(56,189,248,.26)!important;box-shadow:0 30px 85px rgba(0,0,0,.34)!important}
+.tool-box h3{font-size:17px!important;margin:0 0 16px!important;color:#fff!important;letter-spacing:-.02em}
+.builder-pro-box{padding:26px!important}
+.builder-pro-box>h3{font-size:25px!important;margin-bottom:20px!important}
+.reply-card input,.reply-card textarea,.tool-box input,.tool-box textarea,.tool-box select,.status-select,.followup-input{
+  width:100%;box-sizing:border-box;border:1px solid rgba(148,163,184,.15)!important;background:rgba(4,9,20,.62)!important;
+  color:var(--v10-text)!important;border-radius:13px!important;padding:12px 14px!important;outline:none;transition:border-color .18s,box-shadow .18s,background .18s;
+}
+.tool-box input:focus,.tool-box textarea:focus,.tool-box select:focus,.reply-card input:focus,.reply-card textarea:focus{border-color:rgba(56,189,248,.65)!important;box-shadow:0 0 0 4px rgba(56,189,248,.09)!important;background:rgba(4,9,20,.86)!important}
+.tool-box textarea{min-height:130px}
+button{font-family:inherit!important;font-weight:750!important;letter-spacing:-.01em;border:1px solid transparent!important;border-radius:12px!important;padding:10px 14px!important;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease!important}
+button:hover{opacity:1!important;transform:translateY(-1px);filter:brightness(1.07)}
+.reply-btn{background:linear-gradient(135deg,#0ea5e9,#6366f1)!important;box-shadow:0 12px 30px rgba(14,165,233,.19)!important}
+.pin-btn{background:rgba(245,158,11,.13)!important;color:#fde68a!important;border-color:rgba(245,158,11,.22)!important}
+.read-btn,.success-btn{background:rgba(34,197,94,.13)!important;color:#bbf7d0!important;border-color:rgba(34,197,94,.22)!important}
+.download-btn{background:rgba(56,189,248,.12)!important;color:#bae6fd!important;border-color:rgba(56,189,248,.22)!important}
+.builder-actions{gap:10px!important;padding:2px 0}
+.preview-frame{border:1px solid rgba(148,163,184,.18)!important;border-radius:18px!important;background:#fff!important;box-shadow:0 28px 80px rgba(0,0,0,.34)!important}
+.small-note{color:var(--v10-muted)!important}
+.badge{border:1px solid rgba(255,255,255,.08);font-weight:700}
+#replyBox{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.reply-card{padding:24px!important}
+#toast{background:linear-gradient(135deg,#16a34a,#059669)!important;border:1px solid rgba(255,255,255,.18);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.v70-studio,.v90-studio,details[id*="Studio"],section[id*="Studio"]{border:1px solid var(--v10-border)!important;background:linear-gradient(145deg,rgba(12,21,38,.94),rgba(7,13,25,.94))!important;border-radius:20px!important;box-shadow:0 20px 65px rgba(0,0,0,.24)!important}
+.v70-title,.v90-studio summary{border-bottom-color:rgba(148,163,184,.12)!important}
+.v70-card{background:rgba(255,255,255,.025)!important;border-color:rgba(148,163,184,.13)!important;transition:.18s ease!important}
+.v70-card:hover{border-color:rgba(56,189,248,.4)!important;background:rgba(56,189,248,.055)!important;transform:translateY(-1px)}
+.v90-presets button{background:rgba(255,255,255,.045)!important;border-color:rgba(148,163,184,.14)!important}
+.v90-control{background:rgba(255,255,255,.025)!important;border-color:rgba(148,163,184,.12)!important}
+.v90-control input[type="color"]{height:46px!important;padding:4px!important}
+#messages>.card{padding:20px!important;margin:14px 0!important}
+body>h3,.container>h3{margin-top:28px;font-size:18px}
+@media(max-width:900px){.tool-grid{grid-template-columns:1fr!important}.container{padding:18px!important}.header{padding:15px 18px!important}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:560px){.stats-grid{grid-template-columns:1fr!important}.header{grid-template-columns:1fr auto}.header p{max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.builder-pro-box{padding:16px!important}.container{padding:12px!important}.preview-frame{height:620px!important}}
 </style>
 </head>
 
@@ -418,7 +495,18 @@ function createFiles() {
   const footer = `<footer>© ${d.year} ${b}. Website by Vinctec.</footer>`;
 
   return {
-    'index.html': `${head(`${b} | Home`, `${b} offers ${type} services in ${address}. Contact us for ${htmlEscape(d.services.join(', '))}.`)}\n<body>\n${nav}\n<section class="hero"><div class="hero-content"><p class="eyebrow">${d.preset.label} • ${htmlEscape(d.tone)}</p><h1>${hero}</h1><p>${about}</p><div class="actions"><a class="btn" href="contact.html">Get a Free Quote</a><a class="btn secondary" href="services.html">View Services</a></div></div></section>\n<section><h2>Services built around your needs</h2><p>${servicesIntro}</p><div class="grid">${services}</div></section>\n<section class="split"><div><h2>Why choose ${b}?</h2><p>${b} focuses on trust, service quality and making it easy for customers to get support.</p><ul><li>Clear service information</li><li>Mobile-friendly customer journey</li><li>Simple contact options</li><li>Professional and reliable presentation</li></ul></div><div class="highlight"><h3>Quick Contact</h3><p><strong>Phone:</strong> ${phone}</p><p><strong>Email:</strong> ${email}</p><p><strong>Area:</strong> ${address}</p></div></section>\n${footer}\n</body>\n</html>`,
+    'index.html': `${head(`${b} | Home`, `${b} offers ${type} services in ${address}. Contact us for ${htmlEscape(d.services.join(', '))}.`)}\n<body>\n${nav}\n<section class="hero"><div class="hero-content"><p class="eyebrow">${d.preset.label} • ${htmlEscape(d.tone)}</p><h1>${hero}</h1><p>${about}</p><div class="actions"><a class="btn" href="contact.html">Get a Free Quote</a><a class="btn secondary" href="services.html">View Services</a></div></div></section>\n<section><h2>Services built around your needs</h2><p>${servicesIntro}</p><div class="grid">${services}</div></section>\n<section class="split"><div><h2>Why choose ${b}?</h2><p>${b} focuses on trust, service quality and making it easy for customers to get support.</p><ul><li>Clear service information</li><li>Mobile-friendly customer journey</li><li>Simple contact options</li><li>Professional and reliable presentation</li></ul></div><div class="highlight"><h3>Quick Contact</h3><p><strong>Phone:</strong> ${phone}</p><p><strong>Email:</strong> ${email}</p><p><strong>Area:</strong> ${address}</p></div></section>\n${footer}\n
+<script id="vinctec-v10-safe-ui">
+document.addEventListener('DOMContentLoaded',function(){
+  var oldBg=document.getElementById('v89Background');
+  if(oldBg&&oldBg.closest('label')) oldBg.closest('label').style.display='none';
+  var title=document.querySelector('.builder-pro-box > h3');
+  if(title) title.textContent='✦ Vinctec Website Studio';
+  var headerTitle=document.querySelector('.header h2');
+  if(headerTitle) headerTitle.textContent='Vinctec Admin Studio';
+});
+</script>
+</body>\n</html>`,
     'about.html': `${head(`About ${b}`, `Learn about ${b}, a ${type} serving ${address}.`)}\n<body>\n${nav}\n<section class="page-hero"><h1>About ${b}</h1><p>${about}</p></section>\n<section><h2>Who we are</h2><p>${desc}</p><p>Our website style uses ${htmlEscape(d.colours)} with a ${htmlEscape(d.tone)} tone.</p></section><section class="highlight"><h2>Our mission</h2><p>To provide a simple, trustworthy and professional experience from first enquiry to completed service.</p></section>\n${footer}\n</body>\n</html>`,
     'services.html': `${head(`${b} Services`, `Explore ${b} services including ${htmlEscape(d.services.join(', '))}.`)}\n<body>\n${nav}\n<section class="page-hero"><h1>Our Services</h1><p>${servicesIntro}</p></section>\n<section><div class="grid">${services}</div></section><section class="highlight"><h2>Services available</h2><ul>${list}</ul><a class="btn" href="contact.html">Request a Quote</a></section>\n${footer}\n</body>\n</html>`,
     'contact.html': `${head(`Contact ${b}`, `Contact ${b} in ${address}. Call ${phone} or email ${email}.`)}\n<body>\n${nav}\n<section class="page-hero"><h1>Contact ${b}</h1><p>${contactIntro}</p></section>\n<section class="split"><div class="contact-card"><form><input type="text" placeholder="Your Name" required><input type="email" placeholder="Email Address" required><input type="tel" placeholder="Phone Number"><textarea placeholder="Tell us what you need" required></textarea><button type="submit">Send Enquiry</button></form></div><div class="highlight"><h2>Contact Details</h2><p><strong>Phone:</strong> <a href="tel:${phone}">${phone}</a></p><p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p><p><strong>Address:</strong> ${address}</p></div></section>\n${footer}\n</body>\n</html>`,
