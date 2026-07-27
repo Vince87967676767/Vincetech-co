@@ -2879,5 +2879,49 @@ h3{letter-spacing:-.025em;}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important;}}
 </style>
 
+
+<script id="vinctec-services-choice-live-fix">
+(function(){
+  'use strict';
+
+  function applyServicesMenuChoice(){
+    const select = document.getElementById('siteMenuStyle');
+    if (!select) return;
+
+    // Rebuild the generated files immediately so the preview matches the selected option.
+    if (typeof window.generateWebsiteStarter === 'function') {
+      window.generateWebsiteStarter();
+    }
+
+    // Refresh once more after generation finishes to avoid showing an older cached preview.
+    window.setTimeout(function(){
+      if (typeof window.previewWebsite === 'function') {
+        window.previewWebsite();
+      }
+    }, 80);
+  }
+
+  function install(){
+    const select = document.getElementById('siteMenuStyle');
+    if (!select || select.dataset.liveMenuFix === '1') return false;
+    select.dataset.liveMenuFix = '1';
+
+    // Keep the normal Services link as the default for new projects.
+    if (!select.value) select.value = 'standard';
+
+    select.addEventListener('change', applyServicesMenuChoice);
+    return true;
+  }
+
+  let attempts = 0;
+  const timer = window.setInterval(function(){
+    attempts += 1;
+    if (install() || attempts > 80) window.clearInterval(timer);
+  }, 100);
+
+  if (document.readyState !== 'loading') install();
+  else document.addEventListener('DOMContentLoaded', install, {once:true});
+})();
+</script>
 </body>
 </html>
