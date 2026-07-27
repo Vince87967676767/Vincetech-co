@@ -273,9 +273,11 @@ button:hover {
       <input id="siteVideoUrl" placeholder="Video URL, e.g. https://example.com/video.mp4 or YouTube link">
       <input id="siteExtraFeatures" placeholder="Extra features, e.g. search bar, gallery, video, testimonials, prices, FAQ, WhatsApp">
       <select id="siteMenuStyle">
-        <option value="standard">Standard navigation menu</option>
+        <option value="standard" selected>Normal Services link — no dropdown</option>
         <option value="dropdown">Services dropdown menu</option>
+        <option value="hidden">Hide Services from navigation</option>
       </select>
+      <p class="small-note">Choose whether the generated website uses a normal Services link, a dropdown menu, or no Services item in the navigation.</p>
       <input id="siteOpeningHours" placeholder="Opening hours, e.g. Mon-Fri 9am-5pm, Sat 10am-4pm, Sun Closed">
 
       <div class="builder-actions">
@@ -1477,7 +1479,9 @@ footer{text-align:center;padding:24px;background:#020617;color:#94a3b8;}
 
     const servicesMenu = d.menuStyle === "dropdown"
       ? `<span class="nav-dropdown"><a href="services.html">Services ▾</a><span class="dropdown-menu">${serviceLinks}</span></span>`
-      : `<a href="services.html">Services</a>`;
+      : d.menuStyle === "hidden"
+        ? ``
+        : `<a href="services.html">Services</a>`;
 
     return `<header><div class="logo">${esc(d.business)}</div><nav><a href="index.html">Home</a><a href="about.html">About</a>${servicesMenu}<a href="contact.html">Contact</a><label class="search-box" aria-label="Search website">🔍<input id="siteSearch" type="search" placeholder="Search..." autocomplete="off"></label></nav></header>`;
   }
@@ -2430,7 +2434,7 @@ function collect(){
  return {business:val('siteBusiness','Your Business'),type,description:val('siteDescription','A premium business delivering thoughtful service, clear communication and exceptional attention to detail.'),services:csv(val('siteServices','Signature Service, Personal Support, Bespoke Solutions'),'Signature Service, Personal Support, Bespoke Solutions'),phone:val('sitePhone','01279 000000'),email:val('siteEmail','hello@example.co.uk'),address:val('siteAddress','Harlow, Essex'),tone:val('siteTone','refined, confident and welcoming'),hours:val('siteOpeningHours','Mon–Fri 9am–5pm'),heroImage:val('siteHeroImage',''),gallery:csv(val('siteGalleryImages',''),''),video:val('siteVideoUrl',''),extraFeatures:val('siteExtraFeatures',''),menuStyle:($('siteMenuStyle')||{}).value||'standard',industry:ind,architecture:chosen==='auto'?recommendedArchitecture(ind):chosen,palette:pal,typography:($('v30Typography')||{}).value||'modern',effect:($('v30Effect')||{}).value||'luxury',radius:($('v30Radius')||{}).value||'24',spacing:($('v30Spacing')||{}).value||'luxury',buttonStyle:($('v30Button')||{}).value||'pill',motion:($('v70Motion')||{}).value||'luxury',nav:($('v70Nav')||{}).value||'floating',heroBg,shadow:($('v90Shadow')||{}).value||'premium',year:new Date().getFullYear()};
 }
 function head(d,title,desc){return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="stylesheet" href="style.css"></head>`}
-function nav(d){const services=d.menuStyle==='dropdown'?`<span class="nav-dropdown"><button type="button" class="nav-drop-toggle">Services <span>⌄</span></button><span class="nav-drop-menu">${d.services.map(s=>`<a href="services.html#${esc(String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-'))}">${esc(s)}</a>`).join('')}</span></span>`:`<a href="services.html">Services</a>`;return `<header class="site-nav ${esc(d.nav)}"><a class="brand" href="index.html">${esc(d.business)}</a><nav><a href="index.html">Home</a><a href="about.html">About</a>${services}<a class="nav-cta" href="contact.html">Start a project</a></nav></header>`}
+function nav(d){const services=d.menuStyle==='dropdown'?`<span class="nav-dropdown"><button type="button" class="nav-drop-toggle">Services <span>⌄</span></button><span class="nav-drop-menu">${d.services.map(s=>`<a href="services.html#${esc(String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-'))}">${esc(s)}</a>`).join('')}</span></span>`:d.menuStyle==='hidden'?``:`<a href="services.html">Services</a>`;return `<header class="site-nav ${esc(d.nav)}"><a class="brand" href="index.html">${esc(d.business)}</a><nav><a href="index.html">Home</a><a href="about.html">About</a>${services}<a class="nav-cta" href="contact.html">Start a project</a></nav></header>`}
 function footer(d){return `<footer class="footer-minimal"><div><strong>${esc(d.business)}</strong><p>${esc(d.description)}</p></div><small>© ${d.year} ${esc(d.business)} · Designed with Vinctec</small></footer>`}
 function serviceCards(d,cls='service-grid'){return `<div class="${cls}">${d.services.map((s,i)=>{const slug=String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');return `<article id="${esc(slug)}" class="service reveal"><span>0${i+1}</span><h3>${esc(s)}</h3><p>Premium ${esc(s).toLowerCase()} shaped around your goals, delivered with care and precision.</p><a href="contact.html">Discover more →</a></article>`}).join('')}</div>`}
 function media(d,cls='hero-media'){if(d.video){const yt=/youtu(?:\.be|be\.com)/i.test(d.video);const embed=yt?d.video.replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/').split('&')[0]:'';return yt?`<div class="${cls}"><iframe src="${esc(embed)}?autoplay=1&mute=1&loop=1" title="${esc(d.business)} video" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`:`<div class="${cls}"><video autoplay muted loop playsinline controls src="${esc(d.video)}"></video></div>`}if(d.heroImage)return `<div class="${cls}"><img src="${esc(d.heroImage)}" alt="${esc(d.business)}"></div>`;return `<div class="${cls} art"><i></i><i></i><b>${esc(d.business.charAt(0))}</b></div>`}
