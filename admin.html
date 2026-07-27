@@ -280,6 +280,20 @@ button:hover {
       <p class="small-note">Choose whether the generated website uses a normal Services link, a dropdown menu, or no Services item in the navigation.</p>
       <input id="siteOpeningHours" placeholder="Opening hours, e.g. Mon-Fri 9am-5pm, Sat 10am-4pm, Sun Closed">
 
+      <select id="siteBackgroundAnimation">
+        <option value="none" selected>No background animation</option>
+        <option value="orbs">Floating gradient orbs</option>
+        <option value="mesh">Moving mesh gradient</option>
+        <option value="grid">Animated digital grid</option>
+        <option value="particles">Floating particles</option>
+        <option value="stars">Futuristic stars</option>
+        <option value="luxury-glow">Luxury ambient glow</option>
+        <option value="spider-web">Spider web corner</option>
+        <option value="spider">Animated spider</option>
+        <option value="spider-web-combo">Animated spider + web</option>
+      </select>
+      <p class="small-note">Optional: choose one premium background effect for the generated client website. “No background animation” keeps it completely off.</p>
+
       <div class="builder-actions">
         <button class="reply-btn" onclick="generateWebsiteStarter()">Generate Full Website Files</button>
         <button class="pin-btn" onclick="previewWebsite()">Live Preview</button>
@@ -1396,7 +1410,8 @@ window.logout = function () {
       videoUrl: get("siteVideoUrl", ""),
       extraFeatures: get("siteExtraFeatures", ""),
       menuStyle: ($("siteMenuStyle") || {}).value || "standard",
-      openingHours: get("siteOpeningHours", "Mon-Fri 9am-5pm, Sat 10am-4pm, Sun Closed")
+      openingHours: get("siteOpeningHours", "Mon-Fri 9am-5pm, Sat 10am-4pm, Sun Closed"),
+      backgroundAnimation: ($("siteBackgroundAnimation") || {}).value || "none"
     };
   }
 
@@ -1469,7 +1484,57 @@ section{padding:65px 8%;}
 input,textarea{width:100%;padding:14px;margin:9px 0;border:none;border-radius:10px;}
 textarea{height:140px;resize:vertical;}
 footer{text-align:center;padding:24px;background:#020617;color:#94a3b8;}
-@media(max-width:760px){header{display:block;}nav{margin-top:12px;}nav a{display:inline-block;margin:6px 12px 0 0;}.nav-dropdown{display:block;margin:6px 0 0;}.dropdown-menu{position:static;display:block;margin-top:6px;box-shadow:none;}.search-box{margin:10px 0 0 0;}h1{font-size:36px;}.split,.hero{grid-template-columns:1fr;}.actions{display:block}.btn{margin-top:10px;}}`;
+body{position:relative;overflow-x:hidden;}
+header,section,footer{position:relative;z-index:2;}
+.bg-animation{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
+.bg-animation span,.bg-animation div,.bg-animation svg{position:absolute;}
+.bg-orb{width:36vw;height:36vw;min-width:260px;min-height:260px;border-radius:50%;filter:blur(55px);opacity:.22;animation:orbFloat 13s ease-in-out infinite alternate;}
+.bg-orb.one{left:-10%;top:8%;background:${pr.accent};}
+.bg-orb.two{right:-12%;bottom:2%;background:${pr.muted};animation-delay:-5s;animation-duration:17s;}
+.mesh-layer{inset:-25%;background:radial-gradient(circle at 20% 25%,${pr.accent}55,transparent 32%),radial-gradient(circle at 80% 35%,${pr.muted}44,transparent 30%),radial-gradient(circle at 55% 82%,${pr.accent}38,transparent 34%);filter:blur(42px);opacity:.52;animation:meshMove 18s ease-in-out infinite alternate;}
+.grid-layer{inset:-40px;background-image:linear-gradient(${pr.accent}20 1px,transparent 1px),linear-gradient(90deg,${pr.accent}20 1px,transparent 1px);background-size:52px 52px;transform:perspective(700px) rotateX(62deg) translateY(28%);transform-origin:center bottom;opacity:.24;animation:gridTravel 10s linear infinite;}
+.particle{width:5px;height:5px;border-radius:50%;background:${pr.accent};box-shadow:0 0 16px ${pr.accent};opacity:.52;animation:particleRise var(--dur,12s) linear infinite;left:var(--x);bottom:-30px;animation-delay:var(--delay,0s);}
+.star{width:3px;height:3px;border-radius:50%;background:${pr.text};box-shadow:0 0 9px ${pr.text};left:var(--x);top:var(--y);animation:starTwinkle var(--dur,3s) ease-in-out infinite;animation-delay:var(--delay,0s);}
+.luxury-glow{width:58vw;height:58vw;border-radius:50%;left:50%;top:45%;transform:translate(-50%,-50%);background:radial-gradient(circle,${pr.accent}38 0%,${pr.accent}12 34%,transparent 68%);filter:blur(26px);animation:luxuryPulse 7s ease-in-out infinite;}
+.spider-web-svg{right:-10px;top:-8px;width:min(430px,48vw);height:auto;opacity:.42;filter:drop-shadow(0 0 10px ${pr.accent}55);}
+.spider-line{right:92px;top:0;width:1px;height:260px;background:linear-gradient(${pr.accent},transparent);transform-origin:top;}
+.css-spider{right:72px;top:145px;width:42px;height:52px;animation:spiderDrop 7s ease-in-out infinite;filter:drop-shadow(0 8px 9px rgba(0,0,0,.4));}
+.css-spider .spider-body{left:12px;top:15px;width:20px;height:27px;border-radius:48% 48% 58% 58%;background:${pr.accent};box-shadow:0 0 18px ${pr.accent}88;}
+.css-spider .spider-head{left:15px;top:7px;width:14px;height:14px;border-radius:50%;background:${pr.accent};}
+.css-spider .leg{left:20px;top:22px;width:30px;height:2px;background:${pr.accent};transform-origin:left center;border-radius:999px;}
+.css-spider .l1{transform:rotate(-150deg)}.css-spider .l2{transform:rotate(-125deg);top:27px}.css-spider .l3{transform:rotate(125deg);top:32px}.css-spider .l4{transform:rotate(150deg);top:37px}
+.css-spider .r1{transform:rotate(-30deg)}.css-spider .r2{transform:rotate(-55deg);top:27px}.css-spider .r3{transform:rotate(55deg);top:32px}.css-spider .r4{transform:rotate(30deg);top:37px}
+@keyframes orbFloat{0%{transform:translate3d(-3%,0,0) scale(.92)}100%{transform:translate3d(14%,12%,0) scale(1.12)}}
+@keyframes meshMove{0%{transform:translate3d(-4%,-2%,0) rotate(0deg) scale(1)}100%{transform:translate3d(7%,5%,0) rotate(12deg) scale(1.12)}}
+@keyframes gridTravel{to{background-position:0 52px,52px 0}}
+@keyframes particleRise{0%{transform:translateY(0) scale(.6);opacity:0}12%{opacity:.58}100%{transform:translateY(-110vh) translateX(45px) scale(1.25);opacity:0}}
+@keyframes starTwinkle{0%,100%{opacity:.18;transform:scale(.65)}50%{opacity:.92;transform:scale(1.5)}}
+@keyframes luxuryPulse{0%,100%{opacity:.34;transform:translate(-50%,-50%) scale(.88)}50%{opacity:.62;transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes spiderDrop{0%,100%{transform:translateY(-115px) rotate(-3deg)}45%{transform:translateY(65px) rotate(5deg)}65%{transform:translateY(65px) rotate(-4deg)}}
+@media(max-width:760px){header{display:block;}nav{margin-top:12px;}nav a{display:inline-block;margin:6px 12px 0 0;}.nav-dropdown{display:block;margin:6px 0 0;}.dropdown-menu{position:static;display:block;margin-top:6px;box-shadow:none;}.search-box{margin:10px 0 0 0;}h1{font-size:36px;}.split,.hero{grid-template-columns:1fr;}.actions{display:block}.btn{margin-top:10px;}.spider-web-svg{width:250px}.css-spider{right:35px;transform:scale(.78)}}
+@media(prefers-reduced-motion:reduce){.bg-animation *{animation:none!important;}.bg-animation{opacity:.45;}}`;
+  }
+
+  function backgroundAnimationMarkup(d) {
+    const mode = d.backgroundAnimation || "none";
+    if (mode === "none") return "";
+    if (mode === "orbs") return `<div class="bg-animation" aria-hidden="true"><span class="bg-orb one"></span><span class="bg-orb two"></span></div>`;
+    if (mode === "mesh") return `<div class="bg-animation" aria-hidden="true"><span class="mesh-layer"></span></div>`;
+    if (mode === "grid") return `<div class="bg-animation" aria-hidden="true"><span class="grid-layer"></span></div>`;
+    if (mode === "luxury-glow") return `<div class="bg-animation" aria-hidden="true"><span class="luxury-glow"></span></div>`;
+    if (mode === "particles") {
+      const dots = Array.from({length:24}, function(_,i){return `<span class="particle" style="--x:${(i*37)%100}%;--dur:${9+(i%8)}s;--delay:-${i%11}s"></span>`;}).join("");
+      return `<div class="bg-animation" aria-hidden="true">${dots}</div>`;
+    }
+    if (mode === "stars") {
+      const stars = Array.from({length:38}, function(_,i){return `<span class="star" style="--x:${(i*29)%100}%;--y:${(i*47)%100}%;--dur:${2+(i%5)}s;--delay:-${i%7}s"></span>`;}).join("");
+      return `<div class="bg-animation" aria-hidden="true">${stars}</div>`;
+    }
+    const web = `<svg class="spider-web-svg" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1.4" opacity=".75"><path d="M420 0L0 420M420 0L420 420M420 0L0 0M420 0L90 420M420 0L0 260M420 0L210 420"/><path d="M348 72C320 46 294 30 264 18M296 124C254 83 208 54 158 35M244 176C190 121 128 83 60 64M192 228C131 166 68 123 0 100M140 280C90 229 43 195 0 174M88 332C56 299 28 278 0 264"/></g></svg>`;
+    const spider = `<span class="spider-line"></span><div class="css-spider"><span class="spider-head"></span><span class="spider-body"></span><span class="leg l1"></span><span class="leg l2"></span><span class="leg l3"></span><span class="leg l4"></span><span class="leg r1"></span><span class="leg r2"></span><span class="leg r3"></span><span class="leg r4"></span></div>`;
+    if (mode === "spider-web") return `<div class="bg-animation" aria-hidden="true" style="color:${preset(d.style).accent}">${web}</div>`;
+    if (mode === "spider") return `<div class="bg-animation" aria-hidden="true">${spider}</div>`;
+    return `<div class="bg-animation" aria-hidden="true" style="color:${preset(d.style).accent}">${web}${spider}</div>`;
   }
 
   function header(d) {
@@ -1597,13 +1662,13 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
     const hero = heroLines[variants.hero % heroLines.length];
 
-    const index = `${head(`${esc(d.business)} | Home`, `${esc(d.business)} offers ${esc(d.type)} services in ${esc(d.address)}.`)}<body>${header(d)}<section class="hero"><div class="hero-content"><p class="eyebrow">${esc(pr.label)} • ${esc(d.tone)}</p><h1>${hero}</h1><p>${esc(d.description)}</p><div class="actions"><a class="btn" href="contact.html">Get a Free Quote</a><a class="btn secondary" href="services.html">View Services</a></div></div>${heroVisual(d)}</section><section><h2>Services built around your needs</h2><p>Choose the service that best matches your needs.</p><div class="grid">${serviceCards(d)}</div></section>${gallerySection(d)}${videoSection(d)}${extraSections(d)}<section class="split"><div><h2>Why choose ${esc(d.business)}?</h2><p>${esc(d.business)} focuses on trust, service quality and making it easy for customers to get support.</p><ul><li>Clear service information</li><li>Mobile-friendly customer journey</li><li>Simple contact options</li><li>Professional and reliable presentation</li></ul></div><div><div class="highlight"><h3>Quick Contact</h3><p><strong>Phone:</strong> ${esc(d.phone)}</p><p><strong>Email:</strong> ${esc(d.email)}</p><p><strong>Area:</strong> ${esc(d.address)}</p></div>${openingHoursCard(d)}</div></section>${footer(d)}${websiteSearchScript()}</body></html>`;
+    const index = `${head(`${esc(d.business)} | Home`, `${esc(d.business)} offers ${esc(d.type)} services in ${esc(d.address)}.`)}<body>${backgroundAnimationMarkup(d)}${header(d)}<section class="hero"><div class="hero-content"><p class="eyebrow">${esc(pr.label)} • ${esc(d.tone)}</p><h1>${hero}</h1><p>${esc(d.description)}</p><div class="actions"><a class="btn" href="contact.html">Get a Free Quote</a><a class="btn secondary" href="services.html">View Services</a></div></div>${heroVisual(d)}</section><section><h2>Services built around your needs</h2><p>Choose the service that best matches your needs.</p><div class="grid">${serviceCards(d)}</div></section>${gallerySection(d)}${videoSection(d)}${extraSections(d)}<section class="split"><div><h2>Why choose ${esc(d.business)}?</h2><p>${esc(d.business)} focuses on trust, service quality and making it easy for customers to get support.</p><ul><li>Clear service information</li><li>Mobile-friendly customer journey</li><li>Simple contact options</li><li>Professional and reliable presentation</li></ul></div><div><div class="highlight"><h3>Quick Contact</h3><p><strong>Phone:</strong> ${esc(d.phone)}</p><p><strong>Email:</strong> ${esc(d.email)}</p><p><strong>Area:</strong> ${esc(d.address)}</p></div>${openingHoursCard(d)}</div></section>${footer(d)}${websiteSearchScript()}</body></html>`;
 
-    const about = `${head(`About ${esc(d.business)}`, `Learn about ${esc(d.business)}.`)}<body>${header(d)}<section class="page-hero"><h1>About ${esc(d.business)}</h1><p>${esc(d.description)}</p></section><section><h2>Who we are</h2><p>${esc(d.business)} is built around reliable service, clear communication and a ${esc(d.tone)} customer experience.</p><p>Colour direction requested: ${esc(d.colours)}.</p></section>${extraFeatureFlags(d).testimonials ? extraSections({ ...d, features: "testimonials", extraFeatures: "" }) : ""}${footer(d)}${websiteSearchScript()}</body></html>`;
+    const about = `${head(`About ${esc(d.business)}`, `Learn about ${esc(d.business)}.`)}<body>${backgroundAnimationMarkup(d)}${header(d)}<section class="page-hero"><h1>About ${esc(d.business)}</h1><p>${esc(d.description)}</p></section><section><h2>Who we are</h2><p>${esc(d.business)} is built around reliable service, clear communication and a ${esc(d.tone)} customer experience.</p><p>Colour direction requested: ${esc(d.colours)}.</p></section>${extraFeatureFlags(d).testimonials ? extraSections({ ...d, features: "testimonials", extraFeatures: "" }) : ""}${footer(d)}${websiteSearchScript()}</body></html>`;
 
-    const services = `${head(`${esc(d.business)} Services`, `Explore services from ${esc(d.business)}.`)}<body>${header(d)}<section class="page-hero"><h1>Our Services</h1><p>Choose the service that best matches your needs.</p></section><section><div class="grid">${serviceCards(d)}</div></section>${gallerySection(d)}${videoSection(d)}<section class="highlight"><h2>Need help?</h2><p>Contact ${esc(d.business)} today to discuss your requirements.</p><a class="btn" href="contact.html">Request a Quote</a></section>${footer(d)}${websiteSearchScript()}</body></html>`;
+    const services = `${head(`${esc(d.business)} Services`, `Explore services from ${esc(d.business)}.`)}<body>${backgroundAnimationMarkup(d)}${header(d)}<section class="page-hero"><h1>Our Services</h1><p>Choose the service that best matches your needs.</p></section><section><div class="grid">${serviceCards(d)}</div></section>${gallerySection(d)}${videoSection(d)}<section class="highlight"><h2>Need help?</h2><p>Contact ${esc(d.business)} today to discuss your requirements.</p><a class="btn" href="contact.html">Request a Quote</a></section>${footer(d)}${websiteSearchScript()}</body></html>`;
 
-    const contact = `${head(`Contact ${esc(d.business)}`, `Contact ${esc(d.business)} in ${esc(d.address)}.`)}<body>${header(d)}<section class="page-hero"><h1>Contact ${esc(d.business)}</h1><p>Send an enquiry and we will get back to you as soon as possible.</p></section><section class="split"><div class="contact-card"><form><input type="text" placeholder="Your Name" required><input type="email" placeholder="Email Address" required><input type="tel" placeholder="Phone Number"><textarea placeholder="Tell us what you need" required></textarea><button type="submit">Send Enquiry</button></form></div><div><div class="highlight"><h2>Contact Details</h2><p><strong>Phone:</strong> <a href="tel:${esc(d.phone)}">${esc(d.phone)}</a></p><p><strong>Email:</strong> <a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p><p><strong>Address:</strong> ${esc(d.address)}</p></div>${openingHoursCard(d)}</div></section>${footer(d)}${websiteSearchScript()}</body></html>`;
+    const contact = `${head(`Contact ${esc(d.business)}`, `Contact ${esc(d.business)} in ${esc(d.address)}.`)}<body>${backgroundAnimationMarkup(d)}${header(d)}<section class="page-hero"><h1>Contact ${esc(d.business)}</h1><p>Send an enquiry and we will get back to you as soon as possible.</p></section><section class="split"><div class="contact-card"><form><input type="text" placeholder="Your Name" required><input type="email" placeholder="Email Address" required><input type="tel" placeholder="Phone Number"><textarea placeholder="Tell us what you need" required></textarea><button type="submit">Send Enquiry</button></form></div><div><div class="highlight"><h2>Contact Details</h2><p><strong>Phone:</strong> <a href="tel:${esc(d.phone)}">${esc(d.phone)}</a></p><p><strong>Email:</strong> <a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p><p><strong>Address:</strong> ${esc(d.address)}</p></div>${openingHoursCard(d)}</div></section>${footer(d)}${websiteSearchScript()}</body></html>`;
 
     const cssText = css(d);
     const inlineStyle = `<style>${cssText}</style>`;
@@ -1732,6 +1797,14 @@ document.addEventListener('click', function(e){
       styleSelect.dataset.vinctecPreviewInstalled = "1";
       styleSelect.addEventListener("change", function () {
         if (files["index.html"]) window.generateWebsiteStarter();
+      });
+    }
+
+    const animationSelect = $("siteBackgroundAnimation");
+    if (animationSelect && !animationSelect.dataset.vinctecAnimationInstalled) {
+      animationSelect.dataset.vinctecAnimationInstalled = "1";
+      animationSelect.addEventListener("change", function () {
+        window.generateWebsiteStarter();
       });
     }
   }
