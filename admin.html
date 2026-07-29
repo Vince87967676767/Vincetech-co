@@ -2431,7 +2431,7 @@ clinical:{bg:'#f4fbfb',surface:'#ffffff',text:'#102828',muted:'#637979',accent:'
 function collect(){
  const type=val('siteType','premium local business'), ind=detectIndustry(type), chosen=document.querySelector('input[name="v70Architecture"]:checked')?.value||'auto';
  const selectedPalette=($('v70Palette')||{}).value||'auto'; const autoPalette=({skincare:'blush',fashion:'obsidian',roofing:'stone',health:'cloud',hospitality:'ivory',property:'ivory'})[ind]||'obsidian'; const pal=palette(selectedPalette==='auto'?autoPalette:selectedPalette); const custom=($('v30Accent')||{}).value||''; if(custom)pal.accent=custom; const activeColor=(id)=>{const e=$(id);return e&&e.dataset.active==='1'?e.value:''}; const customBackground=activeColor('v90Background')||(($('v89Background')||{}).value||''); if(customBackground)pal.bg=customBackground; const customSurface=activeColor('v90Surface'); if(customSurface)pal.surface=customSurface; const customText=activeColor('v90Text'); if(customText)pal.text=customText; const customMuted=activeColor('v90Muted'); if(customMuted)pal.muted=customMuted; const customAccent=activeColor('v90Accent'); if(customAccent)pal.accent=customAccent; const heroBg=activeColor('v90Hero');
- return {business:val('siteBusiness','Your Business'),type,description:val('siteDescription','A premium business delivering thoughtful service, clear communication and exceptional attention to detail.'),services:csv(val('siteServices','Signature Service, Personal Support, Bespoke Solutions'),'Signature Service, Personal Support, Bespoke Solutions'),phone:val('sitePhone','01279 000000'),email:val('siteEmail','hello@example.co.uk'),address:val('siteAddress','Harlow, Essex'),tone:val('siteTone','refined, confident and welcoming'),hours:val('siteOpeningHours','Mon–Fri 9am–5pm'),heroImage:val('siteHeroImage',''),gallery:csv(val('siteGalleryImages',''),''),video:val('siteVideoUrl',''),extraFeatures:val('siteExtraFeatures',''),menuStyle:($('siteMenuStyle')||{}).value||'standard',industry:ind,architecture:chosen==='auto'?recommendedArchitecture(ind):chosen,palette:pal,typography:($('v30Typography')||{}).value||'modern',effect:($('v30Effect')||{}).value||'luxury',radius:($('v30Radius')||{}).value||'24',spacing:($('v30Spacing')||{}).value||'luxury',buttonStyle:($('v30Button')||{}).value||'pill',motion:($('v70Motion')||{}).value||'luxury',nav:($('v70Nav')||{}).value||'floating',heroBg,shadow:($('v90Shadow')||{}).value||'premium',year:new Date().getFullYear()};
+ return {business:val('siteBusiness','Your Business'),type,description:val('siteDescription','A premium business delivering thoughtful service, clear communication and exceptional attention to detail.'),services:csv(val('siteServices','Signature Service, Personal Support, Bespoke Solutions'),'Signature Service, Personal Support, Bespoke Solutions'),phone:val('sitePhone','01279 000000'),email:val('siteEmail','hello@example.co.uk'),address:val('siteAddress','Harlow, Essex'),tone:val('siteTone','refined, confident and welcoming'),hours:val('siteOpeningHours','Mon–Fri 9am–5pm'),heroImage:val('siteHeroImage',''),gallery:csv(val('siteGalleryImages',''),''),video:val('siteVideoUrl',''),extraFeatures:val('siteExtraFeatures',''),menuStyle:($('siteMenuStyle')||{}).value||'standard',industry:ind,architecture:chosen==='auto'?recommendedArchitecture(ind):chosen,palette:pal,typography:($('v30Typography')||{}).value||'modern',effect:($('v30Effect')||{}).value||'luxury',radius:($('v30Radius')||{}).value||'24',spacing:($('v30Spacing')||{}).value||'luxury',buttonStyle:($('v30Button')||{}).value||'pill',motion:($('v70Motion')||{}).value||'luxury',nav:($('v70Nav')||{}).value||'floating',animation:(window.__vinctecAnimationChoice||localStorage.getItem('vinctecAnimationChoice')||'none'),heroBg,shadow:($('v90Shadow')||{}).value||'premium',year:new Date().getFullYear()};
 }
 function head(d,title,desc){return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="stylesheet" href="style.css"></head>`}
 function nav(d){const services=d.menuStyle==='dropdown'?`<span class="nav-dropdown"><button type="button" class="nav-drop-toggle">Services <span>⌄</span></button><span class="nav-drop-menu">${d.services.map(s=>`<a href="services.html#${esc(String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-'))}">${esc(s)}</a>`).join('')}</span></span>`:d.menuStyle==='hidden'?``:`<a href="services.html">Services</a>`;return `<header class="site-nav ${esc(d.nav)}"><a class="brand" href="index.html">${esc(d.business)}</a><nav><a href="index.html">Home</a><a href="about.html">About</a>${services}<a class="nav-cta" href="contact.html">Start a project</a></nav></header>`}
@@ -2450,11 +2450,54 @@ function optionalSections(d){let html='';
  if(hasFeature(d,'whatsapp')){const digits=String(d.phone).replace(/\D/g,'').replace(/^0/,'44');html+=`<a class="whatsapp-float" href="https://wa.me/${digits}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">WhatsApp</a>`}
  return html;
 }
-function commonPages(d,index,css){const n=nav(d),f=footer(d);const extras=optionalSections(d);return {
- 'index.html':`${head(d,`${d.business} | ${d.type}`,d.description)}<body>${n}<main>${index}${extras}</main>${f}<script src="script.js"><\/script></body></html>`,
- 'about.html':`${head(d,`About ${d.business}`,d.description)}<body>${n}<main><section class="page-hero"><p class="eyebrow">Our story</p><h1>Standards you can feel.</h1><p>${esc(d.description)}</p></section><section class="story"><div><small>Our approach</small><h2>Personal service. Precise delivery.</h2></div><p>${esc(d.business)} serves clients with a ${esc(d.tone)} experience. From the first conversation to the final detail, everything is designed to feel considered, effortless and trustworthy.</p></section><section class="values"><article><b>01</b><h3>Clarity</h3><p>Simple communication and transparent next steps.</p></article><article><b>02</b><h3>Craft</h3><p>Every detail receives professional attention.</p></article><article><b>03</b><h3>Care</h3><p>A customer experience designed around people.</p></article></section></main>${f}<script src="script.js"><\/script></body></html>`,
- 'services.html':`${head(d,`${d.business} Services`,d.services.join(', '))}<body>${n}<main><section class="page-hero"><p class="eyebrow">Our expertise</p><h1>Services without compromise.</h1><p>Explore specialist support created around your requirements.</p></section><section class="section">${serviceCards(d)}</section><section class="wide-cta"><p>Need something more specific?</p><h2>Let’s shape the right solution.</h2><a class="button" href="contact.html">Speak with us</a></section></main>${f}<script src="script.js"><\/script></body></html>`,
- 'contact.html':`${head(d,`Contact ${d.business}`,`Contact ${d.business}`)}<body>${n}<main><section class="page-hero"><p class="eyebrow">Private consultation</p><h1>Begin with a conversation.</h1><p>Tell us what you need and we’ll guide you through the next step.</p></section><section class="contact"><form><input placeholder="Your name" required><input type="email" placeholder="Email address" required><input placeholder="Phone number"><textarea placeholder="Tell us about your project" required></textarea><button>Send enquiry</button></form><aside><small>Contact</small><h2>${esc(d.business)}</h2><p><b>Phone</b><br>${esc(d.phone)}</p><p><b>Email</b><br>${esc(d.email)}</p><p><b>Location</b><br>${esc(d.address)}</p><p><b>Hours</b><br>${esc(d.hours)}</p></aside></section></main>${f}<script src="script.js"><\/script></body></html>`,
+
+function animationLayer(d){
+ if(!d.animation||d.animation==='none')return '';
+ return `<div class="vx-bg vx-${esc(d.animation)}" aria-hidden="true"><i></i><i></i><i></i><b></b></div>`;
+}
+function animationCSS(d){
+ const p=d.palette;
+ return `
+.vx-bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;background:${p.bg}}
+.vx-bg~.site-nav,.vx-bg~main,.vx-bg~footer{position:relative;z-index:2}
+.vx-bg i,.vx-bg b{position:absolute;display:block;will-change:transform,opacity}
+body:has(.vx-bg){background:transparent}
+body:has(.vx-bg) main{background:transparent}
+body:has(.vx-bg) .site-nav{z-index:9999}
+body:has(.vx-bg) .site-nav.floating{position:fixed;top:18px;left:50%;right:auto;transform:translateX(-50%);visibility:visible;opacity:1}
+.vx-aurora i{width:72vw;height:42vw;border-radius:50%;filter:blur(70px);opacity:.36;background:linear-gradient(110deg,${p.accent},transparent 62%);animation:vxAurora 12s ease-in-out infinite alternate}
+.vx-aurora i:nth-child(1){left:-18vw;top:-10vw}.vx-aurora i:nth-child(2){right:-20vw;top:18vh;animation-delay:-4s;animation-duration:15s}.vx-aurora i:nth-child(3){left:20vw;bottom:-22vw;animation-delay:-8s;animation-duration:18s}
+.vx-neural{background-image:radial-gradient(circle at 20% 30%,color-mix(in srgb,${p.accent} 26%,transparent) 0 1px,transparent 2px),radial-gradient(circle at 75% 65%,color-mix(in srgb,${p.accent} 22%,transparent) 0 1px,transparent 2px);background-size:74px 74px,96px 96px}
+.vx-neural:before,.vx-neural:after{content:"";position:absolute;inset:-20%;background:repeating-linear-gradient(115deg,transparent 0 46px,color-mix(in srgb,${p.accent} 14%,transparent) 47px 48px,transparent 49px 92px);animation:vxDrift 18s linear infinite}
+.vx-neural:after{transform:rotate(90deg);animation-direction:reverse;opacity:.55}
+.vx-portal i{left:50%;top:50%;width:min(76vw,760px);aspect-ratio:1;border:1px solid color-mix(in srgb,${p.accent} 45%,transparent);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 45px color-mix(in srgb,${p.accent} 28%,transparent),inset 0 0 45px color-mix(in srgb,${p.accent} 18%,transparent);animation:vxPortal 9s linear infinite}
+.vx-portal i:nth-child(2){width:min(55vw,550px);animation-direction:reverse;animation-duration:7s}.vx-portal i:nth-child(3){width:min(34vw,340px);animation-duration:5s}
+.vx-waves i{left:-15%;width:130%;height:34%;border-radius:48%;border:1px solid color-mix(in srgb,${p.accent} 30%,transparent);filter:drop-shadow(0 0 20px color-mix(in srgb,${p.accent} 20%,transparent));animation:vxWave 10s ease-in-out infinite alternate}
+.vx-waves i:nth-child(1){top:8%}.vx-waves i:nth-child(2){top:36%;animation-delay:-3s}.vx-waves i:nth-child(3){top:66%;animation-delay:-6s}
+.vx-stars{background-image:radial-gradient(circle,#fff 0 1px,transparent 1.6px),radial-gradient(circle,${p.accent} 0 1px,transparent 1.7px),radial-gradient(circle,#fff 0 1.2px,transparent 1.8px);background-size:83px 83px,127px 127px,191px 191px;background-position:0 0,23px 41px,61px 17px;animation:vxStars 30s linear infinite}
+.vx-stars i{width:34vw;height:34vw;border-radius:50%;filter:blur(70px);background:${p.accent};opacity:.12;animation:vxFloat 12s ease-in-out infinite alternate}.vx-stars i:nth-child(2){right:0;bottom:0;animation-delay:-5s}
+.vx-hud:before,.vx-hud:after{content:"";position:absolute;left:50%;top:50%;width:min(70vw,700px);aspect-ratio:1;border-radius:50%;border:1px dashed color-mix(in srgb,${p.accent} 40%,transparent);transform:translate(-50%,-50%);animation:vxSpin 18s linear infinite;box-shadow:0 0 0 42px color-mix(in srgb,${p.accent} 5%,transparent),0 0 0 84px color-mix(in srgb,${p.accent} 4%,transparent)}
+.vx-hud:after{width:min(43vw,430px);animation-direction:reverse;animation-duration:11s}
+.vx-gold i{width:85vw;height:18vw;left:-25vw;border-radius:50%;filter:blur(55px);background:linear-gradient(90deg,transparent,#f4c542,transparent);opacity:.24;transform:rotate(-18deg);animation:vxGold 11s ease-in-out infinite alternate}.vx-gold i:nth-child(1){top:8%}.vx-gold i:nth-child(2){top:42%;animation-delay:-4s}.vx-gold i:nth-child(3){top:72%;animation-delay:-8s}
+.vx-bg b{inset:0;background:radial-gradient(circle at 50% 42%,transparent 0 30%,color-mix(in srgb,${p.bg} 28%,transparent) 72%,color-mix(in srgb,${p.bg} 76%,transparent) 115%)}
+@keyframes vxAurora{to{transform:translate(16vw,10vh) scale(1.18) rotate(10deg)}}
+@keyframes vxDrift{to{transform:translate3d(12%,8%,0)}}
+@keyframes vxPortal{to{transform:translate(-50%,-50%) rotate(360deg) scale(.72);opacity:.18}}
+@keyframes vxWave{to{transform:translateX(10%) rotate(4deg) scaleY(1.25)}}
+@keyframes vxStars{to{background-position:83px 166px,-104px 168px,252px -174px}}
+@keyframes vxFloat{to{transform:translate(22vw,12vh) scale(1.25)}}
+@keyframes vxSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes vxGold{to{transform:translateX(55vw) rotate(12deg) scale(1.18)}}
+@media(max-width:820px){body:has(.vx-bg) .site-nav.floating{top:10px;left:50%;right:auto;width:calc(100% - 20px);transform:translateX(-50%)}.vx-bg{opacity:.82}}
+@media(prefers-reduced-motion:reduce){.vx-bg *,.vx-bg:before,.vx-bg:after{animation-duration:40s!important}}
+`;
+}
+
+function commonPages(d,index,css){const n=nav(d),f=footer(d),bg=animationLayer(d);css+=animationCSS(d);const extras=optionalSections(d);return {
+ 'index.html':`${head(d,`${d.business} | ${d.type}`,d.description)}<body>${bg}${n}<main>${index}${extras}</main>${f}<script src="script.js"><\/script></body></html>`,
+ 'about.html':`${head(d,`About ${d.business}`,d.description)}<body>${bg}${n}<main><section class="page-hero"><p class="eyebrow">Our story</p><h1>Standards you can feel.</h1><p>${esc(d.description)}</p></section><section class="story"><div><small>Our approach</small><h2>Personal service. Precise delivery.</h2></div><p>${esc(d.business)} serves clients with a ${esc(d.tone)} experience. From the first conversation to the final detail, everything is designed to feel considered, effortless and trustworthy.</p></section><section class="values"><article><b>01</b><h3>Clarity</h3><p>Simple communication and transparent next steps.</p></article><article><b>02</b><h3>Craft</h3><p>Every detail receives professional attention.</p></article><article><b>03</b><h3>Care</h3><p>A customer experience designed around people.</p></article></section></main>${f}<script src="script.js"><\/script></body></html>`,
+ 'services.html':`${head(d,`${d.business} Services`,d.services.join(', '))}<body>${bg}${n}<main><section class="page-hero"><p class="eyebrow">Our expertise</p><h1>Services without compromise.</h1><p>Explore specialist support created around your requirements.</p></section><section class="section">${serviceCards(d)}</section><section class="wide-cta"><p>Need something more specific?</p><h2>Let’s shape the right solution.</h2><a class="button" href="contact.html">Speak with us</a></section></main>${f}<script src="script.js"><\/script></body></html>`,
+ 'contact.html':`${head(d,`Contact ${d.business}`,`Contact ${d.business}`)}<body>${bg}${n}<main><section class="page-hero"><p class="eyebrow">Private consultation</p><h1>Begin with a conversation.</h1><p>Tell us what you need and we’ll guide you through the next step.</p></section><section class="contact"><form><input placeholder="Your name" required><input type="email" placeholder="Email address" required><input placeholder="Phone number"><textarea placeholder="Tell us about your project" required></textarea><button>Send enquiry</button></form><aside><small>Contact</small><h2>${esc(d.business)}</h2><p><b>Phone</b><br>${esc(d.phone)}</p><p><b>Email</b><br>${esc(d.email)}</p><p><b>Location</b><br>${esc(d.address)}</p><p><b>Hours</b><br>${esc(d.hours)}</p></aside></section></main>${f}<script src="script.js"><\/script></body></html>`,
  'style.css':css,
  'script.js':`const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('visible')),{threshold:.12});document.querySelectorAll('.reveal').forEach(e=>io.observe(e));document.querySelectorAll('.nav-drop-toggle').forEach(b=>b.addEventListener('click',()=>b.closest('.nav-dropdown').classList.toggle('open')));document.addEventListener('click',e=>{if(!e.target.closest('.nav-dropdown'))document.querySelectorAll('.nav-dropdown.open').forEach(x=>x.classList.remove('open'))});document.querySelectorAll('.site-search').forEach(input=>input.addEventListener('input',()=>{const q=input.value.trim().toLowerCase(),root=input.closest('.site-search-section'),status=root.querySelector('.search-status');let hits=0;document.querySelectorAll('main section:not(.site-search-section),main article').forEach(el=>{const match=!q||el.innerText.toLowerCase().includes(q);el.style.display=match?'':'none';if(q&&match)hits++});status.textContent=q?(hits?hits+' matching section'+(hits===1?'':'s'):'No matching sections found.'):'';}));`
 }}
@@ -2923,5 +2966,62 @@ h3{letter-spacing:-.025em;}
   else document.addEventListener('DOMContentLoaded', install, {once:true});
 })();
 </script>
+
+<style id="vinctec-safe-animation-ui-style">
+.vx-animation-studio{margin:14px 0 18px;padding:16px;border:1px solid rgba(125,211,252,.22);border-radius:16px;background:linear-gradient(145deg,#0b1220,#111c31);color:#fff}
+.vx-animation-studio h4{margin:0 0 5px;font-size:17px}.vx-animation-studio p{margin:0 0 14px;color:#9fb3ca;font-size:13px}
+.vx-animation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+.vx-animation-card{position:relative;min-height:92px;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:13px;background:#111827;color:#fff;text-align:left;overflow:hidden;cursor:pointer;margin:0}
+.vx-animation-card:hover{opacity:1;border-color:#38bdf8}.vx-animation-card.active{box-shadow:0 0 0 2px #38bdf8;border-color:#38bdf8}
+.vx-animation-card strong,.vx-animation-card small{position:relative;z-index:2;display:block}.vx-animation-card small{margin-top:5px;color:#9fb3ca}
+.vx-animation-preview{position:absolute;inset:0;opacity:.5;background:radial-gradient(circle at 20% 30%,#22d3ee,transparent 43%),radial-gradient(circle at 80% 70%,#7c3aed,transparent 40%);animation:vxUiPulse 4s ease-in-out infinite alternate}
+.vx-animation-card[data-animation="neural"] .vx-animation-preview{background:repeating-linear-gradient(45deg,transparent 0 14px,rgba(34,211,238,.25) 15px 16px)}
+.vx-animation-card[data-animation="portal"] .vx-animation-preview{background:repeating-radial-gradient(circle,rgba(34,211,238,.32) 0 2px,transparent 3px 15px)}
+.vx-animation-card[data-animation="waves"] .vx-animation-preview{background:repeating-linear-gradient(170deg,transparent 0 15px,rgba(34,211,238,.28) 16px 18px)}
+.vx-animation-card[data-animation="stars"] .vx-animation-preview{background:radial-gradient(circle,#fff 0 1px,transparent 2px);background-size:18px 18px}
+.vx-animation-card[data-animation="hud"] .vx-animation-preview{background:repeating-radial-gradient(circle,transparent 0 14px,rgba(34,211,238,.3) 15px 16px)}
+.vx-animation-card[data-animation="gold"] .vx-animation-preview{background:linear-gradient(120deg,transparent,#f4c542,transparent)}
+.vx-animation-card[data-animation="none"] .vx-animation-preview{display:none}
+.vx-animation-status{margin-top:12px;padding:9px 11px;border-radius:10px;background:#07111f;color:#86efac;font-size:13px}
+@keyframes vxUiPulse{to{transform:scale(1.18) rotate(8deg)}}
+</style>
+<script id="vinctec-safe-animation-ui">
+(function(){
+'use strict';
+var choices=[
+ ['aurora','Aurora Galaxy','Soft premium light'],
+ ['neural','AI Neural Network','Digital connection grid'],
+ ['portal','Infinity Portal','Rotating energy rings'],
+ ['waves','Liquid Light Waves','Flowing luminous lines'],
+ ['stars','Premium Starfield','Deep-space movement'],
+ ['hud','Holographic HUD','Futuristic interface'],
+ ['gold','Luxury Gold Flow','Gold cinematic ribbons'],
+ ['none','No Animation','Static background']
+];
+function install(){
+ if(document.getElementById('vxAnimationStudio'))return true;
+ var anchor=document.getElementById('v71Studio')||document.getElementById('v72Studio')||document.getElementById('v70Studio')||document.getElementById('siteStyle');
+ if(!anchor)return false;
+ var box=document.createElement('section');box.id='vxAnimationStudio';box.className='vx-animation-studio';
+ box.innerHTML='<h4>✨ Premium Animation Studio</h4><p>Choose an effect below. The website preview refreshes automatically.</p><div class="vx-animation-grid">'+choices.map(function(c){return '<button type="button" class="vx-animation-card" data-animation="'+c[0]+'"><span class="vx-animation-preview"></span><strong>'+c[1]+'</strong><small>'+c[2]+'</small></button>'}).join('')+'</div><div class="vx-animation-status" id="vxAnimationStatus">Animation Studio ready.</div>';
+ anchor.insertAdjacentElement('afterend',box);
+ var saved=localStorage.getItem('vinctecAnimationChoice')||'none';
+ window.__vinctecAnimationChoice=saved;
+ function select(value,regenerate){
+  window.__vinctecAnimationChoice=value;localStorage.setItem('vinctecAnimationChoice',value);
+  box.querySelectorAll('.vx-animation-card').forEach(function(btn){btn.classList.toggle('active',btn.dataset.animation===value)});
+  var name=(choices.find(function(c){return c[0]===value})||['','Animation'])[1];
+  document.getElementById('vxAnimationStatus').textContent=name+' selected.';
+  if(regenerate&&typeof window.generateWebsiteStarter==='function')window.generateWebsiteStarter();
+ }
+ box.addEventListener('click',function(e){var btn=e.target.closest('.vx-animation-card');if(btn)select(btn.dataset.animation,true)});
+ select(saved,false);
+ return true;
+}
+function boot(){var tries=0,t=setInterval(function(){tries++;if(install()||tries>60)clearInterval(t)},150)}
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
+})();
+</script>
+
 </body>
 </html>
