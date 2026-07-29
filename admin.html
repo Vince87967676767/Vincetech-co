@@ -2453,7 +2453,7 @@ function optionalSections(d){let html='';
 
 function animationLayer(d){
  if(!d.animation||d.animation==='none')return '';
- return `<div id="vx-premium-bg" class="vx-premium-bg vx-${esc(d.animation)}" data-animation="${esc(d.animation)}" data-accent="${esc(d.palette.accent)}" data-bg="${esc(d.palette.bg)}" data-intensity="${Number(d.animationIntensity)||75}" data-interactive="${d.animationInteractive?'true':'false'}" aria-hidden="true"><canvas></canvas><div class="vx-css-layer"><i></i><i></i><i></i><i></i></div>${d.animation==='spider'?`<div class="vx-spider-rig"><div class="vx-silk"></div><div class="vx-spider-swing"><svg class="vx-spider-svg" viewBox="0 0 120 120" role="presentation"><g class="vx-spider-legs"><path d="M52 52 C35 42 21 37 8 24"/><path d="M50 58 C30 55 18 56 4 50"/><path d="M50 64 C31 70 18 78 7 92"/><path d="M52 70 C36 84 27 96 23 112"/><path d="M68 52 C85 42 99 37 112 24"/><path d="M70 58 C90 55 102 56 116 50"/><path d="M70 64 C89 70 102 78 113 92"/><path d="M68 70 C84 84 93 96 97 112"/></g><ellipse class="vx-spider-body" cx="60" cy="67" rx="18" ry="24"/><ellipse class="vx-spider-head" cx="60" cy="42" rx="13" ry="14"/><circle class="vx-spider-eye" cx="55" cy="40" r="2.4"/><circle class="vx-spider-eye" cx="65" cy="40" r="2.4"/></svg></div></div>`:''}<div class="vx-vignette"></div></div>`;
+ return `<div id="vx-premium-bg" class="vx-premium-bg vx-${esc(d.animation)}" data-animation="${esc(d.animation)}" data-accent="${esc(d.palette.accent)}" data-bg="${esc(d.palette.bg)}" data-intensity="${Number(d.animationIntensity)||75}" data-interactive="${d.animationInteractive?'true':'false'}" aria-hidden="true"><canvas></canvas><div class="vx-css-layer"><i></i><i></i><i></i><i></i></div>${d.animation==='spider'?`<div class="vx-reference-spider"><div class="vx-reference-thread"></div><div class="vx-reference-body"><i class="vx-reference-leg l1"></i><i class="vx-reference-leg l2"></i><i class="vx-reference-leg l3"></i><i class="vx-reference-leg l4"></i><i class="vx-reference-leg r1"></i><i class="vx-reference-leg r2"></i><i class="vx-reference-leg r3"></i><i class="vx-reference-leg r4"></i></div></div>`:''}<div class="vx-vignette"></div></div>`;
 }
 function animationCSS(d){
  const p=d.palette;
@@ -2462,24 +2462,110 @@ html,body{min-height:100%}
 body{position:relative;isolation:isolate}
 #vx-premium-bg{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;overflow:hidden!important;pointer-events:none!important;z-index:0!important;background:${p.bg}!important}
 #vx-premium-bg canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-#vx-premium-bg.vx-spider canvas{filter:blur(.65px);opacity:.9}
-.vx-spider-rig{position:absolute;left:50%;top:-18vh;width:140px;height:72vh;transform:translateX(-50%);z-index:4;filter:drop-shadow(0 0 18px color-mix(in srgb,var(--vx-spider-accent,#22d3ee) 38%,transparent));pointer-events:none;animation:vxSpiderDescend 12s cubic-bezier(.48,.06,.52,.95) infinite}
-.vx-spider-rig::before{content:"";position:absolute;left:50%;top:0;width:2px;height:78%;transform:translateX(-50%);background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--vx-spider-accent,#22d3ee) 45%,#fff),rgba(255,255,255,.35));box-shadow:0 0 10px color-mix(in srgb,var(--vx-spider-accent,#22d3ee) 40%,transparent);opacity:.72}
-.vx-silk{position:absolute;left:50%;top:0;width:1px;height:79%;transform:translateX(-50%);background:rgba(255,255,255,.28);filter:blur(.25px)}
-.vx-spider-swing{position:absolute;left:50%;bottom:-8px;width:112px;height:112px;transform:translateX(-50%);transform-origin:50% -240px;animation:vxSpiderSwing 5.2s ease-in-out infinite}
-.vx-spider-svg{width:100%;height:100%;overflow:visible;filter:blur(.22px)}
-.vx-spider-body,.vx-spider-head{fill:rgba(3,7,13,.96);stroke:color-mix(in srgb,var(--vx-spider-accent,#22d3ee) 46%,transparent);stroke-width:1.2}
-.vx-spider-eye{fill:color-mix(in srgb,var(--vx-spider-accent,#22d3ee) 80%,#fff)}
-.vx-spider-legs path{fill:none;stroke:rgba(3,7,13,.98);stroke-width:5.2;stroke-linecap:round;stroke-linejoin:round;transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 0 3px rgba(34,211,238,.25))}
-.vx-spider-legs path:nth-child(1),.vx-spider-legs path:nth-child(5){animation:vxLegA .75s ease-in-out infinite alternate}
-.vx-spider-legs path:nth-child(2),.vx-spider-legs path:nth-child(6){animation:vxLegB .72s ease-in-out infinite alternate}
-.vx-spider-legs path:nth-child(3),.vx-spider-legs path:nth-child(7){animation:vxLegA .78s ease-in-out infinite alternate-reverse}
-.vx-spider-legs path:nth-child(4),.vx-spider-legs path:nth-child(8){animation:vxLegB .82s ease-in-out infinite alternate-reverse}
-.vx-spider-rig.vx-react .vx-spider-swing{animation-duration:2.6s}
-@keyframes vxSpiderDescend{0%,7%{transform:translate(-50%,-22vh)}36%,58%{transform:translate(-50%,25vh)}88%,100%{transform:translate(-50%,-22vh)}}
-@keyframes vxSpiderSwing{0%,100%{transform:translateX(-50%) rotate(-5deg)}50%{transform:translateX(-50%) rotate(5deg)}}
-@keyframes vxLegA{from{transform:rotate(-3deg) translateY(0)}to{transform:rotate(5deg) translateY(2px)}}
-@keyframes vxLegB{from{transform:rotate(4deg) translateY(1px)}to{transform:rotate(-5deg) translateY(-1px)}}
+#vx-premium-bg.vx-spider canvas{
+ position:absolute!important;
+ inset:0!important;
+ width:100%!important;
+ height:100%!important;
+ opacity:.82;
+ filter:none;
+}
+
+/* Reference-video spider: a small dark silhouette suspended in the upper-right web. */
+.vx-reference-spider{
+ position:absolute;
+ left:84%;
+ top:0;
+ width:86px;
+ height:22vh;
+ min-height:150px;
+ max-height:230px;
+ z-index:4;
+ pointer-events:none;
+ transform:translateX(-50%);
+ animation:vxReferenceTravel 9s ease-in-out infinite;
+}
+.vx-reference-thread{
+ position:absolute;
+ left:50%;
+ top:0;
+ width:1px;
+ height:72%;
+ background:rgba(0,0,0,.52);
+ transform:translateX(-50%);
+ box-shadow:0 0 1px rgba(255,255,255,.12);
+}
+.vx-reference-body{
+ position:absolute;
+ left:50%;
+ bottom:0;
+ width:48px;
+ height:52px;
+ transform:translateX(-50%);
+ transform-origin:50% -85px;
+ animation:vxReferenceSwing 3.8s ease-in-out infinite;
+ filter:blur(.28px) drop-shadow(0 5px 4px rgba(0,0,0,.24));
+}
+.vx-reference-body::before,
+.vx-reference-body::after{
+ content:"";
+ position:absolute;
+ left:50%;
+ transform:translateX(-50%);
+ background:rgba(7,7,9,.93);
+ border-radius:50%;
+}
+.vx-reference-body::before{
+ top:17px;
+ width:25px;
+ height:30px;
+}
+.vx-reference-body::after{
+ top:7px;
+ width:18px;
+ height:19px;
+}
+.vx-reference-leg{
+ position:absolute;
+ top:22px;
+ left:50%;
+ width:31px;
+ height:2px;
+ background:rgba(7,7,9,.93);
+ border-radius:999px;
+ transform-origin:0 50%;
+}
+.vx-reference-leg::after{
+ content:"";
+ position:absolute;
+ right:-15px;
+ top:0;
+ width:18px;
+ height:2px;
+ background:inherit;
+ border-radius:999px;
+ transform-origin:0 50%;
+ transform:rotate(var(--bend));
+}
+.vx-reference-leg.l1{transform:translateX(-3px) rotate(204deg);--bend:25deg}
+.vx-reference-leg.l2{transform:translateX(-4px) translateY(7px) rotate(178deg);--bend:-24deg}
+.vx-reference-leg.l3{transform:translateX(-4px) translateY(14px) rotate(158deg);--bend:-31deg}
+.vx-reference-leg.l4{transform:translateX(-2px) translateY(21px) rotate(137deg);--bend:-24deg}
+.vx-reference-leg.r1{transform:translateX(3px) rotate(-24deg);--bend:-25deg}
+.vx-reference-leg.r2{transform:translateX(4px) translateY(7px) rotate(2deg);--bend:24deg}
+.vx-reference-leg.r3{transform:translateX(4px) translateY(14px) rotate(22deg);--bend:31deg}
+.vx-reference-leg.r4{transform:translateX(2px) translateY(21px) rotate(43deg);--bend:24deg}
+.vx-reference-spider.vx-react{animation-duration:6.5s}
+@keyframes vxReferenceTravel{
+ 0%,100%{left:82%;height:19vh}
+ 28%{left:88%;height:23vh}
+ 52%{left:91%;height:18vh}
+ 76%{left:85%;height:25vh}
+}
+@keyframes vxReferenceSwing{
+ 0%,100%{transform:translateX(-50%) rotate(-3deg)}
+ 50%{transform:translateX(-50%) rotate(3deg)}
+}
 #vx-premium-bg .vx-css-layer,#vx-premium-bg .vx-vignette{position:absolute;inset:0}
 #vx-premium-bg~.site-nav,#vx-premium-bg~main,#vx-premium-bg~footer{position:relative!important;z-index:2!important}
 body:has(#vx-premium-bg){background:transparent!important}
@@ -2526,61 +2612,88 @@ var ac=rgb(accent),bc=rgb(bg);
 function rgba(c,a){return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'}
 function resize(){dpr=Math.min(window.devicePixelRatio||1,1.6);w=innerWidth;h=innerHeight;canvas.width=Math.max(1,Math.round(w*dpr));canvas.height=Math.max(1,Math.round(h*dpr));canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}
 addEventListener('resize',resize,{passive:true});resize();
-if(interactive)addEventListener('pointermove',function(e){mouse.tx=e.clientX/w;mouse.ty=e.clientY/h;if(mode==='spider'){var rig=root.querySelector('.vx-spider-rig');if(rig){rig.style.left=(50+(mouse.tx-.5)*10)+'%';rig.classList.add('vx-react');clearTimeout(rig._vxTimer);rig._vxTimer=setTimeout(function(){rig.classList.remove('vx-react')},450)}}},{passive:true});
+if(interactive)addEventListener('pointermove',function(e){mouse.tx=e.clientX/w;mouse.ty=e.clientY/h;if(mode==='spider'){var rig=root.querySelector('.vx-reference-spider');if(rig){rig.classList.add('vx-react');clearTimeout(rig._vxTimer);rig._vxTimer=setTimeout(function(){rig.classList.remove('vx-react')},450)}}},{passive:true});
 var count=Math.round((innerWidth<700?42:74)*intensity);
 var pts=Array.from({length:count},function(_,i){return{x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.00045,vy:(Math.random()-.5)*.00045,r:.8+Math.random()*1.8,p:Math.random()*6.28,z:Math.random(),ring:i%7}});
 function clear(a){ctx.fillStyle=rgba(bc,a);ctx.fillRect(0,0,w,h)}
 function glow(x,y,r,a,c){var g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,rgba(c||ac,a));g.addColorStop(1,rgba(c||ac,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,6.283);ctx.fill()}
 function spider(t){
- clear(.15);
- var cx=w*.5+(mouse.x-.5)*w*.075,cy=h*.47+(mouse.y-.5)*h*.07,max=Math.min(w,h)*.62;
- ctx.save();ctx.translate(cx,cy);ctx.globalCompositeOperation='screen';
+ clear(.035);
 
- // Main web rings
- for(var r=1;r<=10;r++){
-  ctx.beginPath();
-  for(var a=0;a<=6.34;a+=.075){
-   var rr=max*(r/11)*(1+.05*Math.sin(a*6+t*.8+r*.8));
-   var x=Math.cos(a)*rr,y=Math.sin(a)*rr*.68;
-   if(a===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)
-  }
-  ctx.closePath();
-  ctx.strokeStyle=rgba(ac,.05+r*.017);
-  ctx.lineWidth=.65+r*.075;
-  ctx.stroke()
- }
+ // The reference web is anchored just above the upper-right corner.
+ // Its large radius lets the strands continue behind the whole website.
+ var cx=w*.835+(mouse.x-.5)*w*.014;
+ var cy=-h*.075+(mouse.y-.5)*h*.008;
+ var radius=Math.hypot(w,h)*.88;
 
- // Radial strands
- for(var s=0;s<20;s++){
-  var sa=s*Math.PI/10+t*.018;
+ // Use a dark web on light/colourful themes and a soft pale web on dark themes.
+ var hex=(root.dataset.bg||'#ffffff').replace('#','');
+ if(hex.length===3)hex=hex.split('').map(function(v){return v+v}).join('');
+ var rr=parseInt(hex.slice(0,2),16)||0,gg=parseInt(hex.slice(2,4),16)||0,bb=parseInt(hex.slice(4,6),16)||0;
+ var light=(rr*299+gg*587+bb*114)/1000;
+ var ink=light>72?'0,0,0':'225,231,239';
+
+ ctx.save();
+ ctx.globalCompositeOperation='source-over';
+ ctx.lineCap='round';
+ ctx.lineJoin='round';
+
+ // Long straight anchor strands, matching the filmed example.
+ var spokes=26;
+ for(var i=0;i<spokes;i++){
+  var a=(Math.PI*.08)+(Math.PI*1.76)*(i/(spokes-1));
+  var ex=cx+Math.cos(a)*radius;
+  var ey=cy+Math.sin(a)*radius;
   ctx.beginPath();
-  ctx.moveTo(0,0);
-  ctx.lineTo(Math.cos(sa)*max,Math.sin(sa)*max*.68);
-  ctx.strokeStyle=rgba(ac,.135);
+  ctx.moveTo(cx,cy);
+  ctx.lineTo(ex,ey);
+  ctx.strokeStyle='rgba('+ink+','+(.20*intensity)+')';
   ctx.lineWidth=.72;
-  ctx.stroke()
+  ctx.stroke();
  }
 
- // Nest glow near the centre
- for(var n=0;n<5;n++){
+ // Polygon web rings with slightly imperfect spacing.
+ var rings=15;
+ for(var r=1;r<=rings;r++){
+  var base=radius*(r/rings);
   ctx.beginPath();
-  ctx.ellipse(0,0,24+n*9,13+n*5,Math.sin(t*.25+n)*.16,0,6.283);
-  ctx.strokeStyle=rgba(ac,.19-n*.022);
-  ctx.lineWidth=1.1;
-  ctx.stroke()
+  for(var s=0;s<=spokes;s++){
+   var idx=s%spokes;
+   var ang=(Math.PI*.08)+(Math.PI*1.76)*(idx/(spokes-1));
+   var imperfect=1+.014*Math.sin(idx*1.71+r*.83)+.006*Math.sin(t*.28+r);
+   var rad=base*imperfect;
+   var x=cx+Math.cos(ang)*rad;
+   var y=cy+Math.sin(ang)*rad;
+   if(s===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle='rgba('+ink+','+((.13+r*.004)*intensity)+')';
+  ctx.lineWidth=.66;
+  ctx.stroke();
  }
- glow(0,0,58,.11);
 
- // Light pulses moving toward the nest
- for(var k=0;k<42;k++){
-  var aa=k*.47+t*(.22+(k%4)*.025);
-  var rr2=((k%12)+1)/12*max;
-  var px=Math.cos(aa)*rr2,py=Math.sin(aa)*rr2*.68;
-  glow(px,py,7+(k%3)*2.5,.10+(k%5)*.037)
+ // Extra silk detail around the top-right nest.
+ for(var n=0;n<7;n++){
+  ctx.beginPath();
+  ctx.arc(cx,cy,30+n*18,Math.PI*.12,Math.PI*.94);
+  ctx.strokeStyle='rgba('+ink+','+((.11-n*.008)*intensity)+')';
+  ctx.lineWidth=.6;
+  ctx.stroke();
+ }
+
+ // Very subtle movement so the web feels alive without glowing.
+ if(interactive){
+  var mx=mouse.x*w,my=mouse.y*h;
+  var d=Math.hypot(mx-cx,my-cy);
+  if(d<radius*.7){
+   ctx.beginPath();
+   ctx.arc(mx,my,18+Math.sin(t*2)*3,0,Math.PI*2);
+   ctx.strokeStyle='rgba('+ink+','+(.055*intensity)+')';
+   ctx.lineWidth=.55;
+   ctx.stroke();
+  }
  }
 
  ctx.restore();
- glow(cx,cy,max*.35,.07);
 }
 function neural(t){
  clear(.17);
