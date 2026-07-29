@@ -2462,6 +2462,7 @@ html,body{min-height:100%}
 body{position:relative;isolation:isolate}
 #vx-premium-bg{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;overflow:hidden!important;pointer-events:none!important;z-index:0!important;background:${p.bg}!important}
 #vx-premium-bg canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#vx-premium-bg.vx-spider canvas{filter:blur(.45px);opacity:.96}
 #vx-premium-bg .vx-css-layer,#vx-premium-bg .vx-vignette{position:absolute;inset:0}
 #vx-premium-bg~.site-nav,#vx-premium-bg~main,#vx-premium-bg~footer{position:relative!important;z-index:2!important}
 body:has(#vx-premium-bg){background:transparent!important}
@@ -2514,12 +2515,97 @@ var pts=Array.from({length:count},function(_,i){return{x:Math.random(),y:Math.ra
 function clear(a){ctx.fillStyle=rgba(bc,a);ctx.fillRect(0,0,w,h)}
 function glow(x,y,r,a,c){var g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,rgba(c||ac,a));g.addColorStop(1,rgba(c||ac,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,6.283);ctx.fill()}
 function spider(t){
- clear(.15);var cx=w*.5+(mouse.x-.5)*w*.08,cy=h*.48+(mouse.y-.5)*h*.08,max=Math.min(w,h)*.58;
+ clear(.15);
+ var cx=w*.5+(mouse.x-.5)*w*.08,cy=h*.48+(mouse.y-.5)*h*.08,max=Math.min(w,h)*.58;
  ctx.save();ctx.translate(cx,cy);ctx.globalCompositeOperation='screen';
- for(var r=1;r<=9;r++){ctx.beginPath();for(var a=0;a<=6.34;a+=.08){var rr=max*(r/10)*(1+.045*Math.sin(a*6+t*.9+r));var x=Math.cos(a)*rr,y=Math.sin(a)*rr*.68;if(a===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.closePath();ctx.strokeStyle=rgba(ac,.06+r*.018);ctx.lineWidth=.7+r*.08;ctx.stroke()}
- for(var s=0;s<18;s++){var a=s*Math.PI/9+t*.03;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*max,Math.sin(a)*max*.68);ctx.strokeStyle=rgba(ac,.16);ctx.lineWidth=.75;ctx.stroke()}
- for(var k=0;k<34;k++){var aa=k*.58+t*(.18+(k%5)*.02),rr=(k%10+1)/10*max;var px=Math.cos(aa)*rr,py=Math.sin(aa)*rr*.68;glow(px,py,8+(k%4)*3,.12+(k%5)*.05)}
- ctx.restore();glow(cx,cy,max*.34,.08);
+
+ // Glowing web rings
+ for(var r=1;r<=9;r++){
+  ctx.beginPath();
+  for(var a=0;a<=6.34;a+=.08){
+   var rr=max*(r/10)*(1+.045*Math.sin(a*6+t*.9+r));
+   var x=Math.cos(a)*rr,y=Math.sin(a)*rr*.68;
+   if(a===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)
+  }
+  ctx.closePath();
+  ctx.strokeStyle=rgba(ac,.055+r*.017);
+  ctx.lineWidth=.7+r*.08;
+  ctx.stroke()
+ }
+
+ // Radial strands
+ for(var s=0;s<18;s++){
+  var sa=s*Math.PI/9+t*.03;
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.lineTo(Math.cos(sa)*max,Math.sin(sa)*max*.68);
+  ctx.strokeStyle=rgba(ac,.15);
+  ctx.lineWidth=.75;
+  ctx.stroke()
+ }
+
+ // Pulses travelling over the web
+ for(var k=0;k<34;k++){
+  var aa=k*.58+t*(.18+(k%5)*.02),rr2=(k%10+1)/10*max;
+  var px=Math.cos(aa)*rr2,py=Math.sin(aa)*rr2*.68;
+  glow(px,py,8+(k%4)*3,.11+(k%5)*.045)
+ }
+
+ // Silk thread from top of viewport into the web
+ var threadTop=-cy-20;
+ var climb=(Math.sin(t*.62)+1)/2;
+ var spiderY=threadTop+45+climb*(Math.min(h*.42,max*.72));
+ ctx.strokeStyle=rgba(ac,.28);
+ ctx.lineWidth=1.1;
+ ctx.beginPath();
+ ctx.moveTo(0,threadTop);
+ ctx.quadraticCurveTo(Math.sin(t*.7)*8,(threadTop+spiderY)/2,0,spiderY-16);
+ ctx.stroke();
+
+ // Slightly blurred spider body
+ ctx.save();
+ ctx.translate(Math.sin(t*.8)*4,spiderY);
+ ctx.rotate(Math.sin(t*.9)*.05);
+ ctx.shadowBlur=18;
+ ctx.shadowColor=accent;
+ ctx.globalAlpha=.78;
+
+ // Abdomen and head
+ ctx.fillStyle='rgba(4,8,14,.94)';
+ ctx.beginPath();ctx.ellipse(0,6,8.5,11.5,0,0,6.283);ctx.fill();
+ ctx.beginPath();ctx.ellipse(0,-5,5.5,6.2,0,0,6.283);ctx.fill();
+
+ // Soft glow around spider
+ glow(0,2,26,.075);
+
+ // Eight legs with animated bends
+ ctx.strokeStyle='rgba(4,8,14,.96)';
+ ctx.lineWidth=2.2;
+ ctx.lineCap='round';
+ for(var leg=0;leg<4;leg++){
+  var ly=-5+leg*4.2;
+  var phase=t*2.2+leg*.65;
+  var bend=4+Math.sin(phase)*2.3;
+  var reach=12+leg*1.2;
+
+  ctx.beginPath();
+  ctx.moveTo(-3.5,ly);
+  ctx.quadraticCurveTo(-9-bend,ly-4,-reach-6,ly+Math.sin(phase)*3);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(3.5,ly);
+  ctx.quadraticCurveTo(9+bend,ly-4,reach+6,ly+Math.sin(phase+1.4)*3);
+  ctx.stroke();
+ }
+
+ // Small highlight so the spider is readable without looking sharp
+ ctx.fillStyle=rgba(ac,.18);
+ ctx.beginPath();ctx.ellipse(-1.5,-7,1.4,1.8,0,0,6.283);ctx.fill();
+
+ ctx.restore();
+ ctx.restore();
+ glow(cx,cy,max*.34,.08);
 }
 function neural(t){
  clear(.17);
