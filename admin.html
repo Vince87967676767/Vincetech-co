@@ -2598,13 +2598,155 @@ function animationStudioScript(){
   for(let i=0;i<13;i++){const z=(i/13+time*.18)%1,r=(1-z)*Math.min(w,h)*.55;ctx.strokeStyle=rgba(ac,.04+z*.13);ctx.lineWidth=1+z*2;ctx.beginPath();ctx.ellipse(0,0,r,r*.55,time*.08,0,Math.PI*2);ctx.stroke()}ctx.restore()
  }
  function spider(){
-  clear(.17);const cx=w*.82,cy=h*.18;ctx.strokeStyle=rgba(ac,.17);ctx.lineWidth=1;
-  for(let i=0;i<12;i++){const a=i*Math.PI/6;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*Math.max(w,h),cy+Math.sin(a)*Math.max(w,h));ctx.stroke()}
-  for(let r=45;r<420;r+=38){ctx.beginPath();for(let i=0;i<=12;i++){const a=i*Math.PI/6+(r%76?0:.05),rr=r*(.9+.07*Math.sin(i*1.7));const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.closePath();ctx.stroke()}
-  const drop=(Math.sin(time*.75)*.5+.5)*(h*.42)+35,sx=cx+Math.sin(time*1.1)*22,sy=drop;ctx.strokeStyle=rgba(ac,.5);ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(sx,sy);ctx.stroke();
-  glow(sx,sy,38,ac,.18);ctx.fillStyle=accent;ctx.beginPath();ctx.ellipse(sx,sy,11,16,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(sx,sy-14,8,0,Math.PI*2);ctx.fill();
-  for(let i=0;i<4;i++){const oy=-8+i*7,spread=19+i*4;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx-5,sy+oy);ctx.quadraticCurveTo(sx-spread,sy+oy-8,sx-spread-8,sy+oy+(i-1.5)*7);ctx.moveTo(sx+5,sy+oy);ctx.quadraticCurveTo(sx+spread,sy+oy-8,sx+spread+8,sy+oy+(i-1.5)*7);ctx.stroke()}
-  const dx=mouse.x*w-sx,dy=mouse.y*h-sy;if(Math.hypot(dx,dy)<190)glow(mouse.x*w,mouse.y*h,90,ac,.1)
+  clear(.13);
+
+  // Full-website web: centred and large enough to reach every edge.
+  const cx=w*(.5+(mouse.x-.5)*.035);
+  const cy=h*(.43+(mouse.y-.5)*.025);
+  const max=Math.hypot(w,h)*.72;
+
+  ctx.save();
+  ctx.globalCompositeOperation='screen';
+
+  // Radial silk strands spanning the complete viewport.
+  for(let i=0;i<28;i++){
+   const a=i*Math.PI/14+Math.sin(time*.18+i)*.003;
+   ctx.beginPath();
+   ctx.moveTo(cx,cy);
+   ctx.lineTo(cx+Math.cos(a)*max,cy+Math.sin(a)*max);
+   ctx.strokeStyle=rgba(ac,.10+(i%4)*.018);
+   ctx.lineWidth=.7+(i%3)*.18;
+   ctx.stroke();
+  }
+
+  // Irregular web rings covering the whole website.
+  for(let ring=1;ring<=18;ring++){
+   const radius=max*(ring/18);
+   ctx.beginPath();
+   for(let i=0;i<=28;i++){
+    const a=i*Math.PI/14;
+    const wobble=1+.026*Math.sin(i*1.9+ring*.7+time*.34)
+                  +.014*Math.sin(i*.6-time*.26);
+    const rr=radius*wobble;
+    const x=cx+Math.cos(a)*rr;
+    const y=cy+Math.sin(a)*rr*.76;
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+   }
+   ctx.closePath();
+   ctx.strokeStyle=rgba(ac,.045+ring*.0065);
+   ctx.lineWidth=.55+ring*.035;
+   ctx.stroke();
+  }
+
+  // Dense glowing nest in the central area.
+  for(let n=0;n<8;n++){
+   ctx.beginPath();
+   ctx.ellipse(
+    cx,cy,
+    30+n*14,
+    18+n*8,
+    Math.sin(time*.22+n)*.08,
+    0,Math.PI*2
+   );
+   ctx.strokeStyle=rgba(ac,.19-n*.014);
+   ctx.lineWidth=1.05;
+   ctx.stroke();
+  }
+  glow(cx,cy,125,ac,.11);
+
+  // Soft travelling light pulses across the full web.
+  for(let k=0;k<70;k++){
+   const a=k*.73+time*(.12+(k%5)*.012);
+   const radius=((k%18)+1)/18*max;
+   const px=cx+Math.cos(a)*radius;
+   const py=cy+Math.sin(a)*radius*.76;
+   glow(px,py,4+(k%4)*2,ac,.045+(k%6)*.018);
+  }
+
+  // Spider descends from the top to the nest and returns.
+  const journey=(Math.sin(time*.56-Math.PI/2)+1)/2;
+  const eased=journey<.5
+   ? 2*journey*journey
+   : 1-Math.pow(-2*journey+2,2)/2;
+  const topY=-45;
+  const targetY=cy-18;
+  const sy=topY+(targetY-topY)*eased;
+  const sx=cx+Math.sin(time*.82)*24+(mouse.x-.5)*26;
+
+  // Long silk thread from the top edge.
+  ctx.strokeStyle=rgba(ac,.55);
+  ctx.lineWidth=1.15;
+  ctx.shadowBlur=10;
+  ctx.shadowColor=accent;
+  ctx.beginPath();
+  ctx.moveTo(cx,0);
+  ctx.quadraticCurveTo(
+   cx+(mouse.x-.5)*34,
+   sy*.48,
+   sx,sy-22
+  );
+  ctx.stroke();
+  ctx.shadowBlur=0;
+
+  // Premium spider glow.
+  glow(sx,sy,48,ac,.18);
+
+  ctx.save();
+  ctx.translate(sx,sy);
+  ctx.rotate(Math.sin(time*1.05)*.055+(mouse.x-.5)*.045);
+
+  // Animated eight legs.
+  ctx.strokeStyle=rgba(ac,.88);
+  ctx.lineWidth=2.15;
+  ctx.lineCap='round';
+  for(let i=0;i<4;i++){
+   const oy=-8+i*7;
+   const step=Math.sin(time*5.2+i*1.45)*3.8;
+   const spread=20+i*5;
+
+   ctx.beginPath();
+   ctx.moveTo(-5,oy);
+   ctx.quadraticCurveTo(-spread,oy-10-step,-spread-12,oy+(i-1.5)*8+step);
+   ctx.stroke();
+
+   ctx.beginPath();
+   ctx.moveTo(5,oy);
+   ctx.quadraticCurveTo(spread,oy-10+step,spread+12,oy+(i-1.5)*8-step);
+   ctx.stroke();
+  }
+
+  // Body and head.
+  ctx.fillStyle=accent;
+  ctx.shadowBlur=16;
+  ctx.shadowColor=accent;
+  ctx.beginPath();
+  ctx.ellipse(0,4,12,17,0,0,Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(0,-12,8.5,0,Math.PI*2);
+  ctx.fill();
+
+  // Small dark body centre gives it more shape.
+  ctx.shadowBlur=0;
+  ctx.fillStyle=rgba(bc,.72);
+  ctx.beginPath();
+  ctx.ellipse(0,5,7,11,0,0,Math.PI*2);
+  ctx.fill();
+
+  // Eyes.
+  ctx.fillStyle='rgba(255,255,255,.9)';
+  ctx.beginPath();ctx.arc(-2.8,-13.5,1.15,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(2.8,-13.5,1.15,0,Math.PI*2);ctx.fill();
+
+  ctx.restore();
+
+  // Web reacts subtly when the cursor approaches the spider.
+  const dx=mouse.x*w-sx,dy=mouse.y*h-sy;
+  if(Math.hypot(dx,dy)<240){
+   glow(mouse.x*w,mouse.y*h,120,ac,.09);
+  }
+
+  ctx.restore();
  }
  const draw={aurora,neural,portal,hud,gold,waves,tunnel,'spider-pro':spider}[mode]||aurora;
  function frame(now){time=now/1000;mouse.x+=(mouse.tx-mouse.x)*.035;mouse.y+=(mouse.ty-mouse.y)*.035;draw();raf=requestAnimationFrame(frame)}
