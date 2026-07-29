@@ -2453,7 +2453,7 @@ function optionalSections(d){let html='';
 
 function animationLayer(d){
  if(!d.animation||d.animation==='none')return '';
- return `<div id="vx-premium-bg" class="vx-premium-bg vx-${esc(d.animation)}" data-animation="${esc(d.animation)}" data-accent="${esc(d.palette.accent)}" data-bg="${esc(d.palette.bg)}" data-intensity="${Number(d.animationIntensity)||75}" data-interactive="${d.animationInteractive?'true':'false'}" aria-hidden="true"><canvas></canvas><div class="vx-css-layer"><i></i><i></i><i></i><i></i></div><div class="vx-vignette"></div></div>`;
+ return `<div id="vx-premium-bg" class="vx-premium-bg vx-${esc(d.animation)}" data-animation="${esc(d.animation)}" data-accent="${esc(d.palette.accent)}" data-bg="${esc(d.palette.bg)}" data-intensity="${Number(d.animationIntensity)||75}" data-interactive="${d.animationInteractive?'true':'false'}" aria-hidden="true"><canvas></canvas><div class="vx-css-layer"><i></i><i></i><i></i><i></i></div>${d.animation==='spider'?`<div class="vx-spider-rig"><div class="vx-silk"></div><div class="vx-spider-swing"><svg class="vx-spider-svg" viewBox="0 0 120 120" role="presentation"><g class="vx-spider-legs"><path d="M52 52 C35 42 21 37 8 24"/><path d="M50 58 C30 55 18 56 4 50"/><path d="M50 64 C31 70 18 78 7 92"/><path d="M52 70 C36 84 27 96 23 112"/><path d="M68 52 C85 42 99 37 112 24"/><path d="M70 58 C90 55 102 56 116 50"/><path d="M70 64 C89 70 102 78 113 92"/><path d="M68 70 C84 84 93 96 97 112"/></g><ellipse class="vx-spider-body" cx="60" cy="67" rx="18" ry="24"/><ellipse class="vx-spider-head" cx="60" cy="42" rx="13" ry="14"/><circle class="vx-spider-eye" cx="55" cy="40" r="2.4"/><circle class="vx-spider-eye" cx="65" cy="40" r="2.4"/></svg></div></div>`:''}<div class="vx-vignette"></div></div>`;
 }
 function animationCSS(d){
  const p=d.palette;
@@ -2462,7 +2462,24 @@ html,body{min-height:100%}
 body{position:relative;isolation:isolate}
 #vx-premium-bg{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;overflow:hidden!important;pointer-events:none!important;z-index:0!important;background:${p.bg}!important}
 #vx-premium-bg canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-#vx-premium-bg.vx-spider canvas{filter:blur(.45px);opacity:.96}
+#vx-premium-bg.vx-spider canvas{filter:blur(.65px);opacity:.9}
+.vx-spider-rig{position:absolute;left:50%;top:-18vh;width:140px;height:72vh;transform:translateX(-50%);z-index:4;filter:drop-shadow(0 0 18px color-mix(in srgb,var(--vx-spider-accent,#22d3ee) 38%,transparent));pointer-events:none;animation:vxSpiderDescend 12s cubic-bezier(.48,.06,.52,.95) infinite}
+.vx-spider-rig::before{content:"";position:absolute;left:50%;top:0;width:2px;height:78%;transform:translateX(-50%);background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--vx-spider-accent,#22d3ee) 45%,#fff),rgba(255,255,255,.35));box-shadow:0 0 10px color-mix(in srgb,var(--vx-spider-accent,#22d3ee) 40%,transparent);opacity:.72}
+.vx-silk{position:absolute;left:50%;top:0;width:1px;height:79%;transform:translateX(-50%);background:rgba(255,255,255,.28);filter:blur(.25px)}
+.vx-spider-swing{position:absolute;left:50%;bottom:-8px;width:112px;height:112px;transform:translateX(-50%);transform-origin:50% -240px;animation:vxSpiderSwing 5.2s ease-in-out infinite}
+.vx-spider-svg{width:100%;height:100%;overflow:visible;filter:blur(.22px)}
+.vx-spider-body,.vx-spider-head{fill:rgba(3,7,13,.96);stroke:color-mix(in srgb,var(--vx-spider-accent,#22d3ee) 46%,transparent);stroke-width:1.2}
+.vx-spider-eye{fill:color-mix(in srgb,var(--vx-spider-accent,#22d3ee) 80%,#fff)}
+.vx-spider-legs path{fill:none;stroke:rgba(3,7,13,.98);stroke-width:5.2;stroke-linecap:round;stroke-linejoin:round;transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 0 3px rgba(34,211,238,.25))}
+.vx-spider-legs path:nth-child(1),.vx-spider-legs path:nth-child(5){animation:vxLegA .75s ease-in-out infinite alternate}
+.vx-spider-legs path:nth-child(2),.vx-spider-legs path:nth-child(6){animation:vxLegB .72s ease-in-out infinite alternate}
+.vx-spider-legs path:nth-child(3),.vx-spider-legs path:nth-child(7){animation:vxLegA .78s ease-in-out infinite alternate-reverse}
+.vx-spider-legs path:nth-child(4),.vx-spider-legs path:nth-child(8){animation:vxLegB .82s ease-in-out infinite alternate-reverse}
+.vx-spider-rig.vx-react .vx-spider-swing{animation-duration:2.6s}
+@keyframes vxSpiderDescend{0%,7%{transform:translate(-50%,-22vh)}36%,58%{transform:translate(-50%,25vh)}88%,100%{transform:translate(-50%,-22vh)}}
+@keyframes vxSpiderSwing{0%,100%{transform:translateX(-50%) rotate(-5deg)}50%{transform:translateX(-50%) rotate(5deg)}}
+@keyframes vxLegA{from{transform:rotate(-3deg) translateY(0)}to{transform:rotate(5deg) translateY(2px)}}
+@keyframes vxLegB{from{transform:rotate(4deg) translateY(1px)}to{transform:rotate(-5deg) translateY(-1px)}}
 #vx-premium-bg .vx-css-layer,#vx-premium-bg .vx-vignette{position:absolute;inset:0}
 #vx-premium-bg~.site-nav,#vx-premium-bg~main,#vx-premium-bg~footer{position:relative!important;z-index:2!important}
 body:has(#vx-premium-bg){background:transparent!important}
@@ -2499,7 +2516,7 @@ function animationScript(){
 'use strict';
 var root=document.getElementById('vx-premium-bg');if(!root)return;
 var canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d',{alpha:true});
-var mode=root.dataset.animation||'spider';
+var mode=root.dataset.animation||'spider';root.style.setProperty('--vx-spider-accent',root.dataset.accent||'#22d3ee');
 var intensity=Math.max(20,Math.min(100,Number(root.dataset.intensity)||75))/100;
 var interactive=root.dataset.interactive==='true';
 var accent=root.dataset.accent||'#22d3ee',bg=root.dataset.bg||'#020617';
@@ -2509,103 +2526,61 @@ var ac=rgb(accent),bc=rgb(bg);
 function rgba(c,a){return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'}
 function resize(){dpr=Math.min(window.devicePixelRatio||1,1.6);w=innerWidth;h=innerHeight;canvas.width=Math.max(1,Math.round(w*dpr));canvas.height=Math.max(1,Math.round(h*dpr));canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}
 addEventListener('resize',resize,{passive:true});resize();
-if(interactive)addEventListener('pointermove',function(e){mouse.tx=e.clientX/w;mouse.ty=e.clientY/h},{passive:true});
+if(interactive)addEventListener('pointermove',function(e){mouse.tx=e.clientX/w;mouse.ty=e.clientY/h;if(mode==='spider'){var rig=root.querySelector('.vx-spider-rig');if(rig){rig.style.left=(50+(mouse.tx-.5)*10)+'%';rig.classList.add('vx-react');clearTimeout(rig._vxTimer);rig._vxTimer=setTimeout(function(){rig.classList.remove('vx-react')},450)}}},{passive:true});
 var count=Math.round((innerWidth<700?42:74)*intensity);
 var pts=Array.from({length:count},function(_,i){return{x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.00045,vy:(Math.random()-.5)*.00045,r:.8+Math.random()*1.8,p:Math.random()*6.28,z:Math.random(),ring:i%7}});
 function clear(a){ctx.fillStyle=rgba(bc,a);ctx.fillRect(0,0,w,h)}
 function glow(x,y,r,a,c){var g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,rgba(c||ac,a));g.addColorStop(1,rgba(c||ac,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,6.283);ctx.fill()}
 function spider(t){
  clear(.15);
- var cx=w*.5+(mouse.x-.5)*w*.08,cy=h*.48+(mouse.y-.5)*h*.08,max=Math.min(w,h)*.58;
+ var cx=w*.5+(mouse.x-.5)*w*.075,cy=h*.47+(mouse.y-.5)*h*.07,max=Math.min(w,h)*.62;
  ctx.save();ctx.translate(cx,cy);ctx.globalCompositeOperation='screen';
 
- // Glowing web rings
- for(var r=1;r<=9;r++){
+ // Main web rings
+ for(var r=1;r<=10;r++){
   ctx.beginPath();
-  for(var a=0;a<=6.34;a+=.08){
-   var rr=max*(r/10)*(1+.045*Math.sin(a*6+t*.9+r));
+  for(var a=0;a<=6.34;a+=.075){
+   var rr=max*(r/11)*(1+.05*Math.sin(a*6+t*.8+r*.8));
    var x=Math.cos(a)*rr,y=Math.sin(a)*rr*.68;
    if(a===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)
   }
   ctx.closePath();
-  ctx.strokeStyle=rgba(ac,.055+r*.017);
-  ctx.lineWidth=.7+r*.08;
+  ctx.strokeStyle=rgba(ac,.05+r*.017);
+  ctx.lineWidth=.65+r*.075;
   ctx.stroke()
  }
 
  // Radial strands
- for(var s=0;s<18;s++){
-  var sa=s*Math.PI/9+t*.03;
+ for(var s=0;s<20;s++){
+  var sa=s*Math.PI/10+t*.018;
   ctx.beginPath();
   ctx.moveTo(0,0);
   ctx.lineTo(Math.cos(sa)*max,Math.sin(sa)*max*.68);
-  ctx.strokeStyle=rgba(ac,.15);
-  ctx.lineWidth=.75;
+  ctx.strokeStyle=rgba(ac,.135);
+  ctx.lineWidth=.72;
   ctx.stroke()
  }
 
- // Pulses travelling over the web
- for(var k=0;k<34;k++){
-  var aa=k*.58+t*(.18+(k%5)*.02),rr2=(k%10+1)/10*max;
+ // Nest glow near the centre
+ for(var n=0;n<5;n++){
+  ctx.beginPath();
+  ctx.ellipse(0,0,24+n*9,13+n*5,Math.sin(t*.25+n)*.16,0,6.283);
+  ctx.strokeStyle=rgba(ac,.19-n*.022);
+  ctx.lineWidth=1.1;
+  ctx.stroke()
+ }
+ glow(0,0,58,.11);
+
+ // Light pulses moving toward the nest
+ for(var k=0;k<42;k++){
+  var aa=k*.47+t*(.22+(k%4)*.025);
+  var rr2=((k%12)+1)/12*max;
   var px=Math.cos(aa)*rr2,py=Math.sin(aa)*rr2*.68;
-  glow(px,py,8+(k%4)*3,.11+(k%5)*.045)
+  glow(px,py,7+(k%3)*2.5,.10+(k%5)*.037)
  }
 
- // Silk thread from top of viewport into the web
- var threadTop=-cy-20;
- var climb=(Math.sin(t*.62)+1)/2;
- var spiderY=threadTop+45+climb*(Math.min(h*.42,max*.72));
- ctx.strokeStyle=rgba(ac,.28);
- ctx.lineWidth=1.1;
- ctx.beginPath();
- ctx.moveTo(0,threadTop);
- ctx.quadraticCurveTo(Math.sin(t*.7)*8,(threadTop+spiderY)/2,0,spiderY-16);
- ctx.stroke();
-
- // Slightly blurred spider body
- ctx.save();
- ctx.translate(Math.sin(t*.8)*4,spiderY);
- ctx.rotate(Math.sin(t*.9)*.05);
- ctx.shadowBlur=18;
- ctx.shadowColor=accent;
- ctx.globalAlpha=.78;
-
- // Abdomen and head
- ctx.fillStyle='rgba(4,8,14,.94)';
- ctx.beginPath();ctx.ellipse(0,6,8.5,11.5,0,0,6.283);ctx.fill();
- ctx.beginPath();ctx.ellipse(0,-5,5.5,6.2,0,0,6.283);ctx.fill();
-
- // Soft glow around spider
- glow(0,2,26,.075);
-
- // Eight legs with animated bends
- ctx.strokeStyle='rgba(4,8,14,.96)';
- ctx.lineWidth=2.2;
- ctx.lineCap='round';
- for(var leg=0;leg<4;leg++){
-  var ly=-5+leg*4.2;
-  var phase=t*2.2+leg*.65;
-  var bend=4+Math.sin(phase)*2.3;
-  var reach=12+leg*1.2;
-
-  ctx.beginPath();
-  ctx.moveTo(-3.5,ly);
-  ctx.quadraticCurveTo(-9-bend,ly-4,-reach-6,ly+Math.sin(phase)*3);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(3.5,ly);
-  ctx.quadraticCurveTo(9+bend,ly-4,reach+6,ly+Math.sin(phase+1.4)*3);
-  ctx.stroke();
- }
-
- // Small highlight so the spider is readable without looking sharp
- ctx.fillStyle=rgba(ac,.18);
- ctx.beginPath();ctx.ellipse(-1.5,-7,1.4,1.8,0,0,6.283);ctx.fill();
-
  ctx.restore();
- ctx.restore();
- glow(cx,cy,max*.34,.08);
+ glow(cx,cy,max*.35,.07);
 }
 function neural(t){
  clear(.17);
