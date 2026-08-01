@@ -2431,10 +2431,10 @@ clinical:{bg:'#f4fbfb',surface:'#ffffff',text:'#102828',muted:'#637979',accent:'
 function collect(){
  const type=val('siteType','premium local business'), ind=detectIndustry(type), chosen=document.querySelector('input[name="v70Architecture"]:checked')?.value||'auto';
  const selectedPalette=($('v70Palette')||{}).value||'auto'; const autoPalette=({skincare:'blush',fashion:'obsidian',roofing:'stone',health:'cloud',hospitality:'ivory',property:'ivory'})[ind]||'obsidian'; const pal=palette(selectedPalette==='auto'?autoPalette:selectedPalette); const custom=($('v30Accent')||{}).value||''; if(custom)pal.accent=custom; const activeColor=(id)=>{const e=$(id);return e&&e.dataset.active==='1'?e.value:''}; const customBackground=activeColor('v90Background')||(($('v89Background')||{}).value||''); if(customBackground)pal.bg=customBackground; const customSurface=activeColor('v90Surface'); if(customSurface)pal.surface=customSurface; const customText=activeColor('v90Text'); if(customText)pal.text=customText; const customMuted=activeColor('v90Muted'); if(customMuted)pal.muted=customMuted; const customAccent=activeColor('v90Accent'); if(customAccent)pal.accent=customAccent; const heroBg=activeColor('v90Hero');
- return {business:val('siteBusiness','Your Business'),type,description:val('siteDescription','A premium business delivering thoughtful service, clear communication and exceptional attention to detail.'),services:csv(val('siteServices','Signature Service, Personal Support, Bespoke Solutions'),'Signature Service, Personal Support, Bespoke Solutions'),phone:val('sitePhone','01279 000000'),email:val('siteEmail','hello@example.co.uk'),address:val('siteAddress','Harlow, Essex'),tone:val('siteTone','refined, confident and welcoming'),hours:val('siteOpeningHours','Mon–Fri 9am–5pm'),heroImage:val('siteHeroImage',''),gallery:csv(val('siteGalleryImages',''),''),video:val('siteVideoUrl',''),extraFeatures:val('siteExtraFeatures',''),menuStyle:($('siteMenuStyle')||{}).value||'standard',industry:ind,architecture:chosen==='auto'?recommendedArchitecture(ind):chosen,palette:pal,typography:($('v30Typography')||{}).value||'modern',effect:($('v30Effect')||{}).value||'luxury',radius:($('v30Radius')||{}).value||'24',spacing:($('v30Spacing')||{}).value||'luxury',buttonStyle:($('v30Button')||{}).value||'pill',motion:($('v70Motion')||{}).value||'luxury',nav:($('v70Nav')||{}).value||'floating',animation:(window.__vinctecAnimationChoice||localStorage.getItem('vinctecAnimationChoice')||'spider'),animationIntensity:Number(window.__vinctecAnimationIntensity||localStorage.getItem('vinctecAnimationIntensity')||75),animationInteractive:(window.__vinctecAnimationInteractive!==false&&localStorage.getItem('vinctecAnimationInteractive')!=='false'),commerceEnabled:(window.__vinctecCommerceEnabled===true||localStorage.getItem('vinctecCommerceEnabled')==='true'),commerceProducts:(window.__vinctecCommerceProducts||localStorage.getItem('vinctecCommerceProducts')||''),commerceCheckout:(window.__vinctecCommerceCheckout||localStorage.getItem('vinctecCommerceCheckout')||''),heroBg,shadow:($('v90Shadow')||{}).value||'premium',year:new Date().getFullYear()};
+ return {business:val('siteBusiness','Your Business'),type,description:val('siteDescription','A premium business delivering thoughtful service, clear communication and exceptional attention to detail.'),services:csv(val('siteServices','Signature Service, Personal Support, Bespoke Solutions'),'Signature Service, Personal Support, Bespoke Solutions'),phone:val('sitePhone','01279 000000'),email:val('siteEmail','hello@example.co.uk'),address:val('siteAddress','Harlow, Essex'),tone:val('siteTone','refined, confident and welcoming'),hours:val('siteOpeningHours','Mon–Fri 9am–5pm'),heroImage:val('siteHeroImage',''),gallery:csv(val('siteGalleryImages',''),''),video:val('siteVideoUrl',''),extraFeatures:val('siteExtraFeatures',''),menuStyle:($('siteMenuStyle')||{}).value||'standard',industry:ind,architecture:chosen==='auto'?recommendedArchitecture(ind):chosen,palette:pal,typography:($('v30Typography')||{}).value||'modern',effect:($('v30Effect')||{}).value||'luxury',radius:($('v30Radius')||{}).value||'24',spacing:($('v30Spacing')||{}).value||'luxury',buttonStyle:($('v30Button')||{}).value||'pill',motion:($('v70Motion')||{}).value||'luxury',nav:($('v70Nav')||{}).value||'floating',animation:(window.__vinctecAnimationChoice||localStorage.getItem('vinctecAnimationChoice')||'spider'),animationIntensity:Number(window.__vinctecAnimationIntensity||localStorage.getItem('vinctecAnimationIntensity')||75),animationInteractive:(window.__vinctecAnimationInteractive!==false&&localStorage.getItem('vinctecAnimationInteractive')!=='false'),heroBg,shadow:($('v90Shadow')||{}).value||'premium',year:new Date().getFullYear()};
 }
 function head(d,title,desc){return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="stylesheet" href="style.css"></head>`}
-function nav(d){const services=d.menuStyle==='dropdown'?`<span class="nav-dropdown"><button type="button" class="nav-drop-toggle">Services <span>⌄</span></button><span class="nav-drop-menu">${d.services.map(s=>`<a href="services.html#${esc(String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-'))}">${esc(s)}</a>`).join('')}</span></span>`:d.menuStyle==='hidden'?``:`<a href="services.html">Services</a>`;const basket=commerceNav(d);return `<header class="site-nav ${esc(d.nav)}"><a class="brand" href="index.html">${esc(d.business)}</a><nav><a href="index.html">Home</a><a href="about.html">About</a>${services}<a class="nav-cta" href="contact.html">Start a project</a>${basket}</nav></header>`}
+function nav(d){const services=d.menuStyle==='dropdown'?`<span class="nav-dropdown"><button type="button" class="nav-drop-toggle">Services <span>⌄</span></button><span class="nav-drop-menu">${d.services.map(s=>`<a href="services.html#${esc(String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-'))}">${esc(s)}</a>`).join('')}</span></span>`:d.menuStyle==='hidden'?``:`<a href="services.html">Services</a>`;return `<header class="site-nav ${esc(d.nav)}"><a class="brand" href="index.html">${esc(d.business)}</a><nav><a href="index.html">Home</a><a href="about.html">About</a>${services}<a class="nav-cta" href="contact.html">Start a project</a></nav></header>`}
 function footer(d){return `<footer class="footer-minimal"><div><strong>${esc(d.business)}</strong><p>${esc(d.description)}</p></div><small>© ${d.year} ${esc(d.business)} · Designed with Vinctec</small></footer>`}
 function serviceCards(d,cls='service-grid'){return `<div class="${cls}">${d.services.map((s,i)=>{const slug=String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');return `<article id="${esc(slug)}" class="service reveal"><span>0${i+1}</span><h3>${esc(s)}</h3><p>Premium ${esc(s).toLowerCase()} shaped around your goals, delivered with care and precision.</p><a href="contact.html">Discover more →</a></article>`}).join('')}</div>`}
 function media(d,cls='hero-media'){if(d.video){const yt=/youtu(?:\.be|be\.com)/i.test(d.video);const embed=yt?d.video.replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/').split('&')[0]:'';return yt?`<div class="${cls}"><iframe src="${esc(embed)}?autoplay=1&mute=1&loop=1" title="${esc(d.business)} video" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`:`<div class="${cls}"><video autoplay muted loop playsinline controls src="${esc(d.video)}"></video></div>`}if(d.heroImage)return `<div class="${cls}"><img src="${esc(d.heroImage)}" alt="${esc(d.business)}"></div>`;return `<div class="${cls} art"><i></i><i></i><b>${esc(d.business.charAt(0))}</b></div>`}
@@ -2724,121 +2724,13 @@ document.addEventListener('visibilitychange',function(){cancelAnimationFrame(raf
 })();`;
 }
 
-
-function commerceProducts(d){
- if(!d.commerceEnabled)return [];
- return String(d.commerceProducts||'')
-  .split('\n')
-  .map(line=>line.trim())
-  .filter(Boolean)
-  .map((line,index)=>{
-    const parts=line.split('|').map(x=>x.trim());
-    const price=Number(String(parts[1]||'0').replace(/[^0-9.]/g,''))||0;
-    return {id:'vx-product-'+(index+1),name:parts[0]||('Product '+(index+1)),price,image:parts[2]||'',description:parts[3]||''};
-  })
-  .filter(p=>p.name);
-}
-function commerceNav(d){
- if(!d.commerceEnabled)return '';
- return `<button type="button" class="vx-basket-trigger" aria-label="Open basket">Basket <span class="vx-basket-count">0</span></button>`;
-}
-function commerceSection(d){
- const products=commerceProducts(d);
- if(!d.commerceEnabled)return '';
- const cards=products.length?products.map(p=>`<article class="vx-product-card reveal">
-   <div class="vx-product-media">${p.image?`<img loading="lazy" src="${esc(p.image)}" alt="${esc(p.name)}">`:`<span>${esc(p.name.charAt(0).toUpperCase())}</span>`}</div>
-   <div class="vx-product-copy">
-    <p class="eyebrow">Product</p>
-    <h3>${esc(p.name)}</h3>
-    ${p.description?`<p>${esc(p.description)}</p>`:''}
-    <div class="vx-product-row"><strong>£${p.price.toFixed(2)}</strong><button type="button" class="vx-add-basket" data-id="${esc(p.id)}" data-name="${esc(p.name)}" data-price="${p.price}" data-image="${esc(p.image)}">Add to basket</button></div>
-   </div>
-  </article>`).join(''):`<div class="vx-store-empty"><h3>No products added yet</h3><p>Add products in the Vinctec Commerce panel inside the admin.</p></div>`;
- return `<section class="vx-store-section reveal" id="shop"><div class="section-heading"><p class="eyebrow">Shop</p><h2>Featured products.</h2><p>Browse the latest products and add your favourites to the basket.</p></div><div class="vx-product-grid">${cards}</div></section>`;
-}
-function commerceDrawer(d){
- if(!d.commerceEnabled)return '';
- const checkout=esc(d.commerceCheckout||'');
- return `<div class="vx-basket-overlay" hidden></div><aside class="vx-basket-drawer" aria-hidden="true" aria-label="Shopping basket">
-  <div class="vx-basket-head"><div><p class="eyebrow">Your selection</p><h2>Basket</h2></div><button type="button" class="vx-basket-close" aria-label="Close basket">×</button></div>
-  <div class="vx-basket-items"></div>
-  <div class="vx-basket-empty"><span>✦</span><h3>Your basket is empty.</h3><p>Add a product to get started.</p><button type="button" class="vx-continue-shopping">Continue browsing</button></div>
-  <div class="vx-basket-summary"><div><span>Subtotal</span><strong class="vx-basket-subtotal">£0.00</strong></div>
-   <a class="vx-checkout-button${checkout?'':' is-disabled'}" ${checkout?`href="${checkout}" target="_blank" rel="noopener"`:'aria-disabled="true"'}>${checkout?'Checkout':'Checkout unavailable'}</a>
-  </div>
- </aside>`;
-}
-function commerceCSS(d){
- if(!d.commerceEnabled)return '';
- const p=d.palette;
- return `
-.vx-basket-trigger{display:inline-flex;align-items:center;gap:8px;border:1px solid color-mix(in srgb,${p.text} 18%,transparent);background:transparent;color:${p.text};padding:10px 14px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer}
-.vx-basket-count{display:grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:${p.accent};color:${p.bg};font-size:12px}
-.vx-store-section{padding:90px 6%}
-.vx-product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;margin-top:30px}
-.vx-product-card{overflow:hidden;border:1px solid color-mix(in srgb,${p.text} 12%,transparent);border-radius:${d.radius}px;background:color-mix(in srgb,${p.surface} 92%,transparent);box-shadow:${d.shadow==='premium'?'0 24px 70px rgba(0,0,0,.22)':'0 12px 35px rgba(0,0,0,.14)'}}
-.vx-product-media{aspect-ratio:4/5;background:linear-gradient(135deg,color-mix(in srgb,${p.accent} 18%,${p.surface}),${p.surface});display:grid;place-items:center;overflow:hidden}
-.vx-product-media img{width:100%;height:100%;object-fit:cover;display:block}
-.vx-product-media span{font-size:72px;font-weight:900;color:color-mix(in srgb,${p.accent} 78%,${p.text})}
-.vx-product-copy{padding:22px}.vx-product-copy h3{margin:0 0 8px}.vx-product-copy p{margin:0 0 16px}
-.vx-product-row{display:flex;align-items:center;justify-content:space-between;gap:16px}.vx-product-row strong{font-size:20px}
-.vx-add-basket{border:0;border-radius:999px;padding:11px 16px;background:${p.accent};color:${p.bg};font-weight:800;cursor:pointer}
-.vx-store-empty{grid-column:1/-1;padding:36px;border:1px dashed color-mix(in srgb,${p.text} 20%,transparent);border-radius:20px;text-align:center}
-.vx-basket-overlay{position:fixed;inset:0;z-index:99990;background:rgba(0,0,0,.66);backdrop-filter:blur(4px)}
-.vx-basket-drawer{position:fixed;top:0;right:0;z-index:99999;width:min(520px,100%);height:100dvh;background:#0f0f10;color:#fff;transform:translateX(105%);transition:transform .35s ease;display:flex;flex-direction:column;padding:34px 34px 24px;box-shadow:-28px 0 80px rgba(0,0,0,.4)}
-.vx-basket-drawer.open{transform:translateX(0)}.vx-basket-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:20px}
-.vx-basket-head h2{font-size:44px;margin:4px 0 0}.vx-basket-close{border:0;background:transparent;color:#fff;font-size:36px;line-height:1;cursor:pointer}
-.vx-basket-items{display:grid;gap:14px;overflow:auto;padding:20px 0;flex:1}
-.vx-basket-item{display:grid;grid-template-columns:74px 1fr auto;gap:14px;align-items:center;padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:14px}
-.vx-basket-item img,.vx-basket-placeholder{width:74px;height:82px;border-radius:10px;object-fit:cover;background:#1f1f22;display:grid;place-items:center;font-size:28px}
-.vx-basket-item h4{margin:0 0 5px}.vx-basket-item p{margin:0;color:#b7b7bd}.vx-basket-qty{display:flex;align-items:center;gap:8px;margin-top:8px}
-.vx-basket-qty button,.vx-basket-remove{border:1px solid rgba(255,255,255,.14);background:transparent;color:#fff;border-radius:8px;cursor:pointer}
-.vx-basket-qty button{width:30px;height:30px}.vx-basket-remove{padding:7px 9px}
-.vx-basket-empty{display:none;flex:1;place-content:center;text-align:center;padding:40px 10px}.vx-basket-empty.show{display:grid}.vx-basket-empty span{font-size:42px}.vx-basket-empty h3{font-size:26px;margin:18px 0 8px}.vx-basket-empty p{color:#aaaab2}.vx-continue-shopping{justify-self:center;margin-top:20px;padding:12px 20px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:transparent;color:#fff;cursor:pointer}
-.vx-basket-summary{border-top:1px solid rgba(255,255,255,.12);padding-top:18px}.vx-basket-summary>div{display:flex;justify-content:space-between;font-size:18px;margin-bottom:16px}
-.vx-checkout-button{display:block;text-align:center;padding:16px;border-radius:2px;background:#fff;color:#111;text-decoration:none;font-weight:800}.vx-checkout-button.is-disabled{background:#252527;color:#888;pointer-events:none}
-body.vx-basket-open{overflow:hidden}
-@media(max-width:820px){.vx-basket-trigger{padding:8px 10px;font-size:12px}.vx-basket-drawer{padding:24px 18px 18px}.vx-basket-head h2{font-size:36px}.vx-product-grid{grid-template-columns:1fr 1fr}.vx-product-copy{padding:16px}.vx-product-row{align-items:flex-start;flex-direction:column}}
-@media(max-width:540px){.vx-product-grid{grid-template-columns:1fr}.vx-basket-item{grid-template-columns:62px 1fr}.vx-basket-item>strong{grid-column:2}.vx-basket-item img,.vx-basket-placeholder{width:62px;height:70px}}
-`;
-}
-function commerceScript(){
- return `(function(){
-'use strict';
-var drawer=document.querySelector('.vx-basket-drawer');if(!drawer)return;
-var overlay=document.querySelector('.vx-basket-overlay'),itemsRoot=drawer.querySelector('.vx-basket-items'),empty=drawer.querySelector('.vx-basket-empty'),subtotal=drawer.querySelector('.vx-basket-subtotal');
-var key='vinctecStoreBasketV1',basket=[];
-try{basket=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){basket=[]}
-function save(){localStorage.setItem(key,JSON.stringify(basket))}
-function money(v){return '£'+Number(v||0).toFixed(2)}
-function count(){return basket.reduce(function(n,x){return n+x.qty},0)}
-function open(){drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');overlay.hidden=false;document.body.classList.add('vx-basket-open')}
-function close(){drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');overlay.hidden=true;document.body.classList.remove('vx-basket-open')}
-function render(){
- document.querySelectorAll('.vx-basket-count').forEach(function(el){el.textContent=count()});
- var total=basket.reduce(function(n,x){return n+x.price*x.qty},0);subtotal.textContent=money(total);
- if(!basket.length){itemsRoot.innerHTML='';empty.classList.add('show');return}
- empty.classList.remove('show');
- itemsRoot.innerHTML=basket.map(function(x){return '<div class="vx-basket-item" data-id="'+x.id+'">'+(x.image?'<img src="'+x.image+'" alt="">':'<div class="vx-basket-placeholder">'+String(x.name||'?').charAt(0)+'</div>')+'<div><h4>'+x.name+'</h4><p>'+money(x.price)+'</p><div class="vx-basket-qty"><button type="button" data-action="minus">−</button><span>'+x.qty+'</span><button type="button" data-action="plus">+</button></div></div><div><strong>'+money(x.price*x.qty)+'</strong><br><button type="button" class="vx-basket-remove" data-action="remove">Remove</button></div></div>'}).join('');
-}
-document.addEventListener('click',function(e){
- var add=e.target.closest('.vx-add-basket');if(add){var id=add.dataset.id,found=basket.find(function(x){return x.id===id});if(found)found.qty++;else basket.push({id:id,name:add.dataset.name,price:Number(add.dataset.price)||0,image:add.dataset.image||'',qty:1});save();render();open();return}
- if(e.target.closest('.vx-basket-trigger')){open();return}
- if(e.target.closest('.vx-basket-close')||e.target.closest('.vx-continue-shopping')||e.target===overlay){close();return}
- var action=e.target.closest('[data-action]');if(action){var row=action.closest('.vx-basket-item'),item=basket.find(function(x){return x.id===row.dataset.id});if(!item)return;var type=action.dataset.action;if(type==='plus')item.qty++;if(type==='minus')item.qty=Math.max(1,item.qty-1);if(type==='remove')basket=basket.filter(function(x){return x.id!==item.id});save();render()}
-});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
-render();
-})();`;
-}
-
-function commonPages(d,index,css){const n=nav(d),f=footer(d),bg=animationLayer(d),store=commerceSection(d),basket=commerceDrawer(d);css+=animationCSS(d)+commerceCSS(d);const extras=optionalSections(d);return {
- 'index.html':`${head(d,`${d.business} | ${d.type}`,d.description)}<body>${bg}${n}<main>${index}${store}${extras}</main>${f}${basket}<script src="script.js"><\/script></body></html>`,
- 'about.html':`${head(d,`About ${d.business}`,d.description)}<body>${bg}${n}<main><section class="page-hero"><p class="eyebrow">Our story</p><h1>Standards you can feel.</h1><p>${esc(d.description)}</p></section><section class="story"><div><small>Our approach</small><h2>Personal service. Precise delivery.</h2></div><p>${esc(d.business)} serves clients with a ${esc(d.tone)} experience. From the first conversation to the final detail, everything is designed to feel considered, effortless and trustworthy.</p></section><section class="values"><article><b>01</b><h3>Clarity</h3><p>Simple communication and transparent next steps.</p></article><article><b>02</b><h3>Craft</h3><p>Every detail receives professional attention.</p></article><article><b>03</b><h3>Care</h3><p>A customer experience designed around people.</p></article></section></main>${f}${basket}<script src="script.js"><\/script></body></html>`,
- 'services.html':`${head(d,`${d.business} Services`,d.services.join(', '))}<body>${bg}${n}<main><section class="page-hero"><p class="eyebrow">Our expertise</p><h1>Services without compromise.</h1><p>Explore specialist support created around your requirements.</p></section><section class="section">${serviceCards(d)}</section><section class="wide-cta"><p>Need something more specific?</p><h2>Let’s shape the right solution.</h2><a class="button" href="contact.html">Speak with us</a></section></main>${f}${basket}<script src="script.js"><\/script></body></html>`,
- 'contact.html':`${head(d,`Contact ${d.business}`,`Contact ${d.business}`)}<body>${bg}${n}<main><section class="page-hero"><p class="eyebrow">Private consultation</p><h1>Begin with a conversation.</h1><p>Tell us what you need and we’ll guide you through the next step.</p></section><section class="contact"><form><input placeholder="Your name" required><input type="email" placeholder="Email address" required><input placeholder="Phone number"><textarea placeholder="Tell us about your project" required></textarea><button>Send enquiry</button></form><aside><small>Contact</small><h2>${esc(d.business)}</h2><p><b>Phone</b><br>${esc(d.phone)}</p><p><b>Email</b><br>${esc(d.email)}</p><p><b>Location</b><br>${esc(d.address)}</p><p><b>Hours</b><br>${esc(d.hours)}</p></aside></section></main>${f}${basket}<script src="script.js"><\/script></body></html>`,
+function commonPages(d,index,css){const n=nav(d),f=footer(d),bg=animationLayer(d);css+=animationCSS(d);const extras=optionalSections(d);return {
+ 'index.html':`${head(d,`${d.business} | ${d.type}`,d.description)}<body>${bg}${n}<main>${index}${extras}</main>${f}<script src="script.js"><\/script></body></html>`,
+ 'about.html':`${head(d,`About ${d.business}`,d.description)}<body>${bg}${n}<main><section class="page-hero"><p class="eyebrow">Our story</p><h1>Standards you can feel.</h1><p>${esc(d.description)}</p></section><section class="story"><div><small>Our approach</small><h2>Personal service. Precise delivery.</h2></div><p>${esc(d.business)} serves clients with a ${esc(d.tone)} experience. From the first conversation to the final detail, everything is designed to feel considered, effortless and trustworthy.</p></section><section class="values"><article><b>01</b><h3>Clarity</h3><p>Simple communication and transparent next steps.</p></article><article><b>02</b><h3>Craft</h3><p>Every detail receives professional attention.</p></article><article><b>03</b><h3>Care</h3><p>A customer experience designed around people.</p></article></section></main>${f}<script src="script.js"><\/script></body></html>`,
+ 'services.html':`${head(d,`${d.business} Services`,d.services.join(', '))}<body>${bg}${n}<main><section class="page-hero"><p class="eyebrow">Our expertise</p><h1>Services without compromise.</h1><p>Explore specialist support created around your requirements.</p></section><section class="section">${serviceCards(d)}</section><section class="wide-cta"><p>Need something more specific?</p><h2>Let’s shape the right solution.</h2><a class="button" href="contact.html">Speak with us</a></section></main>${f}<script src="script.js"><\/script></body></html>`,
+ 'contact.html':`${head(d,`Contact ${d.business}`,`Contact ${d.business}`)}<body>${bg}${n}<main><section class="page-hero"><p class="eyebrow">Private consultation</p><h1>Begin with a conversation.</h1><p>Tell us what you need and we’ll guide you through the next step.</p></section><section class="contact"><form><input placeholder="Your name" required><input type="email" placeholder="Email address" required><input placeholder="Phone number"><textarea placeholder="Tell us about your project" required></textarea><button>Send enquiry</button></form><aside><small>Contact</small><h2>${esc(d.business)}</h2><p><b>Phone</b><br>${esc(d.phone)}</p><p><b>Email</b><br>${esc(d.email)}</p><p><b>Location</b><br>${esc(d.address)}</p><p><b>Hours</b><br>${esc(d.hours)}</p></aside></section></main>${f}<script src="script.js"><\/script></body></html>`,
  'style.css':css,
- 'script.js':`${animationScript()}\n${commerceScript()}\nconst io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('visible')),{threshold:.12});document.querySelectorAll('.reveal').forEach(e=>io.observe(e));document.querySelectorAll('.nav-drop-toggle').forEach(b=>{b.setAttribute('aria-expanded','false');b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const box=b.closest('.nav-dropdown'),willOpen=!box.classList.contains('open');document.querySelectorAll('.nav-dropdown.open').forEach(x=>{if(x!==box){x.classList.remove('open');const t=x.querySelector('.nav-drop-toggle');if(t)t.setAttribute('aria-expanded','false')}});box.classList.toggle('open',willOpen);b.setAttribute('aria-expanded',String(willOpen))})});document.addEventListener('click',e=>{if(!e.target.closest('.nav-dropdown'))document.querySelectorAll('.nav-dropdown.open').forEach(x=>{x.classList.remove('open');const t=x.querySelector('.nav-drop-toggle');if(t)t.setAttribute('aria-expanded','false')})});document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.nav-dropdown.open').forEach(x=>{x.classList.remove('open');const t=x.querySelector('.nav-drop-toggle');if(t){t.setAttribute('aria-expanded','false');t.focus()}})});document.querySelectorAll('.site-search').forEach(input=>input.addEventListener('input',()=>{const q=input.value.trim().toLowerCase(),root=input.closest('.site-search-section'),status=root.querySelector('.search-status');let hits=0;document.querySelectorAll('main section:not(.site-search-section),main article').forEach(el=>{const match=!q||el.innerText.toLowerCase().includes(q);el.style.display=match?'':'none';if(q&&match)hits++});status.textContent=q?(hits?hits+' matching section'+(hits===1?'':'s'):'No matching sections found.'):'';}));`
+ 'script.js':`${animationScript()}\nconst io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('visible')),{threshold:.12});document.querySelectorAll('.reveal').forEach(e=>io.observe(e));document.querySelectorAll('.nav-drop-toggle').forEach(b=>{b.setAttribute('aria-expanded','false');b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const box=b.closest('.nav-dropdown'),willOpen=!box.classList.contains('open');document.querySelectorAll('.nav-dropdown.open').forEach(x=>{if(x!==box){x.classList.remove('open');const t=x.querySelector('.nav-drop-toggle');if(t)t.setAttribute('aria-expanded','false')}});box.classList.toggle('open',willOpen);b.setAttribute('aria-expanded',String(willOpen))})});document.addEventListener('click',e=>{if(!e.target.closest('.nav-dropdown'))document.querySelectorAll('.nav-dropdown.open').forEach(x=>{x.classList.remove('open');const t=x.querySelector('.nav-drop-toggle');if(t)t.setAttribute('aria-expanded','false')})});document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.nav-dropdown.open').forEach(x=>{x.classList.remove('open');const t=x.querySelector('.nav-drop-toggle');if(t){t.setAttribute('aria-expanded','false');t.focus()}})});document.querySelectorAll('.site-search').forEach(input=>input.addEventListener('input',()=>{const q=input.value.trim().toLowerCase(),root=input.closest('.site-search-section'),status=root.querySelector('.search-status');let hits=0;document.querySelectorAll('main section:not(.site-search-section),main article').forEach(el=>{const match=!q||el.innerText.toLowerCase().includes(q);el.style.display=match?'':'none';if(q&&match)hits++});status.textContent=q?(hits?hits+' matching section'+(hits===1?'':'s'):'No matching sections found.'):'';}));`
 }}
 function baseCSS(d,extra=''){const p=d.palette;return `*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:${p.bg};color:${p.text};font-family:${d.typography==='serif'?'Georgia,Times New Roman,serif':d.typography==='editorial'?'Arial Narrow,Arial,sans-serif':d.typography==='fashion'?'Helvetica Neue,Arial,sans-serif':d.typography==='corporate'?'Arial,Helvetica,sans-serif':'Inter,Arial,sans-serif'};line-height:1.55}a{color:inherit}.site-nav{position:relative;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:22px 6%;background:${p.bg}}.site-nav.floating{position:fixed;top:18px;left:50%;transform:translateX(-50%);width:min(1180px,calc(100% - 28px));border:1px solid rgba(255,255,255,.14);border-radius:999px;background:color-mix(in srgb,${p.surface} 78%,transparent);backdrop-filter:blur(18px);box-shadow:0 18px 55px rgba(0,0,0,.28)}.brand{font-weight:900;text-decoration:none;letter-spacing:-.03em}.site-nav nav{display:flex;align-items:center;gap:24px}.site-nav nav a{text-decoration:none;font-size:14px}.nav-cta,.button,button{display:inline-block;border:0;border-radius:${d.buttonStyle==='square'?'4px':d.buttonStyle==='soft'?'14px':'999px'};padding:13px 20px;background:${p.accent};color:${p.bg};font-weight:800;text-decoration:none}.eyebrow,section small{color:${p.accent};text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:800}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(54px,8vw,118px);line-height:.92;letter-spacing:-.065em}h2{font-size:clamp(36px,5vw,72px);line-height:1;letter-spacing:-.05em}p{color:${p.muted}}.section{padding:${d.spacing==='compact'?'72px':d.spacing==='normal'?'92px':'120px'} 6%}.service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.service{padding:30px;border:1px solid color-mix(in srgb,${p.text} 12%,transparent);border-radius:${d.radius}px;background:${p.surface};min-height:290px}.service span{color:${p.accent};font-size:12px}.service h3{font-size:28px;margin-top:50px}.service a{text-decoration:none;font-weight:800}.page-hero{padding:190px 6% 90px;min-height:72vh;display:flex;flex-direction:column;justify-content:flex-end}.page-hero p{max-width:760px;font-size:21px}.story{padding:110px 6%;display:grid;grid-template-columns:1fr 1fr;gap:80px}.story>p{font-size:24px}.values{padding:0 6% 110px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.values article{padding:28px;border-top:1px solid ${p.muted}}.wide-cta{margin:30px 6% 110px;padding:80px;border-radius:${Math.min(Number(d.radius)+14,48)}px;background:${p.accent};color:${p.bg}}.wide-cta p{color:inherit}.contact{padding:80px 6% 120px;display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.contact form,.contact aside{padding:34px;border-radius:${d.radius}px;background:${p.surface}}input,textarea{width:100%;padding:17px 0;border:0;border-bottom:1px solid color-mix(in srgb,${p.text} 20%,transparent);background:transparent;color:${p.text};font:inherit}textarea{min-height:150px}form button{margin-top:24px}footer{padding:70px 6% 28px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:34px;background:${p.surface}}footer>div{display:flex;flex-direction:column;gap:9px}footer a{text-decoration:none}footer small{grid-column:1/-1;padding-top:24px;border-top:1px solid color-mix(in srgb,${p.text} 12%,transparent);color:${p.muted}}.footer-minimal{grid-template-columns:1fr}.footer-minimal>div{max-width:720px}.footer-minimal small{grid-column:1}.nav-dropdown{position:relative}.nav-drop-toggle{padding:0;background:none;color:inherit;border:0;font:inherit;cursor:pointer}.nav-drop-menu{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(-6px);min-width:220px;padding:10px;display:grid;gap:4px;background:${p.surface};border:1px solid color-mix(in srgb,${p.text} 14%,transparent);border-radius:18px;box-shadow:0 22px 60px rgba(0,0,0,.28);opacity:0;visibility:hidden;transition:.2s}.nav-dropdown.open .nav-drop-menu,.nav-dropdown:hover .nav-drop-menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}.nav-drop-menu a{padding:10px 12px;border-radius:10px}.nav-drop-menu a:hover{background:${p.soft}}.feature-section{padding:110px 6%;border-top:1px solid color-mix(in srgb,${p.text} 10%,transparent)}.section-heading{max-width:850px;margin-bottom:38px}.site-search{padding:18px 20px!important;border:1px solid color-mix(in srgb,${p.text} 18%,transparent)!important;border-radius:${d.radius}px!important;background:${p.surface}!important}.search-status{margin-top:12px}.premium-gallery{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.premium-gallery figure{margin:0;min-height:280px;overflow:hidden;border-radius:${d.radius}px}.premium-gallery figure:nth-child(3n+1){grid-column:span 7}.premium-gallery figure:nth-child(3n+2){grid-column:span 5}.premium-gallery figure:nth-child(3n+3){grid-column:span 12}.premium-gallery img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}.premium-gallery figure:hover img{transform:scale(1.04)}.feature-video{min-height:520px;border-radius:${d.radius}px;overflow:hidden;background:${p.surface}}.feature-video video,.feature-video iframe{width:100%;height:520px;object-fit:cover;border:0}.testimonial-grid,.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.testimonial-grid blockquote,.price-grid article{margin:0;padding:32px;border:1px solid color-mix(in srgb,${p.text} 12%,transparent);border-radius:${d.radius}px;background:${p.surface}}.testimonial-grid blockquote p{font-size:21px;color:${p.text}}.testimonial-grid footer{display:block;padding:18px 0 0;background:none;color:${p.muted}}.price-grid .featured{outline:2px solid ${p.accent};transform:translateY(-8px)}.faq-list{display:grid;gap:12px}.faq-list details{padding:22px 24px;border:1px solid color-mix(in srgb,${p.text} 12%,transparent);border-radius:${Math.max(Number(d.radius)-6,8)}px;background:${p.surface}}.faq-list summary{cursor:pointer;font-weight:800}.faq-list p{margin:14px 0 0}.hours-strip{display:flex;justify-content:space-between;align-items:end;gap:30px;background:${p.surface}}.hours-strip>p{font-size:clamp(24px,4vw,48px);color:${p.text};max-width:700px}.whatsapp-float{position:fixed;right:22px;bottom:22px;z-index:50;padding:14px 18px;border-radius:999px;background:#25d366;color:#07120b;text-decoration:none;font-weight:900;box-shadow:0 18px 45px rgba(0,0,0,.3)}.reveal{opacity:0;transform:translateY(24px);transition:.75s ease}.reveal.visible{opacity:1;transform:none}${d.effect==='glass'?`.service,.contact form,.contact aside{background:color-mix(in srgb,${p.surface} 72%,transparent);backdrop-filter:blur(18px);border:1px solid color-mix(in srgb,${p.text} 16%,transparent)} body:before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 10%,color-mix(in srgb,${p.accent} 18%,transparent),transparent 34%),radial-gradient(circle at 85% 70%,color-mix(in srgb,${p.accent} 12%,transparent),transparent 30%);z-index:-1}`:d.effect==='gradient'?`body{background:linear-gradient(145deg,${p.bg},${p.soft})}.button,.nav-cta,button{background:linear-gradient(135deg,${p.accent},color-mix(in srgb,${p.accent} 55%,white))}`:d.effect==='minimal'?`.service,.contact form,.contact aside{box-shadow:none;border-width:1px}.site-nav.floating{box-shadow:none}`:d.effect==='soft'?`.service,.contact form,.contact aside{box-shadow:12px 12px 30px rgba(0,0,0,.12),-8px -8px 24px rgba(255,255,255,.04);border:0}`:`.service,.contact form,.contact aside{box-shadow:0 28px 80px rgba(0,0,0,.16)}`}${d.heroBg?`.sig-hero,.glass-hero,.editorial-hero,.executive-hero,.hospitality-hero,.wellness-hero,.boutique-hero,.property-hero,.showroom-hero,.future-hero,.skin-hero,.fashion-hero,.roof-hero,.page-hero{background:${d.heroBg}!important}`:''}${d.shadow==='none'?`.service,.contact form,.contact aside,.site-nav.floating{box-shadow:none!important}`:d.shadow==='soft'?`.service,.contact form,.contact aside{box-shadow:0 12px 34px rgba(0,0,0,.12)!important}`:d.shadow==='strong'?`.service,.contact form,.contact aside{box-shadow:0 34px 90px rgba(0,0,0,.34)!important}`:''}${extra}@media(max-width:820px){.site-nav{left:10px;right:10px;width:auto;padding:10px 14px;gap:12px;overflow:visible}.site-nav .brand{font-size:15px;flex:0 0 auto}.site-nav nav{display:flex;align-items:center;justify-content:flex-end;gap:12px;min-width:0;overflow:visible;white-space:nowrap;scrollbar-width:none}.site-nav nav::-webkit-scrollbar{display:none}.site-nav nav a{display:inline-flex!important;align-items:center;font-size:12px;flex:0 0 auto}.site-nav .nav-cta{padding:9px 13px}.nav-dropdown{position:relative;flex:0 0 auto}.nav-drop-toggle{display:inline-flex;align-items:center;min-height:40px;padding:8px 4px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.nav-drop-menu{top:calc(100% + 10px);left:auto;right:0;transform:translateY(-6px);width:min(280px,calc(100vw - 24px));min-width:210px;max-height:min(62vh,430px);overflow-y:auto;overscroll-behavior:contain;z-index:9999}.nav-dropdown.open .nav-drop-menu{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0)}.nav-dropdown:not(.open) .nav-drop-menu{pointer-events:none}.service-grid,.values,.story,.contact,footer{grid-template-columns:1fr}.page-hero{padding-top:150px}.wide-cta{padding:45px 25px}.site-nav.floating{top:10px}.service{min-height:auto}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}`}
 function signature(d){const index=`<section class="sig-hero"><div><p class="eyebrow">Vinctec Signature · ${esc(d.industry)}</p><h1>Exceptional service, made unmistakably yours.</h1><p>${esc(d.description)}</p><div class="hero-actions"><a class="button" href="contact.html">Start a conversation</a><a href="services.html">Explore services →</a></div></div>${media(d)}</section><section class="marquee">${d.services.map(x=>`<span>${esc(x)}</span>`).join('')}</section><section class="section"><div class="section-heading"><small>Selected expertise</small><h2>Built around what matters.</h2></div>${serviceCards(d)}</section><section class="proof"><article><strong>01</strong><p>Tailored around your needs</p></article><article><strong>02</strong><p>Clear from start to finish</p></article><article><strong>03</strong><p>Premium attention to detail</p></article></section>`;return commonPages(d,index,baseCSS(d,`.sig-hero{min-height:100vh;padding:160px 6% 80px;display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center}.sig-hero>div>p{max-width:650px;font-size:21px}.hero-actions{display:flex;gap:20px;align-items:center}.hero-actions>a:not(.button){text-decoration:none;font-weight:800}.hero-media{height:620px;border-radius:42px;overflow:hidden;background:${d.palette.soft};position:relative}.hero-media img,.hero-media video{width:100%;height:100%;object-fit:cover}.art i{position:absolute;border-radius:50%;filter:blur(4px)}.art i:first-child{width:320px;height:320px;background:${d.palette.accent};top:8%;right:4%}.art i:nth-child(2){width:240px;height:240px;background:${d.palette.surface};bottom:7%;left:10%}.art b{position:absolute;inset:0;display:grid;place-items:center;font-size:220px;color:${d.palette.bg};opacity:.7}.marquee{padding:22px 6%;display:flex;justify-content:space-around;gap:30px;border-block:1px solid color-mix(in srgb,${d.palette.text} 12%,transparent);overflow:auto}.marquee span{white-space:nowrap;color:${d.palette.muted}}.section-heading{max-width:800px;margin-bottom:45px}.proof{padding:20px 6% 120px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.proof article{padding:30px;border-top:1px solid ${d.palette.muted}}.proof strong{font-size:56px}@media(max-width:820px){.sig-hero{grid-template-columns:1fr;padding-top:140px}.hero-media{height:390px}.proof{grid-template-columns:1fr}}`))}
@@ -3382,49 +3274,353 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boo
 </script>
 
 
-<style id="vx-commerce-admin-style">
-.vx-commerce-admin{margin:16px 0 20px;padding:18px;border:1px solid rgba(34,211,238,.24);border-radius:18px;background:linear-gradient(145deg,#07111f,#101b31);color:#fff}
-.vx-commerce-admin h4{margin:0 0 5px;font-size:18px}.vx-commerce-admin p{margin:0 0 14px;color:#a9bad0;font-size:13px}
-.vx-commerce-switch{display:flex;align-items:center;gap:10px;padding:12px;border-radius:12px;background:#07101d;margin-bottom:12px}
-.vx-commerce-fields{display:none}.vx-commerce-fields.show{display:block}
-.vx-commerce-admin textarea,.vx-commerce-admin input{width:100%;box-sizing:border-box;padding:11px 12px;margin:7px 0;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#050c18;color:#fff}
-.vx-commerce-admin textarea{min-height:130px;resize:vertical}
-.vx-commerce-help{font-size:12px;color:#8fa5bf;margin-top:5px}
-.vx-commerce-status{margin-top:10px;color:#86efac;font-size:13px}
+<style id="vx-ecommerce-v90-styles">
+#vxEcommerceBuilder{grid-column:1/-1;margin-top:18px;background:linear-gradient(145deg,#101827,#172237);border:1px solid rgba(56,189,248,.22);border-radius:18px;padding:20px;color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.22)}
+#vxEcommerceBuilder *{box-sizing:border-box}
+.vxe-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.vxe-head h3{margin:0 0 6px;color:#fff;font-size:24px}.vxe-head p{margin:0;color:#9fb3ca;max-width:720px}.vxe-badge{padding:7px 11px;border-radius:999px;background:#0ea5e9;color:#fff;font-size:12px;font-weight:800}
+.vxe-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.vxe-tab{margin:0;background:#0b1220;color:#cbd5e1;border:1px solid rgba(255,255,255,.1)}.vxe-tab.active{background:#2563eb;color:#fff}
+.vxe-panel{display:none}.vxe-panel.active{display:block}
+.vxe-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.vxe-full{grid-column:1/-1}
+.vxe-field label{display:block;margin:0 0 6px;font-size:13px;color:#c8d5e5;font-weight:700}.vxe-field input,.vxe-field select,.vxe-field textarea{width:100%;margin:0;padding:11px 12px;border:1px solid rgba(255,255,255,.11);border-radius:10px;background:#07101e;color:#fff}.vxe-field textarea{min-height:105px;resize:vertical}
+.vxe-pages{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px}.vxe-page{display:flex;align-items:center;gap:8px;background:#07101e;border:1px solid rgba(255,255,255,.1);padding:10px;border-radius:10px;color:#dbe7f4}
+.vxe-template-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.vxe-template{position:relative;min-height:104px;padding:13px;border-radius:13px;border:1px solid rgba(255,255,255,.12);background:#0b1220;color:#fff;text-align:left;overflow:hidden;margin:0}.vxe-template.active{border-color:#38bdf8;box-shadow:0 0 0 2px #38bdf8}.vxe-template span{position:relative;z-index:2;display:block}.vxe-template strong{font-size:15px}.vxe-template small{margin-top:5px;color:#aebed0}.vxe-template::before{content:"";position:absolute;inset:0;opacity:.42;background:radial-gradient(circle at 20% 20%,#22d3ee,transparent 45%),radial-gradient(circle at 85% 80%,#7c3aed,transparent 45%)}
+.vxe-template[data-template="luxury"]::before{background:linear-gradient(135deg,#050505,#806420,#050505)}.vxe-template[data-template="streetwear"]::before{background:linear-gradient(135deg,#101010,#dc2626)}.vxe-template[data-template="minimal"]::before{background:linear-gradient(135deg,#fff,#d4d4d8)}.vxe-template[data-template="beauty"]::before{background:linear-gradient(135deg,#3b1027,#f9a8d4)}.vxe-template[data-template="electronics"]::before{background:linear-gradient(135deg,#020617,#2563eb)}
+.vxe-actions{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.vxe-actions button{margin:0}.vxe-generate{background:#16a34a}.vxe-download{background:#0ea5e9}.vxe-secondary{background:#7c3aed}
+#vxeStoreOutput{display:none}.vxe-status{padding:10px 12px;background:#07111f;border-radius:10px;color:#86efac;font-size:13px;margin-bottom:12px}
+#vxeStorePreview{width:100%;height:760px;border:0;border-radius:14px;background:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.12)}
+.vxe-product-help{font-size:12px;color:#91a5bd;margin-top:6px}
+@media(max-width:760px){.vxe-grid{grid-template-columns:1fr}.vxe-full{grid-column:auto}#vxeStorePreview{height:680px}}
 </style>
-<script id="vx-commerce-admin-script">
+
+<script id="vx-ecommerce-v90-script">
 (function(){
 'use strict';
+
+var storeFiles={};
+var selectedTemplate='streetwear';
+
+function esc(value){
+ return String(value||'').replace(/[&<>"']/g,function(ch){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+ });
+}
+function slug(value){
+ return String(value||'store').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'store';
+}
+function money(value,currency){
+ var symbols={GBP:'£',USD:'$',EUR:'€'};
+ return (symbols[currency]||currency+' ')+Number(value||0).toFixed(2);
+}
+function get(id,fallback){
+ var el=document.getElementById(id);
+ return el&&String(el.value).trim()?String(el.value).trim():fallback;
+}
+function checkedPages(){
+ var pages={};
+ document.querySelectorAll('[data-vxe-page]').forEach(function(el){pages[el.dataset.vxePage]=el.checked});
+ return pages;
+}
+function products(){
+ var raw=get('vxeProducts','Signature Hoodie | 59.99 | Hoodies | https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80 | Premium heavyweight hoodie');
+ return raw.split('\n').map(function(line,index){
+  var p=line.split('|').map(function(x){return x.trim()});
+  return {id:'product-'+(index+1),name:p[0]||('Product '+(index+1)),price:Number(String(p[1]||0).replace(/[^0-9.]/g,''))||0,category:p[2]||'Featured',image:p[3]||'',description:p[4]||'Premium product from our latest collection.'};
+ }).filter(function(p){return p.name});
+}
+function palette(template){
+ var presets={
+  streetwear:{bg:'#0a0a0a',surface:'#151515',text:'#ffffff',muted:'#b4b4b8',accent:'#ef4444',hero:'#111111'},
+  luxury:{bg:'#090806',surface:'#17140e',text:'#fffaf0',muted:'#d4c8aa',accent:'#d4af37',hero:'#161006'},
+  minimal:{bg:'#fafafa',surface:'#ffffff',text:'#111111',muted:'#66666d',accent:'#111111',hero:'#f1f1f1'},
+  beauty:{bg:'#fff7fb',surface:'#ffffff',text:'#3b1027',muted:'#7e5269',accent:'#db2777',hero:'#fce7f3'},
+  electronics:{bg:'#020617',surface:'#0f172a',text:'#eaf2ff',muted:'#94a3b8',accent:'#3b82f6',hero:'#07142d'}
+ };
+ return presets[template]||presets.streetwear;
+}
+function pageNav(data){
+ var links=['<a href="index.html">Home</a>','<a href="shop.html">Shop</a>','<a href="collections.html">Collections</a>'];
+ if(data.pages.about)links.push('<a href="about.html">About</a>');
+ if(data.pages.contact)links.push('<a href="contact.html">Contact</a>');
+ return '<header class="store-nav"><a class="store-logo" href="index.html">'+esc(data.store)+'</a><nav>'+links.join('')+'<button type="button" class="basket-open">Basket <span class="basket-count">0</span></button></nav></header>';
+}
+function productCards(data){
+ return data.products.map(function(p){
+  return '<article class="product-card"><a class="product-image" href="product.html?id='+encodeURIComponent(p.id)+'">'+(p.image?'<img src="'+esc(p.image)+'" alt="'+esc(p.name)+'">':'<span>'+esc(p.name.charAt(0))+'</span>')+'</a><div class="product-copy"><small>'+esc(p.category)+'</small><h3><a href="product.html?id='+encodeURIComponent(p.id)+'">'+esc(p.name)+'</a></h3><p>'+esc(p.description)+'</p><div class="product-bottom"><strong>'+money(p.price,data.currency)+'</strong><button class="add-basket" data-id="'+esc(p.id)+'" data-name="'+esc(p.name)+'" data-price="'+p.price+'" data-image="'+esc(p.image)+'">Add to basket</button></div></div></article>';
+ }).join('');
+}
+function basketMarkup(data){
+ return '<div class="basket-overlay" hidden></div><aside class="basket-drawer" aria-hidden="true"><div class="basket-head"><div><small>Your selection</small><h2>Basket</h2></div><button class="basket-close" aria-label="Close">×</button></div><div class="basket-items"></div><div class="basket-empty"><div class="empty-icon">✦</div><h3>Your basket is empty.</h3><p>Browse the shop and add something you love.</p><button class="continue-shopping">Continue shopping</button></div><div class="basket-summary"><div><span>Subtotal</span><strong class="basket-subtotal">'+money(0,data.currency)+'</strong></div><a class="checkout-link" href="checkout.html">Checkout</a></div></aside>';
+}
+function storeCSS(data){
+ var p=data.palette;
+ return `*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:${p.bg};color:${p.text};font-family:Inter,Arial,sans-serif;line-height:1.55}a{color:inherit;text-decoration:none}.store-nav{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:18px 5%;background:color-mix(in srgb,${p.bg} 88%,transparent);backdrop-filter:blur(18px);border-bottom:1px solid color-mix(in srgb,${p.text} 12%,transparent)}.store-logo{font-size:22px;font-weight:900;letter-spacing:.04em}.store-nav nav{display:flex;align-items:center;gap:18px}.store-nav nav a{font-size:14px;font-weight:700}.basket-open{border:1px solid color-mix(in srgb,${p.text} 20%,transparent);background:transparent;color:${p.text};border-radius:999px;padding:10px 14px;font-weight:800;cursor:pointer}.basket-count{display:inline-grid;place-items:center;min-width:21px;height:21px;margin-left:6px;padding:0 5px;border-radius:999px;background:${p.accent};color:${p.bg};font-size:11px}.store-hero{min-height:78vh;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:40px;padding:80px 6%;background:${p.hero}}.store-hero h1{font-size:clamp(46px,7vw,92px);line-height:.96;margin:12px 0 20px;letter-spacing:-.05em}.store-hero p{color:${p.muted};max-width:620px;font-size:18px}.eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:900;color:${p.accent}}.hero-card{min-height:480px;border-radius:28px;background:linear-gradient(145deg,color-mix(in srgb,${p.accent} 25%,${p.surface}),${p.surface});display:grid;place-items:center;overflow:hidden}.hero-card img{width:100%;height:100%;object-fit:cover}.hero-card span{font-size:100px;font-weight:900}.store-btn{display:inline-block;margin-top:22px;padding:14px 22px;border-radius:999px;background:${p.accent};color:${p.bg};font-weight:900}.section{padding:90px 6%}.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:30px}.section-head h2{font-size:clamp(34px,5vw,58px);margin:6px 0 0}.section-head p{color:${p.muted};max-width:520px}.product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.product-card{overflow:hidden;border-radius:20px;background:${p.surface};border:1px solid color-mix(in srgb,${p.text} 11%,transparent)}.product-image{display:grid;place-items:center;aspect-ratio:4/5;overflow:hidden;background:linear-gradient(135deg,color-mix(in srgb,${p.accent} 18%,${p.surface}),${p.surface})}.product-image img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease}.product-card:hover img{transform:scale(1.04)}.product-image span{font-size:76px;font-weight:900}.product-copy{padding:20px}.product-copy small{color:${p.accent};font-weight:800}.product-copy h3{font-size:22px;margin:6px 0}.product-copy p{color:${p.muted};font-size:14px;min-height:44px}.product-bottom{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:18px}.product-bottom strong{font-size:19px}.add-basket{border:0;border-radius:999px;padding:10px 14px;background:${p.accent};color:${p.bg};font-weight:900;cursor:pointer}.collection-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.collection-card{min-height:260px;border-radius:22px;padding:24px;display:flex;align-items:flex-end;background:linear-gradient(135deg,color-mix(in srgb,${p.accent} 25%,${p.surface}),${p.surface});font-size:30px;font-weight:900}.content-page{max-width:1000px;margin:auto;padding:100px 6%;min-height:70vh}.content-page h1{font-size:clamp(44px,7vw,78px);margin:0 0 20px}.content-page p{color:${p.muted};font-size:18px}.contact-form{display:grid;gap:12px;max-width:680px;margin-top:30px}.contact-form input,.contact-form textarea{width:100%;padding:14px;border:1px solid color-mix(in srgb,${p.text} 16%,transparent);border-radius:12px;background:${p.surface};color:${p.text}}.contact-form textarea{min-height:150px}.contact-form button{justify-self:start;border:0;border-radius:999px;padding:13px 20px;background:${p.accent};color:${p.bg};font-weight:900}.store-footer{padding:30px 6%;border-top:1px solid color-mix(in srgb,${p.text} 12%,transparent);color:${p.muted}}.basket-overlay{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.66);backdrop-filter:blur(4px)}.basket-drawer{position:fixed;top:0;right:0;z-index:100;width:min(520px,100%);height:100dvh;padding:32px;background:#111;color:#fff;transform:translateX(104%);transition:transform .35s ease;display:flex;flex-direction:column}.basket-drawer.open{transform:translateX(0)}.basket-head{display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:18px}.basket-head h2{font-size:42px;margin:4px 0}.basket-close{border:0;background:transparent;color:#fff;font-size:36px}.basket-items{flex:1;overflow:auto;display:grid;align-content:start;gap:12px;padding:18px 0}.basket-item{display:grid;grid-template-columns:70px 1fr auto;gap:12px;align-items:center;border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:10px}.basket-item img,.basket-placeholder{width:70px;height:78px;border-radius:9px;object-fit:cover;background:#242424;display:grid;place-items:center}.basket-item h4{margin:0 0 4px}.basket-item p{margin:0;color:#aaa}.basket-qty{display:flex;align-items:center;gap:8px;margin-top:8px}.basket-qty button,.basket-remove{border:1px solid rgba(255,255,255,.15);background:transparent;color:#fff;border-radius:7px}.basket-qty button{width:28px;height:28px}.basket-remove{padding:6px 8px;margin-top:7px}.basket-empty{display:none;flex:1;place-content:center;text-align:center}.basket-empty.show{display:grid}.empty-icon{font-size:44px}.basket-summary{border-top:1px solid rgba(255,255,255,.12);padding-top:16px}.basket-summary>div{display:flex;justify-content:space-between;font-size:18px;margin-bottom:14px}.checkout-link{display:block;text-align:center;padding:15px;background:#fff;color:#111;font-weight:900}.checkout-card{max-width:760px;margin:30px auto 0;padding:26px;border-radius:18px;background:${p.surface};border:1px solid color-mix(in srgb,${p.text} 12%,transparent)}.checkout-card input,.checkout-card select{width:100%;padding:13px;margin:7px 0;border:1px solid color-mix(in srgb,${p.text} 15%,transparent);border-radius:10px;background:${p.bg};color:${p.text}}.checkout-note{color:${p.muted};font-size:14px}.checkout-pay{width:100%;margin-top:12px;padding:15px;border:0;border-radius:10px;background:${p.accent};color:${p.bg};font-weight:900}.product-detail{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}.product-detail-media{aspect-ratio:4/5;border-radius:24px;overflow:hidden;background:${p.surface}.product-detail-media img{width:100%;height:100%;object-fit:cover}.product-detail-copy h1{font-size:clamp(42px,6vw,72px);line-height:1;margin:12px 0}.product-detail-copy p{color:${p.muted}}body.basket-lock{overflow:hidden}@media(max-width:850px){.store-nav{align-items:flex-start}.store-nav nav{gap:10px;overflow-x:auto}.store-nav nav a{display:none}.store-hero{grid-template-columns:1fr;padding-top:110px}.hero-card{min-height:380px}.product-grid,.collection-grid{grid-template-columns:1fr 1fr}.product-detail{grid-template-columns:1fr}.basket-drawer{padding:24px 18px}}@media(max-width:560px){.product-grid,.collection-grid{grid-template-columns:1fr}.section{padding:70px 5%}.store-hero{padding:90px 5% 60px}.hero-card{min-height:310px}.basket-item{grid-template-columns:60px 1fr}.basket-item>div:last-child{grid-column:2}.basket-item img,.basket-placeholder{width:60px;height:68px}}`;
+}
+function storeJS(data){
+ var payload=JSON.stringify(data.products);
+ return `(function(){'use strict';var products=${payload};var currency='${data.currency}';var symbols={GBP:'£',USD:'$',EUR:'€'};var symbol=symbols[currency]||currency+' ';var key='vxeBasket_${slug(data.store)}';var basket=[];try{basket=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){basket=[]}var drawer=document.querySelector('.basket-drawer'),overlay=document.querySelector('.basket-overlay');function cash(v){return symbol+Number(v||0).toFixed(2)}function save(){localStorage.setItem(key,JSON.stringify(basket))}function count(){return basket.reduce(function(n,x){return n+x.qty},0)}function open(){if(!drawer)return;drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');overlay.hidden=false;document.body.classList.add('basket-lock')}function close(){if(!drawer)return;drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');overlay.hidden=true;document.body.classList.remove('basket-lock')}function render(){document.querySelectorAll('.basket-count').forEach(function(x){x.textContent=count()});if(!drawer)return;var root=drawer.querySelector('.basket-items'),empty=drawer.querySelector('.basket-empty'),subtotal=drawer.querySelector('.basket-subtotal');var total=basket.reduce(function(n,x){return n+x.price*x.qty},0);subtotal.textContent=cash(total);if(!basket.length){root.innerHTML='';empty.classList.add('show');return}empty.classList.remove('show');root.innerHTML=basket.map(function(x){return '<div class="basket-item" data-id="'+x.id+'">'+(x.image?'<img src="'+x.image+'" alt="">':'<div class="basket-placeholder">'+x.name.charAt(0)+'</div>')+'<div><h4>'+x.name+'</h4><p>'+cash(x.price)+'</p><div class="basket-qty"><button data-action="minus">−</button><span>'+x.qty+'</span><button data-action="plus">+</button></div></div><div><strong>'+cash(x.price*x.qty)+'</strong><br><button class="basket-remove" data-action="remove">Remove</button></div></div>'}).join('')}document.addEventListener('click',function(e){var add=e.target.closest('.add-basket');if(add){var id=add.dataset.id,item=basket.find(function(x){return x.id===id});if(item)item.qty++;else basket.push({id:id,name:add.dataset.name,price:Number(add.dataset.price)||0,image:add.dataset.image||'',qty:1});save();render();open();return}if(e.target.closest('.basket-open')){open();return}if(e.target.closest('.basket-close')||e.target.closest('.continue-shopping')||e.target===overlay){close();return}var action=e.target.closest('[data-action]');if(action){var row=action.closest('.basket-item'),item=basket.find(function(x){return x.id===row.dataset.id});if(!item)return;if(action.dataset.action==='plus')item.qty++;if(action.dataset.action==='minus')item.qty=Math.max(1,item.qty-1);if(action.dataset.action==='remove')basket=basket.filter(function(x){return x.id!==item.id});save();render()}});document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});var detail=document.querySelector('[data-product-detail]');if(detail){var params=new URLSearchParams(location.search),id=params.get('id')||products[0]?.id,p=products.find(function(x){return x.id===id})||products[0];if(p)detail.innerHTML='<div class="product-detail-media">'+(p.image?'<img src="'+p.image+'" alt="'+p.name+'">':'')+'</div><div class="product-detail-copy"><p class="eyebrow">'+p.category+'</p><h1>'+p.name+'</h1><p>'+p.description+'</p><h2>'+cash(p.price)+'</h2><button class="add-basket store-btn" data-id="'+p.id+'" data-name="'+p.name+'" data-price="'+p.price+'" data-image="'+p.image+'">Add to basket</button></div>'}render()})();`;
+}
+function buildStore(){
+ var data={
+  business:get('vxeBusiness','Client Business'),
+  store:get('vxeStoreName','Vinctec Store'),
+  type:get('vxeStoreType','Streetwear'),
+  description:get('vxeDescription','A modern online store built around strong products, clear branding and a smooth shopping experience.'),
+  template:selectedTemplate,
+  currency:get('vxeCurrency','GBP'),
+  email:get('vxeEmail','hello@example.com'),
+  phone:get('vxePhone','01279 000000'),
+  logo:get('vxeLogo',''),
+  pages:checkedPages(),
+  products:products()
+ };
+ data.palette=palette(data.template);
+ var nav=pageNav(data),basket=basketMarkup(data),css=storeCSS(data),js=storeJS(data);
+ var first=data.products[0]||{name:data.store,image:''};
+ var footer='<footer class="store-footer">© '+new Date().getFullYear()+' '+esc(data.store)+'. Store by Vinctec.</footer>';
+ function head(title,desc){return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><link rel="stylesheet" href="store.css"></head>'}
+ var home=head(data.store+' | Home',data.description)+'<body>'+nav+'<main><section class="store-hero"><div><p class="eyebrow">'+esc(data.type)+'</p><h1>'+esc(data.store)+'</h1><p>'+esc(data.description)+'</p><a class="store-btn" href="shop.html">Shop the collection</a></div><div class="hero-card">'+(first.image?'<img src="'+esc(first.image)+'" alt="'+esc(first.name)+'">':'<span>'+esc(data.store.charAt(0))+'</span>')+'</div></section><section class="section"><div class="section-head"><div><p class="eyebrow">New arrivals</p><h2>Featured products.</h2></div><p>Premium products selected for the latest collection.</p></div><div class="product-grid">'+productCards(data)+'</div></section></main>'+footer+basket+'<script src="store.js"><\\/script></body></html>';
+ var shop=head(data.store+' | Shop','Shop all products from '+data.store)+ '<body>'+nav+'<main class="section"><div class="section-head"><div><p class="eyebrow">Catalogue</p><h2>Shop all.</h2></div><p>Explore every product in the store.</p></div><div class="product-grid">'+productCards(data)+'</div></main>'+footer+basket+'<script src="store.js"><\\/script></body></html>';
+ var cats=[...new Set(data.products.map(function(p){return p.category}))];
+ var collections=head(data.store+' | Collections','Browse collections from '+data.store)+'<body>'+nav+'<main class="section"><div class="section-head"><div><p class="eyebrow">Discover</p><h2>Collections.</h2></div></div><div class="collection-grid">'+cats.map(function(c){return '<a class="collection-card" href="shop.html">'+esc(c)+'</a>'}).join('')+'</div></main>'+footer+basket+'<script src="store.js"><\\/script></body></html>';
+ var product=head(data.store+' | Product','Product details')+'<body>'+nav+'<main class="content-page"><section class="product-detail" data-product-detail></section></main>'+footer+basket+'<script src="store.js"><\\/script></body></html>';
+ var about=head('About '+data.store,'Learn about '+data.store)+'<body>'+nav+'<main class="content-page"><p class="eyebrow">Our story</p><h1>About '+esc(data.store)+'</h1><p>'+esc(data.description)+'</p><p>'+esc(data.store)+' is built around quality products, clear design and a customer-first shopping experience.</p></main>'+footer+basket+'<script src="store.js"><\\/script></body></html>';
+ var contact=head('Contact '+data.store,'Contact '+data.store)+'<body>'+nav+'<main class="content-page"><p class="eyebrow">Get in touch</p><h1>Contact us.</h1><p>Email: '+esc(data.email)+'<br>Phone: '+esc(data.phone)+'</p><form class="contact-form"><input placeholder="Your name"><input type="email" placeholder="Email address"><textarea placeholder="How can we help?"></textarea><button type="button">Send message</button></form></main>'+footer+basket+'<script src="store.js"><\\/script></body></html>';
+ var basketPage=head(data.store+' | Basket','Your basket')+'<body>'+nav+'<main class="content-page"><p class="eyebrow">Your selection</p><h1>Basket.</h1><p>Use the basket button in the navigation to review products and continue to checkout.</p><button class="basket-open store-btn">Open basket</button></main>'+footer+basket+'<script src="store.js"><\\/script></body></html>';
+ var checkout=head(data.store+' | Checkout','Checkout')+'<body>'+nav+'<main class="content-page"><p class="eyebrow">Secure checkout</p><h1>Checkout.</h1><div class="checkout-card"><input placeholder="Full name"><input type="email" placeholder="Email address"><input placeholder="Delivery address"><input placeholder="Town / City"><input placeholder="Postcode"><select><option>Standard delivery</option><option>Express delivery</option></select><p class="checkout-note">Payment processing is ready to connect to Stripe Checkout. Card details are not collected in this demo.</p><button class="checkout-pay" type="button">Continue to secure payment</button></div></main>'+footer+basket+'<script src="store.js"><\\/script></body></html>';
+ storeFiles={'index.html':home,'shop.html':shop,'collections.html':collections,'product.html':product,'basket.html':basketPage,'checkout.html':checkout,'store.css':css,'store.js':js};
+ if(data.pages.about)storeFiles['about.html']=about;
+ if(data.pages.contact)storeFiles['contact.html']=contact;
+ return data;
+}
+function previewStore(page){
+ if(!storeFiles['index.html'])buildStore();
+ page=page||'index.html';
+ var html=storeFiles[page]||storeFiles['index.html'];
+ html=html.replace('<link rel="stylesheet" href="store.css">','<style>'+storeFiles['store.css']+'</style>').replace('<script src="store.js"><\\/script>','<script>'+storeFiles['store.js']+'<\\/script>');
+ var frame=document.getElementById('vxeStorePreview');
+ frame.srcdoc=html;
+}
+function packageText(){
+ return Object.keys(storeFiles).map(function(name){return '==============================\nFILE: '+name+'\n==============================\n'+storeFiles[name]}).join('\n\n');
+}
 function install(){
- if(document.getElementById('vxCommerceAdmin'))return true;
- var anchor=document.getElementById('v70Studio')||document.getElementById('siteOpeningHours')||document.getElementById('siteMenuStyle');
- if(!anchor)return false;
- var box=document.createElement('section');box.id='vxCommerceAdmin';box.className='vx-commerce-admin';
- box.innerHTML='<h4>🛒 Vinctec Commerce</h4><p>Optional store module for client websites. Leave it disabled for normal service websites.</p><label class="vx-commerce-switch"><input id="vxCommerceEnabled" type="checkbox"> Enable online store and basket</label><div class="vx-commerce-fields" id="vxCommerceFields"><label>Products</label><textarea id="vxCommerceProducts" placeholder="Product name | 49.99 | https://image-url.jpg | Short description&#10;Second product | 29.99 | https://image-url.jpg | Short description"></textarea><div class="vx-commerce-help">One product per line: Name | Price | Image URL | Description</div><label>Checkout URL</label><input id="vxCommerceCheckout" type="url" placeholder="Stripe Payment Link or checkout URL (optional)"><div class="vx-commerce-help">Leave blank to show “Checkout unavailable” until payments are connected.</div></div><div class="vx-commerce-status" id="vxCommerceStatus">Commerce module ready.</div>';
- anchor.insertAdjacentElement('afterend',box);
- var enabled=document.getElementById('vxCommerceEnabled'),fields=document.getElementById('vxCommerceFields'),products=document.getElementById('vxCommerceProducts'),checkout=document.getElementById('vxCommerceCheckout'),status=document.getElementById('vxCommerceStatus');
- enabled.checked=localStorage.getItem('vinctecCommerceEnabled')==='true';
- products.value=localStorage.getItem('vinctecCommerceProducts')||'Signature Hoodie | 59.99 |  | Premium heavyweight hoodie\nEssential T-Shirt | 29.99 |  | Soft everyday cotton tee';
- checkout.value=localStorage.getItem('vinctecCommerceCheckout')||'';
- function sync(regenerate){
-  window.__vinctecCommerceEnabled=enabled.checked;
-  window.__vinctecCommerceProducts=products.value;
-  window.__vinctecCommerceCheckout=checkout.value.trim();
-  localStorage.setItem('vinctecCommerceEnabled',String(enabled.checked));
-  localStorage.setItem('vinctecCommerceProducts',products.value);
-  localStorage.setItem('vinctecCommerceCheckout',checkout.value.trim());
-  fields.classList.toggle('show',enabled.checked);
-  status.textContent=enabled.checked?'Online store enabled • '+products.value.split('\n').filter(function(x){return x.trim()}).length+' product(s)':'Online store disabled — existing website stays unchanged.';
-  if(regenerate&&typeof window.generateWebsiteStarter==='function')window.generateWebsiteStarter();
- }
- enabled.addEventListener('change',function(){sync(true)});
- products.addEventListener('change',function(){sync(true)});
- checkout.addEventListener('change',function(){sync(true)});
- sync(false);
+ if(document.getElementById('vxEcommerceBuilder'))return true;
+ var grid=document.querySelector('.tool-grid');
+ if(!grid)return false;
+ var section=document.createElement('section');
+ section.id='vxEcommerceBuilder';
+ section.innerHTML='<div class="vxe-head"><div><h3>🛍️ AI E-commerce Builder Pro</h3><p>A completely separate online-store builder. It does not use or modify the existing AI Website Builder.</p></div><span class="vxe-badge">V9.0</span></div><div class="vxe-tabs"><button class="vxe-tab active" data-vxe-tab="setup">Store setup</button><button class="vxe-tab" data-vxe-tab="design">Designs</button><button class="vxe-tab" data-vxe-tab="products">Products</button><button class="vxe-tab" data-vxe-tab="pages">Pages</button></div><div class="vxe-panel active" data-vxe-panel="setup"><div class="vxe-grid"><div class="vxe-field"><label>Business name</label><input id="vxeBusiness" placeholder="Client business"></div><div class="vxe-field"><label>Store name</label><input id="vxeStoreName" placeholder="Brand or store name"></div><div class="vxe-field"><label>Store type</label><input id="vxeStoreType" placeholder="Streetwear, beauty, jewellery..."></div><div class="vxe-field"><label>Currency</label><select id="vxeCurrency"><option value="GBP">GBP — £</option><option value="USD">USD — $</option><option value="EUR">EUR — €</option></select></div><div class="vxe-field vxe-full"><label>Store description</label><textarea id="vxeDescription" placeholder="Describe the brand and what it sells"></textarea></div><div class="vxe-field"><label>Email</label><input id="vxeEmail" placeholder="hello@store.com"></div><div class="vxe-field"><label>Phone</label><input id="vxePhone" placeholder="01279 000000"></div><div class="vxe-field vxe-full"><label>Logo URL (optional)</label><input id="vxeLogo" placeholder="https://..."></div></div></div><div class="vxe-panel" data-vxe-panel="design"><div class="vxe-template-grid"><button class="vxe-template active" data-template="streetwear"><span><strong>Streetwear</strong><small>Dark and bold</small></span></button><button class="vxe-template" data-template="luxury"><span><strong>Luxury</strong><small>Black and gold</small></span></button><button class="vxe-template" data-template="minimal"><span><strong>Minimal</strong><small>Clean and bright</small></span></button><button class="vxe-template" data-template="beauty"><span><strong>Beauty</strong><small>Soft premium pink</small></span></button><button class="vxe-template" data-template="electronics"><span><strong>Electronics</strong><small>Modern blue tech</small></span></button></div></div><div class="vxe-panel" data-vxe-panel="products"><div class="vxe-field"><label>Products</label><textarea id="vxeProducts">Signature Hoodie | 59.99 | Hoodies | https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&amp;fit=crop&amp;w=900&amp;q=80 | Premium heavyweight hoodie&#10;Essential T-Shirt | 29.99 | T-Shirts | https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&amp;fit=crop&amp;w=900&amp;q=80 | Soft everyday cotton tee&#10;Classic Trainers | 89.99 | Footwear | https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&amp;fit=crop&amp;w=900&amp;q=80 | Everyday trainers with a modern finish</textarea><div class="vxe-product-help">One product per line: Name | Price | Category | Image URL | Description</div></div></div><div class="vxe-panel" data-vxe-panel="pages"><div class="vxe-pages"><label class="vxe-page"><input type="checkbox" data-vxe-page="home" checked disabled> Home</label><label class="vxe-page"><input type="checkbox" data-vxe-page="shop" checked disabled> Shop</label><label class="vxe-page"><input type="checkbox" data-vxe-page="collections" checked disabled> Collections</label><label class="vxe-page"><input type="checkbox" data-vxe-page="product" checked disabled> Product page</label><label class="vxe-page"><input type="checkbox" data-vxe-page="about" checked> About</label><label class="vxe-page"><input type="checkbox" data-vxe-page="basket" checked disabled> Basket</label><label class="vxe-page"><input type="checkbox" data-vxe-page="checkout" checked disabled> Checkout</label><label class="vxe-page"><input type="checkbox" data-vxe-page="contact" checked> Contact</label></div></div><div class="vxe-actions"><button class="vxe-generate" id="vxeGenerate">Generate E-commerce Store</button><button class="vxe-secondary" id="vxePreview">Live Preview</button><button class="vxe-download" id="vxeDownloadZip">Download Store ZIP</button><button class="pin-btn" id="vxeCopy">Copy Store Package</button></div><div class="vxe-status" id="vxeStatus">E-commerce Builder ready. Your existing Website Builder is unchanged.</div><textarea id="vxeStoreOutput"></textarea><iframe id="vxeStorePreview" title="E-commerce store preview"></iframe>';
+ grid.appendChild(section);
+ section.querySelectorAll('[data-vxe-tab]').forEach(function(btn){btn.addEventListener('click',function(){section.querySelectorAll('[data-vxe-tab]').forEach(function(x){x.classList.toggle('active',x===btn)});section.querySelectorAll('[data-vxe-panel]').forEach(function(x){x.classList.toggle('active',x.dataset.vxePanel===btn.dataset.vxeTab)})})});
+ section.querySelectorAll('[data-template]').forEach(function(btn){btn.addEventListener('click',function(){selectedTemplate=btn.dataset.template;section.querySelectorAll('[data-template]').forEach(function(x){x.classList.toggle('active',x===btn)})})});
+ document.getElementById('vxeGenerate').addEventListener('click',function(){var d=buildStore();document.getElementById('vxeStoreOutput').value=packageText();previewStore();document.getElementById('vxeStatus').textContent=d.store+' generated with '+d.products.length+' products and '+Object.keys(storeFiles).length+' files.'});
+ document.getElementById('vxePreview').addEventListener('click',function(){previewStore()});
+ document.getElementById('vxeCopy').addEventListener('click',function(){if(!storeFiles['index.html'])buildStore();navigator.clipboard&&navigator.clipboard.writeText(packageText()).then(function(){document.getElementById('vxeStatus').textContent='Store package copied.'}).catch(function(){document.getElementById('vxeStoreOutput').style.display='block';document.getElementById('vxeStoreOutput').select();document.execCommand('copy');document.getElementById('vxeStoreOutput').style.display='none'})});
+ document.getElementById('vxeDownloadZip').addEventListener('click',async function(){if(!storeFiles['index.html'])buildStore();if(typeof JSZip==='undefined'){alert('ZIP tool is still loading. Try again in a few seconds.');return}var zip=new JSZip();Object.keys(storeFiles).forEach(function(name){zip.file(name,storeFiles[name])});var blob=await zip.generateAsync({type:'blob'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=slug(get('vxeStoreName','client-store'))+'-store.zip';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000)});
+ buildStore();previewStore();
  return true;
 }
 function boot(){var tries=0,t=setInterval(function(){tries++;if(install()||tries>80)clearInterval(t)},150)}
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
+})();
+</script>
+
+<style id="vx-studio-dashboard-style">
+#vxStudioDashboard{
+  margin:20px 0 24px;
+  padding:clamp(20px,3vw,30px);
+  border:1px solid rgba(56,189,248,.22);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(34,211,238,.13),transparent 34%),
+    radial-gradient(circle at 90% 80%,rgba(124,58,237,.14),transparent 38%),
+    linear-gradient(145deg,#07111f,#111c31);
+  box-shadow:0 26px 80px rgba(0,0,0,.25);
+}
+.vx-studio-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap;margin-bottom:18px}
+.vx-studio-heading h2{margin:0 0 7px;font-size:clamp(24px,4vw,36px);color:#fff}
+.vx-studio-heading p{margin:0;color:#9fb3ca;max-width:670px}
+.vx-studio-version{padding:7px 11px;border-radius:999px;background:rgba(14,165,233,.16);border:1px solid rgba(56,189,248,.32);color:#7dd3fc;font-size:12px;font-weight:900}
+.vx-studio-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.vx-studio-card{
+  position:relative;
+  min-height:190px;
+  padding:22px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;
+  overflow:hidden;
+  background:#0a1423;
+  color:#fff;
+  text-align:left;
+  cursor:pointer;
+  margin:0;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.vx-studio-card:hover{opacity:1;transform:translateY(-3px);border-color:#38bdf8;box-shadow:0 18px 46px rgba(0,0,0,.26)}
+.vx-studio-card::before{content:"";position:absolute;inset:0;opacity:.42;pointer-events:none}
+.vx-studio-card.business::before{background:radial-gradient(circle at 20% 25%,#0ea5e9,transparent 40%),radial-gradient(circle at 85% 80%,#1d4ed8,transparent 42%)}
+.vx-studio-card.store::before{background:radial-gradient(circle at 20% 25%,#7c3aed,transparent 40%),radial-gradient(circle at 85% 80%,#db2777,transparent 42%)}
+.vx-studio-card>*{position:relative;z-index:2}
+.vx-studio-icon{font-size:36px;margin-bottom:22px}
+.vx-studio-card h3{margin:0 0 8px;color:#fff;font-size:22px}
+.vx-studio-card p{margin:0;color:#b5c5d8;max-width:440px}
+.vx-studio-open{display:inline-flex;margin-top:18px;color:#7dd3fc;font-weight:900}
+.vx-builder-back{
+  display:none;
+  align-items:center;
+  gap:8px;
+  margin:0 0 14px!important;
+  padding:9px 13px!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  border-radius:999px!important;
+  background:#07111f!important;
+  color:#dbeafe!important;
+}
+.vx-builder-active .vx-builder-back{display:inline-flex}
+.vx-builder-hidden{display:none!important}
+.vx-builder-focus{animation:vxBuilderReveal .32s ease both}
+@keyframes vxBuilderReveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(max-width:720px){.vx-studio-grid{grid-template-columns:1fr}.vx-studio-card{min-height:170px}}
+</style>
+
+<script id="vx-studio-dashboard-script">
+(function(){
+'use strict';
+
+function addBackButton(target,label){
+  if(!target || target.querySelector(':scope > .vx-builder-back')) return;
+  var button=document.createElement('button');
+  button.type='button';
+  button.className='vx-builder-back';
+  button.innerHTML='← Back to Vinctec Studio';
+  button.setAttribute('aria-label','Back to builder selection');
+  button.addEventListener('click',showDashboard);
+  target.insertBefore(button,target.firstChild);
+}
+
+function getBusinessBuilder(){
+  return document.querySelector('.builder-pro-box');
+}
+
+function getStoreBuilder(){
+  return document.getElementById('vxEcommerceBuilder');
+}
+
+function showDashboard(){
+  var dashboard=document.getElementById('vxStudioDashboard');
+  var business=getBusinessBuilder();
+  var store=getStoreBuilder();
+
+  if(dashboard) dashboard.classList.remove('vx-builder-hidden');
+  [business,store].forEach(function(panel){
+    if(panel){
+      panel.classList.add('vx-builder-hidden');
+      panel.classList.remove('vx-builder-active','vx-builder-focus');
+    }
+  });
+
+  if(dashboard){
+    dashboard.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  sessionStorage.setItem('vinctecActiveBuilder','dashboard');
+}
+
+function openBuilder(type){
+  var dashboard=document.getElementById('vxStudioDashboard');
+  var business=getBusinessBuilder();
+  var store=getStoreBuilder();
+  var chosen=type==='store'?store:business;
+  var other=type==='store'?business:store;
+
+  if(!chosen){
+    setTimeout(function(){openBuilder(type)},180);
+    return;
+  }
+
+  if(dashboard) dashboard.classList.add('vx-builder-hidden');
+  if(other){
+    other.classList.add('vx-builder-hidden');
+    other.classList.remove('vx-builder-active','vx-builder-focus');
+  }
+
+  chosen.classList.remove('vx-builder-hidden');
+  chosen.classList.add('vx-builder-active','vx-builder-focus');
+  addBackButton(chosen,type==='store'?'E-commerce Store Builder':'Business Website Builder');
+  chosen.scrollIntoView({behavior:'smooth',block:'start'});
+  sessionStorage.setItem('vinctecActiveBuilder',type);
+}
+
+function install(){
+  if(document.getElementById('vxStudioDashboard')) return true;
+
+  var stats=document.querySelector('.stats-grid');
+  var grid=document.querySelector('.tool-grid');
+  var business=getBusinessBuilder();
+  if(!stats || !grid || !business) return false;
+
+  var dashboard=document.createElement('section');
+  dashboard.id='vxStudioDashboard';
+  dashboard.innerHTML=
+    '<div class="vx-studio-heading">'+
+      '<div><h2>What would you like to build?</h2><p>Choose a builder below. Each system stays separate, so the online-store tools do not overwrite your existing business website designs.</p></div>'+
+      '<span class="vx-studio-version">Vinctec Studio V9.0</span>'+
+    '</div>'+
+    '<div class="vx-studio-grid">'+
+      '<button type="button" class="vx-studio-card business" data-open-builder="business">'+
+        '<div class="vx-studio-icon">🌐</div><h3>Business Website</h3><p>Create professional websites for service businesses, portfolios, trades, restaurants and companies.</p><span class="vx-studio-open">Open Website Builder →</span>'+
+      '</button>'+
+      '<button type="button" class="vx-studio-card store" data-open-builder="store">'+
+        '<div class="vx-studio-icon">🛍️</div><h3>Online Store</h3><p>Create product-based websites with Shop, Collections, Product, About, Basket, Checkout and Contact pages.</p><span class="vx-studio-open">Open E-commerce Builder →</span>'+
+      '</button>'+
+    '</div>';
+
+  stats.insertAdjacentElement('afterend',dashboard);
+
+  dashboard.addEventListener('click',function(event){
+    var card=event.target.closest('[data-open-builder]');
+    if(card) openBuilder(card.dataset.openBuilder);
+  });
+
+  business.classList.add('vx-builder-hidden');
+
+  var tries=0;
+  var waitForStore=setInterval(function(){
+    tries++;
+    var store=getStoreBuilder();
+    if(store){
+      clearInterval(waitForStore);
+      store.classList.add('vx-builder-hidden');
+      addBackButton(store,'E-commerce Store Builder');
+
+      var remembered=sessionStorage.getItem('vinctecActiveBuilder');
+      if(remembered==='business' || remembered==='store') openBuilder(remembered);
+    }else if(tries>80){
+      clearInterval(waitForStore);
+    }
+  },150);
+
+  addBackButton(business,'Business Website Builder');
+
+  var remembered=sessionStorage.getItem('vinctecActiveBuilder');
+  if(remembered==='business') openBuilder('business');
+
+  window.vinctecShowStudio=showDashboard;
+  window.vinctecOpenBuilder=openBuilder;
+  return true;
+}
+
+function boot(){
+  var tries=0;
+  var timer=setInterval(function(){
+    tries++;
+    if(install() || tries>80) clearInterval(timer);
+  },150);
+}
+
+document.readyState==='loading'
+  ? document.addEventListener('DOMContentLoaded',boot)
+  : boot();
 })();
 </script>
 
