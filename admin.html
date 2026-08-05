@@ -197,9 +197,10 @@ button:hover {
 
     <button class="pin-btn" onclick="generateAIReply()">✨ Generate AI Reply</button>
     <button class="reply-btn" onclick="sendReply()">Send Email</button>
+    <button class="pin-btn" type="button" onclick="openGmailReply()">Open Gmail</button>
     <button onclick="closeReply()">Cancel</button>
 
-    <p id="emailStatus"></p>
+    <p id="emailStatus">Replies are sent to the email shown above. A delivery error means the recipient address needs checking.</p>
   </div>
 </div>
 
@@ -1295,36 +1296,75 @@ window.copyWebsiteStarter = function() {
   alert("Website starter code copied!");
 };
 
-window.sendReply = function() {
-  const toEmail = document.getElementById("replyTo").value;
-  const toName = document.getElementById("replyName").value;
-  const message = document.getElementById("replyMessage").value;
+function getReplyFields(){
+  return {
+    toEmail: document.getElementById("replyTo").value.trim(),
+    toName: document.getElementById("replyName").value.trim(),
+    message: document.getElementById("replyMessage").value
+  };
+}
+
+function validEmailAddress(value){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+window.openGmailReply = function(){
+  const f = getReplyFields();
   const emailStatus = document.getElementById("emailStatus");
 
-  if (!message.trim()) {
-    emailStatus.innerText = "Please type a message first.";
-    emailStatus.style.color = "red";
+  if(!validEmailAddress(f.toEmail)){
+    emailStatus.innerText = "This contact email is not valid. Ask the client to confirm their email address.";
+    emailStatus.style.color = "#f87171";
     return;
   }
 
-  emailStatus.innerText = "Sending...";
-  emailStatus.style.color = "#0ff";
+  const subject = encodeURIComponent("Re: Your message to Vinctec");
+  const body = encodeURIComponent(f.message);
+  window.open(
+    "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(f.toEmail) + "&su=" + subject + "&body=" + body,
+    "_blank",
+    "noopener,noreferrer"
+  );
+};
+
+window.sendReply = function() {
+  const f = getReplyFields();
+  const emailStatus = document.getElementById("emailStatus");
+
+  if (!validEmailAddress(f.toEmail)) {
+    emailStatus.innerText = "Invalid recipient email. Check the contact's email address before sending.";
+    emailStatus.style.color = "#f87171";
+    return;
+  }
+
+  if (!f.message.trim()) {
+    emailStatus.innerText = "Please type a message first.";
+    emailStatus.style.color = "#f87171";
+    return;
+  }
+
+  emailStatus.innerText = "Sending to " + f.toEmail + "...";
+  emailStatus.style.color = "#67e8f9";
 
   emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-    to_email: toEmail,
-    to_name: toName,
-    message: message
+    to_email: f.toEmail,
+    to_name: f.toName,
+    message: f.message
   })
   .then(() => {
-    emailStatus.innerText = "Email sent successfully!";
-    emailStatus.style.color = "lime";
+    emailStatus.innerText = "Email sent successfully to " + f.toEmail + ".";
+    emailStatus.style.color = "#86efac";
     if (currentReplyKey) {
       saveMessage(currentReplyKey, { status: "Contacted", read: true });
     }
   })
   .catch((error) => {
-    emailStatus.innerText = "Failed to send email: " + (error.text || JSON.stringify(error));
-    emailStatus.style.color = "red";
+    const raw = String(error && (error.text || error.message || JSON.stringify(error)) || "Unknown error");
+    const bounced = /550|5\.1\.1|does not exist|address not found|no such user|user unknown/i.test(raw);
+    emailStatus.innerText = bounced
+      ? "Delivery failed: this email address appears not to exist. Ask the contact to confirm it, then try again."
+      : "Failed to send email: " + raw;
+    emailStatus.style.color = "#f87171";
     console.error(error);
   });
 };
