@@ -611,8 +611,10 @@ function renderMessage(key, data) {
   const followUp = data.followUpDate || "";
 
   div.innerHTML = `
+    ${data.type ? `<span class="badge" style="background:${data.type === "Project Inquiry" ? "#7c3aed" : "#0891b2"};margin-bottom:6px;">${data.type}</span><br>` : ""}
     <b>Name:</b> ${data.name || ""}<br>
     <b>Email:</b> ${data.email || ""}<br>
+    ${data.role ? `<b>Role/Company:</b> ${data.role}<br>` : ""}
     <b>Message:</b> ${data.message || ""}<br>
     <small>${data.time ? new Date(data.time).toLocaleString() : ""}</small><br>
 
