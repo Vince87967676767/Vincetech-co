@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VINCENTEC.CO.UK | Quantum Spatial Core</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Apple-Style Smooth Scroll Engine (Lenis) -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;0,900;1,500;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Premium Glassmorphic Design System */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #020617;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #d946ef, #38bdf8);
+      border-radius: 999px;
+      border: 2px solid #020617;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #f472b6, #38bdf8);
+    }
+    html {
+      scrollbar-color: #d946ef #020617;
+      scrollbar-width: thin;
+    }
+    #cinematic-vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 40;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%);
+    }
+    .glass-nav {
+      background: rgba(8, 12, 22, 0.75);
+      backdrop-filter: blur(28px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    }
+    .glass-card:hover {
+      border-color: rgba(217, 70, 239, 0.4);
+      box-shadow: 0 0 50px rgba(217, 70, 239, 0.25);
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #a5f3fc 40%, #d946ef 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    /* Premium editorial typography for content headlines */
+    #heroTitleWrap h1,
+    section h2,
+    section h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      letter-spacing: -0.015em;
+    }
+    section p.font-light {
+      letter-spacing: 0.01em;
+    }
+    .glow-magenta {
+      filter: drop-shadow(0 0 20px rgba(217, 70, 239, 0.6));
+    }
+    @keyframes spin-gear {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes pulse-node {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.35); opacity: 1; }
+    }
+    .animate-gear {
+      animation: spin-gear 12s linear infinite;
+      transform-origin: 70px 55px;
+    }
+    .animate-node-1 { animation: pulse-node 2s ease-in-out infinite; }
+    .animate-node-2 { animation: pulse-node 2s ease-in-out 1s infinite; }
+    
+    #welcome-screen {
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes cinematicZoom {
+      0% { transform: scale(0.85); filter: blur(12px); opacity: 0; }
+      50% { filter: blur(0px); opacity: 1; }
+      100% { transform: scale(1); filter: blur(0px); opacity: 1; }
+    }
+    .cinematic-reveal {
+      animation: cinematicZoom 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      filter: blur(4px);
+      transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform, filter;
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    /* ===== VIDEO ASSET FALLBACKS ===== */
+    .video-fallback {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(140% 100% at 50% 100%, rgba(217,70,239,0.25), transparent 60%),
+        radial-gradient(100% 80% at 80% 0%, rgba(56,189,248,0.15), transparent 55%),
+        #020617;
+    }
+    .video-fallback.show { display: flex; }
+
+    /* ===== BACK TO TOP ===== */
+    #backToTop {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 60;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(15,23,42,0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(148,163,184,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 300ms ease, transform 300ms ease, border-color 200ms ease, bottom 300ms ease;
+      cursor: pointer;
+    }
+    #backToTop.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    #backToTop.banner-open { bottom: 104px; }
+    #backToTop:hover { border-color: rgba(217,70,239,0.6); }
+    #backToTop svg { width: 18px; height: 18px; stroke: #e2e8f0; }
+
+    /* ===== PRIVACY BANNER ===== */
+    #privacyBanner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(14px);
+      z-index: 70;
+      width: calc(100% - 40px);
+      max-width: 560px;
+      background: rgba(9,12,22,0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(148,163,184,0.18);
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 450ms ease, transform 450ms ease;
+    }
+    #privacyBanner.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+    #privacyBanner p { color: #cbd5e1; font-size: 12.5px; flex: 1; min-width: 200px; line-height: 1.5; }
+    #privacyBanner .p-btns { display: flex; gap: 10px; }
+    #privacyBanner button {
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    #privacyBanner .p-accept { background: linear-gradient(90deg,#d946ef,#38bdf8); color: #0a0a0f; border: none; }
+    #privacyBanner .p-decline { background: transparent; color: #94a3b8; border: 1px solid rgba(148,163,184,0.3); }
+
+    /* ===== SIGNATURE 3D CANVAS ===== */
+    #signature {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      background: #030308;
+    }
+    #signatureCanvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .signature-label {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      text-align: center;
+      padding-bottom: 8vh;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 900ms ease, transform 900ms ease;
+      pointer-events: none;
+    }
+    .signature-label.show { opacity: 1; transform: translateY(0); }
+    .signature-label span {
+      display: block;
+      font-family: monospace;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: #f472b6;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .signature-label p { color: #94a3b8; font-size: 14px; font-weight: 300; letter-spacing: 0.05em; }
+
+    /* Interactive Project Card Glow Effect */
+    .project-card {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s ease;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      transition: 0.6s;
+    }
+    .project-card:hover::before {
+      left: 100%;
+    }
+    .project-card:hover {
+      transform: translateY(-8px) scale(1.01);
+    }
+
+    /* ===== HERO — LIVING TITLE ===== */
+    @keyframes heroFloat {
+      0%   { transform: translateY(0px) rotate(0deg); }
+      25%  { transform: translateY(-9px) rotate(-0.4deg); }
+      50%  { transform: translateY(2px) rotate(0.3deg); }
+      75%  { transform: translateY(-5px) rotate(0.2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    @keyframes heroGlowPulse {
+      0%, 100% { filter: drop-shadow(0 0 18px rgba(217,70,239,0.25)); }
+      50% { filter: drop-shadow(0 0 34px rgba(56,189,248,0.35)); }
+    }
+    .hero-live {
+      animation: heroFloat 7s ease-in-out infinite, heroGlowPulse 5s ease-in-out infinite;
+      will-change: transform, filter;
+    }
+    .hero-float {
+      animation: heroFloat 7s ease-in-out infinite;
+      will-change: transform;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-live, .hero-float { animation: none; }
+    }
+    #heroTitleWrap {
+      position: relative;
+      width: 100%;
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+    #heroParticles {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 140%;
+      height: 170%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 0;
+      mix-blend-mode: screen;
+    }
+    #heroTitleWrap h1 {
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* ===== HERO — INTERACTIVE TECH CORE VIEWPORT ===== */
+    #techCoreWrap {
+      touch-action: none;
+    }
+    #techCoreWrap canvas {
+      cursor: grab;
+    }
+    #techCoreWrap.dragging canvas {
+      cursor: grabbing;
+    }
+    #techCoreTooltip {
+      transform: translate(-50%, -140%);
+      transition: opacity 0.15s ease;
+    }
+  </style>
+
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased overflow-x-hidden selection:bg-fuchsia-500 selection:text-white">
+
+  <div id="cinematic-vignette"></div>
+
+  <!-- Welcome Overlay Loader -->
+  <div id="welcome-screen" class="fixed inset-0 z-[100] bg-slate-950/98 backdrop-blur-3xl flex flex-col items-center justify-center p-6 text-center border-b border-fuchsia-500/20">
+    <div class="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
+      <div class="w-[500px] h-[500px] bg-fuchsia-600/15 rounded-full blur-[120px] animate-pulse"></div>
+      <div class="w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[100px] absolute translate-x-32 translate-y-20"></div>
+    </div>
+    <div class="relative z-10 flex flex-col items-center cinematic-reveal">
+      <div class="relative w-36 h-36 md:w-44 md:h-44 mb-6 glow-magenta flex items-center justify-center">
+        <div class="absolute inset-0 bg-fuchsia-500/20 rounded-full blur-2xl -z-10 animate-pulse"></div>
+        <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[0_0_15px_rgba(217,70,239,0.5)]" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 20 L45 80 L55 80 L75 20" stroke="url(#v-grad-hero)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M32 30 L45 60" stroke="url(#v-grad-hero)" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="20" cy="20" r="5" fill="#f472b6" class="animate-node-1" />
+          <circle cx="32" cy="30" r="4" fill="#c084fc" class="animate-node-2" />
+          <path d="M 55 55 M 70 40 A 15 15 0 0 1 85 55 A 15 15 0 0 1 70 70 A 15 15 0 0 1 55 55" stroke="#38bdf8" stroke-width="4" stroke-dasharray="6 3" class="animate-gear" />
+          <defs>
+            <linearGradient id="v-grad-hero" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f472b6" />
+              <stop offset="50%" stop-color="#d946ef" />
+              <stop offset="100%" stop-color="#38bdf8" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="relative w-64 h-36 md:w-80 md:h-44 mb-8 rounded-2xl overflow-hidden border border-fuchsia-500/40 shadow-[0_0_50px_rgba(217,70,239,0.25)] bg-black/80">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover scale-105 filter contrast-125">
+          <source src="logomotion-720p (1).mp4" type="video/mp4" />
+          Your browser does not support HTML5 video.
+        </video>
+        <div class="video-fallback"><span class="text-xs font-mono text-cyan-400 tracking-widest">[ LOGO MOTION ASSET PLACEHOLDER ]</span></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10 opacity-60"></div>
+      </div>
+      <h1 class="text-3xl md:text-5xl font-black font-mono tracking-widest text-white mb-3 drop-shadow-lg">
+        WELCOME TO <span class="text-gradient">VINCENTEC.CO.UK</span>
+      </h1>
+      <p class="text-slate-400 text-xs md:text-sm max-w-md font-light tracking-widest uppercase leading-relaxed">
+        Spatial Engineering • Procedural Graphics • Next-Gen Interfaces
+      </p>
+      <div class="mt-8 w-64 h-1 bg-slate-900 rounded-full overflow-hidden border border-slate-800/80 relative shadow-inner">
+        <div id="progress-bar" class="h-full w-0 bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-blue-600 rounded-full transition-all duration-75 ease-linear shadow-[0_0_12px_rgba(217,70,239,0.8)]"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic WebGL Background -->
+  <canvas id="bg-canvas" class="fixed inset-0 w-full h-full -z-10 pointer-events-none"></canvas>
+
+  <!-- Sticky Glass Navigation Header -->
+  <header class="sticky top-0 z-50 glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-8 py-5 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 glow-magenta transition-transform group-hover:scale-105">
+          <svg viewBox="0 0 100 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 20 L45 80 L55 80 L75 20" stroke="url(#v-grad-nav)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M32 30 L45 60" stroke="url(#v-grad-nav)" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="20" cy="20" r="5" fill="#f472b6" class="animate-node-1" />
+            <circle cx="32" cy="30" r="4" fill="#c084fc" class="animate-node-2" />
+            <path d="M 55 55 M 70 40 A 15 15 0 0 1 85 55 A 15 15 0 0 1 70 70 A 15 15 0 0 1 55 55" stroke="#38bdf8" stroke-width="4" stroke-dasharray="6 3" class="animate-gear" />
+            <defs>
+              <linearGradient id="v-grad-nav" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f472b6" />
+                <stop offset="100%" stop-color="#38bdf8" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="text-lg font-bold tracking-widest text-white font-mono">VINCENTEC<span class="text-fuchsia-400">.CO.UK</span></span>
+      </a>
+      <nav class="hidden md:flex space-x-10 text-xs font-mono tracking-widest text-slate-400">
+        <a href="#about" class="hover:text-white transition duration-200">ABOUT</a>
+        <a href="#services" class="hover:text-white transition duration-200">SOLUTIONS</a>
+        <a href="#showcase" class="hover:text-white transition duration-200">SHOWCASE</a>
+        <a href="#feedback" class="hover:text-white transition duration-200">FEEDBACK</a>
+        <a href="#contact" class="hover:text-white transition duration-200">CONTACT</a>
+      </nav>
+      <a href="#contact" class="hidden md:inline-block px-6 py-2.5 text-xs font-mono font-semibold tracking-widest text-white bg-gradient-to-r from-fuchsia-600 via-cyan-500 to-blue-600 rounded-full hover:shadow-lg hover:shadow-fuchsia-500/30 transition duration-300 uppercase">
+        Initialize
+      </a>
+      <button id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false" class="md:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 group">
+        <span class="mobile-burger-line w-6 h-0.5 bg-slate-300 rounded-full transition-all duration-300"></span>
+        <span class="mobile-burger-line w-6 h-0.5 bg-slate-300 rounded-full transition-all duration-300"></span>
+        <span class="mobile-burger-line w-6 h-0.5 bg-slate-300 rounded-full transition-all duration-300"></span>
+      </button>
+    </div>
+    <nav id="mobileMenu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+      <div class="px-8 pb-6 pt-2 flex flex-col gap-1 text-sm font-mono tracking-widest text-slate-300 border-t border-slate-800/60">
+        <a href="#about" class="py-3 border-b border-slate-800/60 hover:text-white transition">ABOUT</a>
+        <a href="#services" class="py-3 border-b border-slate-800/60 hover:text-white transition">SOLUTIONS</a>
+        <a href="#showcase" class="py-3 border-b border-slate-800/60 hover:text-white transition">SHOWCASE</a>
+        <a href="#feedback" class="py-3 border-b border-slate-800/60 hover:text-white transition">FEEDBACK</a>
+        <a href="#contact" class="py-3 hover:text-white transition">CONTACT</a>
+        <a href="#contact" class="mt-4 text-center px-6 py-3 text-white bg-gradient-to-r from-fuchsia-600 via-cyan-500 to-blue-600 rounded-full uppercase font-semibold">
+          Initialize
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero" class="min-h-[90vh] max-w-6xl mx-auto px-6 flex flex-col justify-center items-center text-center relative py-20">
+    <div id="logoWrap" class="reveal hero-float relative w-24 h-24 md:w-32 md:h-32 mb-8">
+      <svg viewBox="0 0 100 100" class="relative w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 20 L45 80 L55 80 L75 20" stroke="url(#v-grad-hero)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M32 30 L45 60" stroke="url(#v-grad-hero)" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="20" cy="20" r="5" fill="#f472b6" class="animate-node-1" />
+        <circle cx="32" cy="30" r="4" fill="#c084fc" class="animate-node-2" />
+        <path d="M 55 55 M 70 40 A 15 15 0 0 1 85 55 A 15 15 0 0 1 70 70 A 15 15 0 0 1 55 55" stroke="#38bdf8" stroke-width="4" stroke-dasharray="6 3" class="animate-gear" />
+        <defs>
+          <linearGradient id="v-grad-hero" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f472b6" />
+            <stop offset="100%" stop-color="#38bdf8" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div id="heroTitleWrap">
+      <canvas id="heroParticles"></canvas>
+      <h1 class="reveal hero-live text-6xl md:text-8xl font-black tracking-tight mb-8 leading-none">
+        Experience <br />
+        <span class="text-gradient">innovation</span>
+      </h1>
+    </div>
+    <p class="reveal text-slate-400 text-base md:text-xl mb-12 max-w-2xl font-light leading-relaxed tracking-wide">
+      A reactive kinetic singularity surrounded by dynamic holographic grid layers, volumetric lighting, and particle shockwaves.
+    </p>
+    <div class="reveal flex flex-col sm:flex-row gap-5 justify-center">
+      <a href="#about" class="px-9 py-4 font-mono text-xs font-bold tracking-widest text-white bg-gradient-to-r from-fuchsia-600 to-blue-600 rounded-full hover:shadow-xl hover:shadow-fuchsia-500/30 transition duration-300 uppercase">
+        Explore Core
+      </a>
+      <a href="#showcase" class="px-9 py-4 font-mono text-xs font-bold tracking-widest text-slate-300 glass-card rounded-full hover:bg-white/10 transition duration-300 uppercase">
+        View Experiments
+      </a>
+    </div>
+    <div class="reveal grid grid-cols-3 gap-6 md:gap-16 mt-16 pt-10 border-t border-slate-800/60 max-w-xl w-full">
+      <div class="text-center">
+        <p class="text-3xl md:text-4xl font-black text-gradient">1,800</p>
+        <p class="text-slate-500 text-[10px] md:text-[11px] font-mono tracking-widest mt-1">LIVE PARTICLES</p>
+      </div>
+      <div class="text-center">
+        <p class="text-3xl md:text-4xl font-black text-gradient">60fps</p>
+        <p class="text-slate-500 text-[10px] md:text-[11px] font-mono tracking-widest mt-1">SUSTAINED RENDER</p>
+      </div>
+      <div class="text-center">
+        <p class="text-3xl md:text-4xl font-black text-gradient">GPU</p>
+        <p class="text-slate-500 text-[10px] md:text-[11px] font-mono tracking-widest mt-1">SHADER-DRIVEN</p>
+      </div>
+    </div>
+
+    <!-- Interactive Tech Core — drag to rotate, hover the nodes -->
+    <div class="reveal mt-16 w-full max-w-sm mx-auto">
+      <div id="techCoreWrap" class="relative aspect-square overflow-visible">
+        <canvas id="techCore3D" class="w-full h-full block"></canvas>
+        <div id="techCoreTooltip" class="hidden absolute left-0 top-0 px-3 py-1.5 rounded-full bg-slate-950/95 border border-fuchsia-500/30 text-[10px] font-mono text-fuchsia-300 tracking-widest pointer-events-none whitespace-nowrap z-10"></div>
+        <span class="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-mono text-slate-500 tracking-widest uppercase pointer-events-none">Drag to explore // hover the nodes</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Particle Intelligence Canvas Section -->
+  <section id="signature">
+    <canvas id="signatureCanvas"></canvas>
+    <div class="signature-label" id="signatureLabel">
+      <span>// Particle Intelligence</span>
+      <p>1,800 autonomous points, resolving on command.</p>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-28 border-t border-slate-800/50 bg-slate-950/70 backdrop-blur-xl">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="reveal glass-card p-10 md:p-14 rounded-3xl relative overflow-hidden">
+        <div class="flex flex-col md:flex-row gap-12 items-center">
+          <div class="relative w-48 h-48 rounded-2xl overflow-hidden border border-fuchsia-500/30 glow-magenta shrink-0 bg-slate-900 flex items-center justify-center">
+            <div class="absolute inset-0 bg-gradient-to-tr from-fuchsia-600/30 to-cyan-500/30"></div>
+            <span class="font-mono text-fuchsia-400 text-5xl font-bold tracking-tighter">VT</span>
+          </div>
+          <div>
+            <span class="text-xs font-mono text-fuchsia-400 tracking-widest uppercase">// ARCHITECT & ENGINEER</span>
+            <h2 class="text-4xl font-bold text-white mt-2 mb-6 tracking-tight">About Vince</h2>
+            <p class="text-slate-300 text-base leading-relaxed mb-4 font-light">
+              At <span class="text-white font-medium">VINCENTEC.CO.UK</span>, I build luxury spatial web systems that break the mold of static modern templates.
+            </p>
+            <p class="text-slate-400 text-sm leading-relaxed mb-8 font-light">
+              Interactive physics engines, real-time particle shockwaves, and custom shaders deliver unparalleled visual intrigue without compromising render speeds.
+            </p>
+            <div class="flex flex-wrap gap-3 font-mono text-xs">
+              <span class="px-4 py-2 glass-card rounded-full text-fuchsia-300 border-fuchsia-500/20">Custom Particle Shaders</span>
+              <span class="px-4 py-2 glass-card rounded-full text-cyan-300 border-cyan-500/20">Kinematic Physics</span>
+              <span class="px-4 py-2 glass-card rounded-full text-blue-300 border-blue-500/20">High-FPS WebGL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities Section -->
+  <section id="services" class="py-28 border-t border-slate-800/50 bg-slate-950/60 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="reveal text-center mb-20">
+        <span class="text-xs font-mono text-fuchsia-400 tracking-widest uppercase">// CORE DISCIPLINES</span>
+        <h2 class="text-4xl font-bold text-white mt-2 tracking-tight">Capabilities</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="reveal glass-card p-10 rounded-3xl transition duration-500 hover:-translate-y-2">
+          <div class="w-12 h-12 rounded-2xl bg-fuchsia-500/10 border border-fuchsia-500/30 flex items-center justify-center font-mono font-bold text-fuchsia-400 mb-8">01</div>
+          <h3 class="text-xl font-bold text-white mb-4">Kinetic Physics</h3>
+          <p class="text-slate-400 text-sm leading-relaxed font-light">Custom GPU velocity fields and real-time gravity pull systems reacting to reader gestures.</p>
+        </div>
+        <div class="reveal glass-card p-10 rounded-3xl transition duration-500 hover:-translate-y-2">
+          <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center font-mono font-bold text-cyan-400 mb-8">02</div>
+          <h3 class="text-xl font-bold text-white mb-4">Generative Visuals</h3>
+          <p class="text-slate-400 text-sm leading-relaxed font-light">Ethereal particle rings and dynamically distorted geometries synchronized with website events.</p>
+        </div>
+        <div class="reveal glass-card p-10 rounded-3xl transition duration-500 hover:-translate-y-2">
+          <div class="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center font-mono font-bold text-blue-400 mb-8">03</div>
+          <h3 class="text-xl font-bold text-white mb-4">High-Speed Rendering</h3>
+          <p class="text-slate-400 text-sm leading-relaxed font-light">Lightweight Three.js pipelines tailored for continuous 60fps interaction on mobile & desktop.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase Grid Section -->
+  <section id="showcase" class="py-28 border-t border-slate-800/50 bg-slate-950/80">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="reveal flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+        <div>
+          <span class="text-xs font-mono text-fuchsia-400 tracking-widest uppercase">// SELECTED WORKS</span>
+          <h2 class="text-4xl md:text-5xl font-black text-white mt-2 tracking-tight">Featured Projects</h2>
+        </div>
+        <p class="text-slate-400 text-sm max-w-sm font-light">Explore real-time spatial web applications and GPU dynamic experiments.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        
+        <!-- Project 1 -->
+        <div class="reveal glass-card project-card rounded-3xl p-6 md:p-8 flex flex-col justify-between group">
+          <div class="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-slate-800 bg-black/60 shadow-2xl">
+            <video autoplay muted loop playsinline class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+              <source src="Screen Recording 2026-09-02 225813 (1).mp4" type="video/mp4">
+            </video>
+            <div class="video-fallback"><span class="text-xs font-mono text-cyan-400 tracking-widest">[ DEMO REEL 01 // QUANTUM SWARM ]</span></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
+            <span class="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur-md rounded-full border border-fuchsia-500/30 text-[10px] font-mono text-fuchsia-300">01 // PHYSX ENGINE</span>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold text-white mb-2 tracking-tight group-hover:text-fuchsia-300 transition-colors">Quantum Swarm Architecture</h3>
+            <p class="text-slate-400 text-sm font-light leading-relaxed mb-6">5,000 GPU-computed autonomous kinetic particles responding dynamically to user cursor velocity and click impulses.</p>
+            <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
+              <span class="text-xs font-mono text-cyan-400">WebGL • Three.js • Shaders</span>
+              <button onclick="openModal('Quantum Swarm Architecture', '5,000 GPU-computed particles responding to user mouse speed and click impulses.', 'Screen Recording 2026-09-02 225813 (1).mp4')" class="px-5 py-2 bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-500 hover:to-blue-500 rounded-full text-xs font-mono font-bold text-white uppercase tracking-wider transition duration-300 shadow-md">
+                Launch Experience
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="reveal glass-card project-card rounded-3xl p-6 md:p-8 flex flex-col justify-between group">
+          <div class="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-slate-800 bg-black/60 shadow-2xl">
+            <video autoplay muted loop playsinline class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+              <source src="Screen Recording 2026-09-03 075714 (1).mp4" type="video/mp4">
+            </video>
+            <div class="video-fallback"><span class="text-xs font-mono text-cyan-400 tracking-widest">[ DEMO REEL 02 // CHRONOS CORE ]</span></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
+            <span class="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur-md rounded-full border border-cyan-500/30 text-[10px] font-mono text-cyan-300">02 // GEOMETRY FIELD</span>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold text-white mb-2 tracking-tight group-hover:text-cyan-300 transition-colors">Chronos Spatial Core</h3>
+            <p class="text-slate-400 text-sm font-light leading-relaxed mb-6">An ethereal wireframe Icosahedron geometry matrix wrapped in dynamic counter-rotating orbital rings with real-time light refraction.</p>
+            <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
+              <span class="text-xs font-mono text-cyan-400">Procedural Mesh • GLSL</span>
+              <button onclick="openModal('Chronos Spatial Core', 'Wireframe geometry matrix emitting dynamic light refraction vectors.', 'Screen Recording 2026-09-03 075714 (1).mp4')" class="px-5 py-2 bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-500 hover:to-blue-500 rounded-full text-xs font-mono font-bold text-white uppercase tracking-wider transition duration-300 shadow-md">
+                Launch Experience
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Banner Call To Action Card -->
+      <div class="reveal mt-12 glass-card rounded-3xl p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border-fuchsia-500/30">
+        <div class="absolute inset-0 bg-gradient-to-r from-fuchsia-600/10 via-cyan-500/10 to-transparent pointer-events-none"></div>
+        <div class="relative z-10 max-w-xl">
+          <span class="text-xs font-mono text-fuchsia-400 tracking-widest uppercase">// NEXT GENERATION WEB</span>
+          <h3 class="text-3xl font-bold text-white mt-2 mb-2">Ready to elevate your digital presence?</h3>
+          <p class="text-slate-400 text-sm font-light">Currently accepting limited high-impact spatial web design & engine integration commissions.</p>
+        </div>
+        <a href="#contact" class="relative z-10 px-8 py-4 bg-gradient-to-r from-fuchsia-600 via-cyan-500 to-blue-600 hover:shadow-xl hover:shadow-fuchsia-500/30 rounded-full text-xs font-mono font-bold text-white uppercase tracking-widest whitespace-nowrap transition duration-300">
+          Start A Project
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Feedback Section -->
+  <section id="feedback" class="py-28 border-t border-slate-800/50 bg-slate-950/70 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="reveal flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+        <div>
+          <span class="text-xs font-mono text-fuchsia-400 tracking-widest uppercase">// Transmissions received</span>
+          <h2 class="text-4xl md:text-5xl font-black text-white mt-2 tracking-tight">People Feedback</h2>
+        </div>
+        <p class="text-slate-400 text-sm max-w-sm font-light">Notes from people who commissioned a spatial build and lived with the result after launch.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="reveal glass-card p-8 rounded-3xl flex flex-col">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 shrink-0 rounded-full bg-gradient-to-tr from-fuchsia-600/40 to-cyan-500/40 border border-fuchsia-500/30 flex items-center justify-center font-mono font-bold text-fuchsia-300">RM</div>
+            <div>
+              <p class="text-white font-semibold text-sm">Rachel Moss</p>
+              <p class="text-slate-500 text-xs font-mono tracking-wide">Founder, Halcyon Studio</p>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed font-light flex-1">The reactor on our landing page is the thing people screenshot and send to their friends. It stayed smooth even on my three-year-old laptop.</p>
+        </div>
+
+        <div class="reveal glass-card p-8 rounded-3xl flex flex-col">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 shrink-0 rounded-full bg-gradient-to-tr from-cyan-500/40 to-blue-600/40 border border-cyan-500/30 flex items-center justify-center font-mono font-bold text-cyan-300">DK</div>
+            <div>
+              <p class="text-white font-semibold text-sm">Daniel Kessler</p>
+              <p class="text-slate-500 text-xs font-mono tracking-wide">Creative Director, Nordfield</p>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed font-light flex-1">Vince turned a vague brief into a working shader prototype within days, then kept refining it with us until the physics felt right, not just fast.</p>
+        </div>
+
+        <div class="reveal glass-card p-8 rounded-3xl flex flex-col">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 shrink-0 rounded-full bg-gradient-to-tr from-blue-600/40 to-fuchsia-600/40 border border-blue-500/30 flex items-center justify-center font-mono font-bold text-blue-300">SA</div>
+            <div>
+              <p class="text-white font-semibold text-sm">Sofia Alvarez</p>
+              <p class="text-slate-500 text-xs font-mono tracking-wide">Product Lead, Orbital Labs</p>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed font-light flex-1">We asked for something that felt alive under the cursor. What we got was a site our own engineers kept opening just to play with.</p>
+        </div>
+      </div>
+
+      <!-- Feedback Form -->
+      <div class="reveal mt-12 glass-card rounded-3xl p-8 md:p-12">
+        <div class="text-center mb-8">
+          <span class="text-xs font-mono text-fuchsia-400 tracking-widest uppercase">// Add your signal</span>
+          <h3 class="text-2xl font-bold text-white mt-2 tracking-tight">Leave Feedback</h3>
+        </div>
+        <form onsubmit="handleFeedbackSubmit(event)" class="space-y-6 max-w-xl mx-auto">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs font-mono text-slate-400 uppercase tracking-widest mb-2">Name</label>
+              <input id="feedback-name" type="text" required placeholder="Your name" class="w-full px-5 py-4 bg-slate-900/60 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-fuchsia-500 transition text-sm font-light" />
+            </div>
+            <div>
+              <label class="block text-xs font-mono text-slate-400 uppercase tracking-widest mb-2">Email</label>
+              <input id="feedback-email" type="email" required placeholder="you@company.com" class="w-full px-5 py-4 bg-slate-900/60 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-fuchsia-500 transition text-sm font-light" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-mono text-slate-400 uppercase tracking-widest mb-2">Role / Company</label>
+            <input id="feedback-role" type="text" placeholder="Optional" class="w-full px-5 py-4 bg-slate-900/60 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-fuchsia-500 transition text-sm font-light" />
+          </div>
+          <div>
+            <label class="block text-xs font-mono text-slate-400 uppercase tracking-widest mb-2">Your Feedback</label>
+            <textarea id="feedback-message" rows="4" required placeholder="What was it like working on a spatial build with us?" class="w-full px-5 py-4 bg-slate-900/60 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-fuchsia-500 transition text-sm font-light"></textarea>
+          </div>
+          <button type="submit" id="feedback-submit-btn" class="w-full py-5 bg-gradient-to-r from-fuchsia-600 via-cyan-500 to-blue-600 font-mono text-xs font-bold tracking-widest text-white rounded-2xl hover:shadow-xl hover:shadow-fuchsia-500/25 transition duration-300 uppercase disabled:opacity-50">
+            Submit Feedback
+          </button>
+        </form>
+        <div id="feedback-status" class="hidden mt-6 text-center text-xs font-mono"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-28 max-w-3xl mx-auto px-6">
+    <div class="reveal glass-card p-10 md:p-14 rounded-3xl">
+      <div class="text-center mb-10">
+        <span class="text-xs font-mono text-fuchsia-400 tracking-widest uppercase">// INITIATE ENGAGEMENT</span>
+        <h2 class="text-4xl font-bold text-white mt-2 tracking-tight">Start a Project</h2>
+      </div>
+      <form onsubmit="handleFormSubmit(event)" class="space-y-6">
+        <div>
+          <label class="block text-xs font-mono text-slate-400 uppercase tracking-widest mb-2">Name</label>
+          <input id="project-name" type="text" required placeholder="Alex Mercer" class="w-full px-5 py-4 bg-slate-900/60 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-fuchsia-500 transition text-sm font-light" />
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-slate-400 uppercase tracking-widest mb-2">Email</label>
+          <input id="project-email" type="email" required placeholder="alex@vincentec.co.uk" class="w-full px-5 py-4 bg-slate-900/60 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-fuchsia-500 transition text-sm font-light" />
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-slate-400 uppercase tracking-widest mb-2">Project Vision</label>
+          <textarea id="project-message" rows="4" required placeholder="Tell us about your 3D spatial project..." class="w-full px-5 py-4 bg-slate-900/60 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-fuchsia-500 transition text-sm font-light"></textarea>
+        </div>
+        <button type="submit" id="project-submit-btn" class="w-full py-5 bg-gradient-to-r from-fuchsia-600 via-cyan-500 to-blue-600 font-mono text-xs font-bold tracking-widest text-white rounded-2xl hover:shadow-xl hover:shadow-fuchsia-500/25 transition duration-300 uppercase disabled:opacity-50">
+          Transmit Request
+        </button>
+      </form>
+      <div id="form-status" class="hidden mt-6 text-center text-xs font-mono"></div>
+    </div>
+  </section>
+
+  <!-- Interactive Project Video Modal -->
+  <div id="video-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-2xl hidden flex items-center justify-center p-6">
+    <div class="glass-card max-w-3xl w-full p-8 rounded-3xl relative">
+      <button onclick="closeModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white font-mono text-xs">✕ CLOSE</button>
+      <h3 id="modal-title" class="text-2xl font-bold text-white mb-2"></h3>
+      <p id="modal-desc" class="text-slate-400 text-sm mb-6 font-light"></p>
+      <div id="modal-video-container" class="relative w-full aspect-video bg-slate-900 rounded-2xl overflow-hidden flex items-center justify-center border border-slate-800">
+        <span class="text-xs font-mono text-cyan-400">[ Interactive Physics & Spatial Engine Running ]</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back To Top Floating Button -->
+  <button id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+  </button>
+
+  <!-- Privacy Dialog -->
+  <div id="privacyBanner" role="dialog" aria-live="polite">
+    <p>This site uses cookies to remember your preferences. No data is sold or shared.</p>
+    <div class="p-btns">
+      <button class="p-decline" id="privacyDecline">Decline</button>
+      <button class="p-accept" id="privacyAccept">Accept</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      /* ===== APPLE-STYLE LENIS SMOOTH SCROLL ENGINE ===== */
+      const lenis = new Lenis({
+        duration: 1.45,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: 2
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      window.smoothScrollTo = (y) => lenis.scrollTo(y);
+
+      // Route every in-page anchor (nav links, CTA buttons, footer links) through
+      // Lenis so navigation always glides with the same cinematic easing —
+      // instead of jumping instantly like a native anchor scroll.
+      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener("click", (e) => {
+          const hash = link.getAttribute("href");
+          if (!hash || hash.length < 2) return;
+          const target = document.querySelector(hash);
+          if (!target) return;
+          e.preventDefault();
+          lenis.scrollTo(target, { offset: -16, duration: 1.5 });
+        });
+      });
+
+      /* ===== INITIAL LOADER SETUP ===== */
+      const progressBar = document.getElementById("progress-bar");
+      const welcomeScreen = document.getElementById("welcome-screen");
+      const duration = 3500;
+      const startTime = performance.now();
+
+      function updateLoader(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min((elapsed / duration) * 100, 100);
+        
+        if (progressBar) progressBar.style.width = `${progress}%`;
+
+        if (progress < 100) {
+          requestAnimationFrame(updateLoader);
+        } else {
+          setTimeout(() => {
+            if (welcomeScreen) {
+              welcomeScreen.style.opacity = '0';
+              welcomeScreen.style.visibility = 'hidden';
+            }
+            window.dispatchEvent(new CustomEvent("vincentec:intro-done"));
+          }, 300);
+        }
+      }
+      requestAnimationFrame(updateLoader);
+
+      /* ===== INTERSECTION REVEAL OBSERVER ===== */
+      const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -40px 0px" };
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add("active");
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+      /* ===== VIDEO ASSET FALLBACK GUARD ===== */
+      window.guardVideo = function (video) {
+        if (!video) return;
+        var fallback = video.parentElement.querySelector(".video-fallback");
+        if (!fallback) return;
+        var shown = false;
+        function showFallback() {
+          if (shown) return;
+          shown = true;
+          fallback.classList.add("show");
+          video.style.visibility = "hidden";
+        }
+        if (video.error) showFallback();
+        video.addEventListener("error", showFallback, true);
+        var sources = video.querySelectorAll("source");
+        for (var s = 0; s < sources.length; s++) {
+          sources[s].addEventListener("error", showFallback);
+        }
+        setTimeout(function () {
+          if (video.readyState === 0 || video.networkState === 3) showFallback();
+        }, 3000);
+      };
+      document.querySelectorAll("video").forEach(window.guardVideo);
+
+      /* ===== MOBILE NAV MENU ===== */
+      (function () {
+        var btn = document.getElementById("mobileMenuBtn");
+        var menu = document.getElementById("mobileMenu");
+        if (!btn || !menu) return;
+
+        var open = false;
+        function setOpen(next) {
+          open = next;
+          btn.setAttribute("aria-expanded", String(open));
+          if (open) {
+            menu.style.maxHeight = menu.scrollHeight + "px";
+          } else {
+            menu.style.maxHeight = "0px";
+          }
+          var lines = btn.querySelectorAll(".mobile-burger-line");
+          if (lines.length === 3) {
+            lines[0].style.transform = open ? "translateY(8px) rotate(45deg)" : "";
+            lines[1].style.opacity = open ? "0" : "1";
+            lines[2].style.transform = open ? "translateY(-8px) rotate(-45deg)" : "";
+          }
+        }
+
+        btn.addEventListener("click", function () { setOpen(!open); });
+        menu.querySelectorAll("a").forEach(function (link) {
+          link.addEventListener("click", function () { setOpen(false); });
+        });
+        window.addEventListener("resize", function () {
+          if (window.innerWidth >= 768 && open) setOpen(false);
+        });
+      })();
+
+      /* ===== HERO TITLE — PARTICLE INTELLIGENCE (forms & re-forms the headline) ===== */
+      (function () {
+        var canvas = document.getElementById("heroParticles");
+        var wrap = document.getElementById("heroTitleWrap");
+        var h1 = wrap && wrap.querySelector("h1");
+        if (!canvas || !wrap || !h1) return;
+
+        var ctx = canvas.getContext("2d");
+        var DPR = Math.min(window.devicePixelRatio || 1, 2);
+        var W, H;
+        var targetPoints = [];
+        var particles = [];
+        var PARTICLE_COUNT = 1900;
+        var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        function makeGlowSprite(rgb) {
+          var c = document.createElement("canvas");
+          c.width = 20; c.height = 20;
+          var g = c.getContext("2d");
+          var grad = g.createRadialGradient(10, 10, 0, 10, 10, 10);
+          grad.addColorStop(0, "rgba(255,255,255,1)");
+          grad.addColorStop(0.22, "rgba(" + rgb + ",1)");
+          grad.addColorStop(0.55, "rgba(" + rgb + ",0.6)");
+          grad.addColorStop(1, "rgba(" + rgb + ",0)");
+          g.fillStyle = grad;
+          g.fillRect(0, 0, 20, 20);
+          return c;
+        }
+
+        var PALETTE = [[244, 114, 182], [217, 70, 239], [168, 85, 247], [56, 189, 248]];
+        function colorForT(t) {
+          t = Math.max(0, Math.min(1, t));
+          var segs = PALETTE.length - 1;
+          var scaled = t * segs;
+          var idx = Math.min(Math.floor(scaled), segs - 1);
+          var lt = scaled - idx;
+          var a = PALETTE[idx], b = PALETTE[idx + 1];
+          return [
+            Math.round(a[0] + (b[0] - a[0]) * lt),
+            Math.round(a[1] + (b[1] - a[1]) * lt),
+            Math.round(a[2] + (b[2] - a[2]) * lt)
+          ];
+        }
+        var GRADIENT_STEPS = 20;
+        var gradientSprites = [];
+        for (var gi = 0; gi < GRADIENT_STEPS; gi++) {
+          var gc = colorForT(gi / (GRADIENT_STEPS - 1));
+          gradientSprites.push(makeGlowSprite(gc[0] + "," + gc[1] + "," + gc[2]));
+        }
+
+        function buildTargets() {
+          var off = document.createElement("canvas");
+          off.width = W;
+          off.height = H;
+          var octx = off.getContext("2d");
+
+          // Use the real heading's font/weight so the letterforms match the brand,
+          // but position purely from the canvas center — guarantees the word sits
+          // dead-center no matter what the invisible h1's box measures.
+          var cs = window.getComputedStyle(h1);
+          var fontSize = parseFloat(cs.fontSize) || Math.min(W * 0.145, H * 0.33);
+          var fontWeight = cs.fontWeight || "900";
+          var fontFamily = cs.fontFamily || "Arial, Helvetica, sans-serif";
+
+          // Auto-fit: measure both lines and shrink the font if either would run past
+          // the sampling canvas, so the full word is always captured — never cut off.
+          var maxWidth = W * 0.88;
+          octx.font = fontWeight + " " + Math.floor(fontSize) + "px " + fontFamily;
+          var w1 = octx.measureText("Experience").width;
+          var w2 = octx.measureText("innovation").width;
+          var longest = Math.max(w1, w2, 1);
+          if (longest > maxWidth) {
+            fontSize = fontSize * (maxWidth / longest) * 0.98;
+          }
+
+          var centerX = W / 2;
+          var blockHeight = fontSize * 2; // two lines, line-height 1
+          var blockTop = H / 2 - blockHeight / 2;
+          var line1Y = blockTop + fontSize * 0.5;
+          var line2Y = blockTop + fontSize * 1.5;
+
+          octx.fillStyle = "#ffffff";
+          octx.font = fontWeight + " " + Math.floor(fontSize) + "px " + fontFamily;
+          octx.textAlign = "center";
+          octx.textBaseline = "middle";
+          octx.fillText("Experience", centerX, line1Y);
+          octx.fillText("innovation", centerX, line2Y);
+
+          var data = octx.getImageData(0, 0, W, H).data;
+          targetPoints = [];
+
+          var step = 2;
+          for (var y = 0; y < H; y += step) {
+            for (var x = 0; x < W; x += step) {
+              if (data[(y * W + x) * 4 + 3] > 128) {
+                targetPoints.push({ x: x, y: y });
+              }
+            }
+          }
+
+          for (var i = targetPoints.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = targetPoints[i];
+            targetPoints[i] = targetPoints[j];
+            targetPoints[j] = tmp;
+          }
+
+          if (particles.length === 0) {
+            for (var k = 0; k < PARTICLE_COUNT; k++) {
+              var ang = Math.random() * Math.PI * 2;
+              var rad = Math.max(W, H) * (0.4 + Math.random() * 0.5);
+              particles.push({
+                x: W / 2 + Math.cos(ang) * rad,
+                y: H / 2 + Math.sin(ang) * rad,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                hueIdx: 0,
+                seed: Math.random() * 1000
+              });
+            }
+          }
+
+          particles.forEach(function (p, i) {
+            var t = targetPoints[i % targetPoints.length] || { x: W / 2, y: H / 2 };
+            p.targetX = t.x;
+            p.targetY = t.y;
+            p.hueIdx = Math.max(0, Math.min(GRADIENT_STEPS - 1, Math.round((t.x / W) * (GRADIENT_STEPS - 1))));
+          });
+        }
+
+        function resize() {
+          W = canvas.clientWidth;
+          H = canvas.clientHeight;
+          if (!W || !H) return;
+          canvas.width = W * DPR;
+          canvas.height = H * DPR;
+          ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+          buildTargets();
+        }
+
+        var mouseX = -9999, mouseY = -9999;
+        wrap.addEventListener("mousemove", function (e) {
+          var rect = canvas.getBoundingClientRect();
+          mouseX = e.clientX - rect.left;
+          mouseY = e.clientY - rect.top;
+        });
+        wrap.addEventListener("mouseleave", function () {
+          mouseX = -9999; mouseY = -9999;
+        });
+
+        // Breathing cycle: hold formation, then briefly scatter into a nebula, then reassemble — on a loop, forever.
+        var cyclePos = 0;
+        var CYCLE_DURATION = 9000;
+        var HOLD_UNTIL = 0.74;
+        var SCATTER_PEAK = 0.85;
+        var cycleStart = performance.now();
+
+        function assembleAmount(now) {
+          var t = ((now - cycleStart) % CYCLE_DURATION) / CYCLE_DURATION;
+          cyclePos = t;
+          if (t < HOLD_UNTIL) return 1;
+          if (t < SCATTER_PEAK) {
+            var k = (t - HOLD_UNTIL) / (SCATTER_PEAK - HOLD_UNTIL);
+            return 1 - Math.sin(k * Math.PI * 0.5);
+          }
+          var k2 = (t - SCATTER_PEAK) / (1 - SCATTER_PEAK);
+          return Math.sin(k2 * Math.PI * 0.5);
+        }
+
+        var visible = true;
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) { visible = entry.isIntersecting; });
+          }, { threshold: 0.02 }).observe(canvas);
+        }
+
+        var SWEEP_DURATION = 4200;
+        var sweepStart = performance.now();
+
+        function tick() {
+          requestAnimationFrame(tick);
+          if (!visible || !W || !H) return;
+
+          ctx.clearRect(0, 0, W, H);
+          var now = performance.now();
+          var assemble = assembleAmount(now);
+          var settle = assemble * assemble; // sharper ramp: crisp lock near full assembly
+          var time = now * 0.0018;
+          var size = 3.9 + assemble * 2.0;
+
+          var sweepT = ((now - sweepStart) % SWEEP_DURATION) / SWEEP_DURATION;
+          var sweepX = -W * 0.25 + sweepT * (W * 1.5);
+
+          for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+
+            var noiseX = Math.sin(time * 1.1 + p.seed) * 0.9;
+            var noiseY = Math.cos(time * 0.9 + p.seed * 1.3) * 0.9;
+
+            if (p.targetX !== undefined) {
+              var jitterAmt = (1 - settle) * 3.5;
+              var dx = (p.targetX + noiseX * jitterAmt) - p.x;
+              var dy = (p.targetY + noiseY * jitterAmt) - p.y;
+              var pull = 0.035 + settle * 0.3;
+              p.vx += dx * pull;
+              p.vy += dy * pull;
+            }
+
+            p.vx += noiseX * 0.08 * (1 - settle);
+            p.vy += noiseY * 0.08 * (1 - settle);
+
+            var scatterForce = Math.max(0, 1 - assemble) * 0.05;
+            if (scatterForce > 0) {
+              var ddx = p.x - W / 2, ddy = p.y - H / 2;
+              var dlen = Math.sqrt(ddx * ddx + ddy * ddy) || 1;
+              p.vx += (ddx / dlen) * scatterForce;
+              p.vy += (ddy / dlen) * scatterForce;
+            }
+
+            p.vx *= 0.78;
+            p.vy *= 0.78;
+
+            var mdx = p.x - mouseX, mdy = p.y - mouseY;
+            var distSq = mdx * mdx + mdy * mdy;
+            if (distSq < 9000 && distSq > 0) {
+              var dist = Math.sqrt(distSq);
+              var force = (95 - dist) / 95;
+              p.vx += (mdx / dist) * force * 10;
+              p.vy += (mdy / dist) * force * 10;
+            }
+
+            p.x += p.vx;
+            p.y += p.vy;
+
+            var shimmer = 0.96 + 0.04 * Math.sin(time * 2.2 + p.seed * 2.7);
+            var sweepBoost = Math.max(0, 1 - Math.abs(p.x - sweepX) / 45) * settle * 0.5;
+            var alpha = (0.85 + assemble * 0.15) * shimmer + sweepBoost * 0.3;
+            var drawSize = size * (1 + sweepBoost * 0.25);
+            var sprite = gradientSprites[p.hueIdx || 0];
+
+            // Soft outer glow bloom, then a crisp bright core on top
+            ctx.globalAlpha = Math.min(alpha * 0.16, 1);
+            var haloSize = drawSize * 1.7;
+            ctx.drawImage(sprite, p.x - haloSize / 2, p.y - haloSize / 2, haloSize, haloSize);
+
+            ctx.globalAlpha = Math.min(alpha, 1);
+            ctx.drawImage(sprite, p.x - drawSize / 2, p.y - drawSize / 2, drawSize, drawSize);
+          }
+          ctx.globalAlpha = 1;
+        }
+
+        var resizeTimer;
+        window.addEventListener("resize", function () {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(resize, 100);
+        });
+
+        if (!reduceMotion) {
+          resize();
+          requestAnimationFrame(tick);
+          if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(function () { resize(); });
+          }
+        }
+      })();
+
+      /* ===== HERO — INTERACTIVE TECH CORE (own mini 3D viewport, drag to rotate) ===== */
+      (function () {
+        var canvas = document.getElementById("techCore3D");
+        var wrap = document.getElementById("techCoreWrap");
+        var tooltip = document.getElementById("techCoreTooltip");
+        if (!canvas || !wrap || typeof THREE === "undefined") return;
+
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 50);
+        camera.position.set(0, 0, 6.2);
+
+        var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+        var coreGroup = new THREE.Group();
+        scene.add(coreGroup);
+
+        // Outer wireframe shell
+        var shellGeo = new THREE.IcosahedronGeometry(1.6, 1);
+        var shellMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.55 });
+        coreGroup.add(new THREE.Mesh(shellGeo, shellMat));
+
+        // Inner pulsing glow core
+        var innerGeo = new THREE.IcosahedronGeometry(0.85, 2);
+        var innerMat = new THREE.MeshBasicMaterial({ color: 0xd946ef, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false });
+        var innerCore = new THREE.Mesh(innerGeo, innerMat);
+        coreGroup.add(innerCore);
+
+        // Thin accent rings
+        var ringDefs = [
+          { r: 2.05, tilt: [Math.PI / 3, 0, 0], color: 0x38bdf8, speed: 0.5 },
+          { r: 2.3, tilt: [0, Math.PI / 4, Math.PI / 6], color: 0xd946ef, speed: -0.35 }
+        ];
+        var rings = ringDefs.map(function (def) {
+          var geo = new THREE.TorusGeometry(def.r, 0.012, 12, 96);
+          var mat = new THREE.MeshBasicMaterial({ color: def.color, transparent: true, opacity: 0.6 });
+          var mesh = new THREE.Mesh(geo, mat);
+          mesh.rotation.set(def.tilt[0], def.tilt[1], def.tilt[2]);
+          mesh.userData.speed = def.speed;
+          coreGroup.add(mesh);
+          return mesh;
+        });
+
+        // Orbiting tech "nodes" — hoverable satellite chips labelling capabilities
+        var NODE_LABELS = [
+          { label: "GPU SHADERS", color: 0x38bdf8, radius: 2.5, speed: 0.5, tilt: 0.3, offset: 0 },
+          { label: "REALTIME PHYSICS", color: 0xd946ef, radius: 2.6, speed: -0.4, tilt: -0.5, offset: 2.1 },
+          { label: "PARTICLE SYSTEMS", color: 0xf472b6, radius: 2.4, speed: 0.35, tilt: 0.8, offset: 4.2 },
+          { label: "WEBGL PIPELINE", color: 0xa855f7, radius: 2.7, speed: -0.3, tilt: -0.2, offset: 1.1 }
+        ];
+        var nodeGeo = new THREE.OctahedronGeometry(0.14, 0);
+        var nodes = NODE_LABELS.map(function (def) {
+          var mat = new THREE.MeshBasicMaterial({ color: def.color, transparent: true, opacity: 0.95 });
+          var mesh = new THREE.Mesh(nodeGeo, mat);
+          mesh.userData = def;
+          coreGroup.add(mesh);
+          return mesh;
+        });
+
+        var ambient = new THREE.AmbientLight(0xffffff, 1.4);
+        scene.add(ambient);
+
+        function resize() {
+          var w = wrap.clientWidth;
+          var h = wrap.clientHeight;
+          if (!w || !h) return;
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+          renderer.setSize(w, h);
+        }
+
+        var ro = null;
+        if ("ResizeObserver" in window) {
+          ro = new ResizeObserver(resize);
+          ro.observe(wrap);
+        } else {
+          window.addEventListener("resize", resize);
+        }
+
+        // ---- Drag-to-rotate ----
+        var dragging = false;
+        var lastX = 0, lastY = 0;
+        var rotVX = 0, rotVY = 0;
+        var userRotX = 0.25, userRotY = -0.4;
+
+        function pointerPos(e) {
+          var t = (e.touches && e.touches[0]) || e;
+          return { x: t.clientX, y: t.clientY };
+        }
+
+        function onDown(e) {
+          dragging = true;
+          wrap.classList.add("dragging");
+          var p = pointerPos(e);
+          lastX = p.x; lastY = p.y;
+        }
+        function onMove(e) {
+          var p = pointerPos(e);
+          if (dragging) {
+            var dx = p.x - lastX;
+            var dy = p.y - lastY;
+            lastX = p.x; lastY = p.y;
+            rotVY = dx * 0.005;
+            rotVX = dy * 0.005;
+            userRotY += rotVY;
+            userRotX += rotVX;
+            userRotX = Math.max(-1.1, Math.min(1.1, userRotX));
+          }
+          handleHover(p);
+        }
+        function onUp() {
+          dragging = false;
+          wrap.classList.remove("dragging");
+        }
+
+        canvas.addEventListener("mousedown", onDown);
+        canvas.addEventListener("touchstart", onDown, { passive: true });
+        window.addEventListener("mousemove", onMove);
+        window.addEventListener("touchmove", onMove, { passive: true });
+        window.addEventListener("mouseup", onUp);
+        window.addEventListener("touchend", onUp);
+        canvas.addEventListener("mouseleave", function () {
+          tooltip.classList.add("hidden");
+        });
+
+        // ---- Hover detection for node tooltips ----
+        var raycaster = new THREE.Raycaster();
+        var ndc = new THREE.Vector2();
+        function handleHover(p) {
+          var rect = canvas.getBoundingClientRect();
+          ndc.x = ((p.x - rect.left) / rect.width) * 2 - 1;
+          ndc.y = -((p.y - rect.top) / rect.height) * 2 + 1;
+          raycaster.setFromCamera(ndc, camera);
+          var hits = raycaster.intersectObjects(nodes);
+          if (hits.length) {
+            var n = hits[0].object;
+            tooltip.textContent = "// " + n.userData.label;
+            tooltip.style.left = (p.x - rect.left) + "px";
+            tooltip.style.top = (p.y - rect.top) + "px";
+            tooltip.classList.remove("hidden");
+            canvas.style.cursor = dragging ? "grabbing" : "pointer";
+          } else if (!dragging) {
+            tooltip.classList.add("hidden");
+            canvas.style.cursor = "grab";
+          }
+        }
+
+        var visible = true;
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) { visible = entry.isIntersecting; });
+          }, { threshold: 0.05 }).observe(canvas);
+        }
+
+        var clockStart = performance.now();
+        function tick() {
+          requestAnimationFrame(tick);
+          if (!visible) return;
+
+          var t = (performance.now() - clockStart) / 1000;
+
+          // Momentum decay + gentle auto-spin when idle
+          if (!dragging) {
+            rotVY *= 0.94;
+            rotVX *= 0.94;
+            userRotY += rotVY + 0.0022;
+            userRotX += rotVX;
+          }
+
+          coreGroup.rotation.x = userRotX;
+          coreGroup.rotation.y = userRotY;
+
+          var pulse = 1 + Math.sin(t * 2.4) * 0.08;
+          innerCore.scale.setScalar(pulse);
+          innerMat.opacity = 0.3 + Math.sin(t * 2.1) * 0.12;
+
+          rings.forEach(function (ring) { ring.rotation.z += 0.008 * ring.userData.speed; });
+
+          nodes.forEach(function (mesh) {
+            var d = mesh.userData;
+            var angle = t * d.speed + d.offset;
+            mesh.position.set(
+              Math.cos(angle) * d.radius,
+              Math.sin(angle * 0.7) * d.tilt * d.radius * 0.5,
+              Math.sin(angle) * d.radius
+            );
+            mesh.rotation.x += 0.02;
+            mesh.rotation.y += 0.03;
+          });
+
+          renderer.render(scene, camera);
+        }
+
+        resize();
+        requestAnimationFrame(tick);
+      })();
+
+      /* ===== BACK TO TOP ===== */
+      var backToTop = document.getElementById("backToTop");
+      if (backToTop) {
+        window.addEventListener("scroll", function () {
+          backToTop.classList.toggle("show", window.scrollY > window.innerHeight * 0.6);
+        });
+        backToTop.addEventListener("click", function () {
+          window.smoothScrollTo(0);
+        });
+      }
+
+      /* ===== PRIVACY BANNER ===== */
+      (function () {
+        var banner = document.getElementById("privacyBanner");
+        if (!banner) return;
+        var KEY = "vincentec_privacy_choice";
+
+        function getStored(key) {
+          try { return localStorage.getItem(key); } catch (e) { return null; }
+        }
+        function setStored(key, val) {
+          try { localStorage.setItem(key, val); } catch (e) {}
+        }
+
+        if (!getStored(KEY)) {
+          setTimeout(function () { banner.classList.add("show"); }, 1800);
+        }
+
+        function dismiss(choice) {
+          setStored(KEY, choice);
+          banner.classList.remove("show");
+          if (backToTop) backToTop.classList.remove("banner-open");
+        }
+
+        document.getElementById("privacyAccept").addEventListener("click", function () { dismiss("accepted"); });
+        document.getElementById("privacyDecline").addEventListener("click", function () { dismiss("declined"); });
+
+        var obs = new MutationObserver(function () {
+          if (backToTop) backToTop.classList.toggle("banner-open", banner.classList.contains("show"));
+        });
+        obs.observe(banner, { attributes: true, attributeFilter: ["class"] });
+      })();
+
+      /* ===== HIGH-DENSITY FLUID SWARMING PARTICLE INTELLIGENCE ===== */
+      (function () {
+        var canvas = document.getElementById("signatureCanvas");
+        var section = document.getElementById("signature");
+        var label = document.getElementById("signatureLabel");
+        if (!canvas || !section) return;
+
+        var ctx = canvas.getContext("2d");
+        var DPR = Math.min(window.devicePixelRatio || 1, 2);
+        var W, H;
+        var targetPoints = [];
+        var particles = [];
+        var PARTICLE_COUNT = 1800;
+
+        function resize() {
+          W = canvas.clientWidth;
+          H = canvas.clientHeight;
+          if (!W || !H) return;
+
+          canvas.width = W * DPR;
+          canvas.height = H * DPR;
+          ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+          buildTargets();
+        }
+
+        function makeGlowSprite(rgb) {
+          var c = document.createElement("canvas");
+          c.width = 16; c.height = 16;
+          var g = c.getContext("2d");
+          var grad = g.createRadialGradient(8, 8, 0, 8, 8, 8);
+          grad.addColorStop(0, "rgba(" + rgb + ",1)");
+          grad.addColorStop(0.4, "rgba(" + rgb + ",0.7)");
+          grad.addColorStop(1, "rgba(" + rgb + ",0)");
+          g.fillStyle = grad;
+          g.fillRect(0, 0, 16, 16);
+          return c;
+        }
+
+        var glowSprites = {
+          "217,70,239": makeGlowSprite("217,70,239"),
+          "56,189,248": makeGlowSprite("56,189,248")
+        };
+
+        function buildTargets() {
+          var off = document.createElement("canvas");
+          off.width = W; 
+          off.height = H;
+          var octx = off.getContext("2d");
+
+          var fontSize = Math.min(W * 0.11, 110);
+          octx.fillStyle = "#ffffff";
+          octx.font = "900 " + Math.floor(fontSize) + "px Arial, Helvetica, sans-serif";
+          octx.textAlign = "center";
+          octx.textBaseline = "middle";
+          octx.fillText("VINCENTEC", W / 2, H / 2);
+
+          var data = octx.getImageData(0, 0, W, H).data;
+          targetPoints = [];
+
+          var step = 2;
+          for (var y = 0; y < H; y += step) {
+            for (var x = 0; x < W; x += step) {
+              if (data[(y * W + x) * 4 + 3] > 128) {
+                targetPoints.push({ x: x, y: y });
+              }
+            }
+          }
+
+          for (var i = targetPoints.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = targetPoints[i]; 
+            targetPoints[i] = targetPoints[j]; 
+            targetPoints[j] = tmp;
+          }
+
+          if (particles.length === 0) {
+            for (var k = 0; k < PARTICLE_COUNT; k++) {
+              particles.push({
+                x: Math.random() * W,
+                y: Math.random() * H,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                hue: Math.random() > 0.5 ? "217,70,239" : "56,189,248"
+              });
+            }
+          }
+
+          particles.forEach(function (p, i) {
+            var t = targetPoints[i % targetPoints.length] || { x: W / 2, y: H / 2 };
+            p.targetX = t.x;
+            p.targetY = t.y;
+          });
+        }
+
+        var mouseX = -9999, mouseY = -9999;
+        section.addEventListener("mousemove", function (e) {
+          var rect = canvas.getBoundingClientRect();
+          mouseX = e.clientX - rect.left;
+          mouseY = e.clientY - rect.top;
+        });
+        section.addEventListener("mouseleave", function () {
+          mouseX = -9999; mouseY = -9999;
+        });
+
+        var assembled = false;
+        var sectionVisible = false;
+
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            sectionVisible = entry.isIntersecting;
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+              assembled = true;
+              if (label) label.classList.add("show");
+            } else {
+              assembled = false;
+              if (label) label.classList.remove("show");
+            }
+          });
+        }, { threshold: [0.1, 0.2, 0.5] });
+
+        io.observe(section);
+
+        function animate() {
+          requestAnimationFrame(animate);
+          if (!sectionVisible) return;
+
+          ctx.clearRect(0, 0, W, H);
+          var size = assembled ? 4 : 3;
+          var time = performance.now() * 0.002;
+
+          for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+
+            // 1. Organic Fluid Turbulence
+            var noiseX = Math.sin(time + i * 0.5) * 0.8;
+            var noiseY = Math.cos(time * 0.8 + i * 0.3) * 0.8;
+
+            if (assembled && p.targetX !== undefined) {
+              // 2. Spring Attraction with High Orbit Dynamics
+              var dx = (p.targetX + noiseX * 6) - p.x;
+              var dy = (p.targetY + noiseY * 6) - p.y;
+              
+              p.vx += dx * 0.015;
+              p.vy += dy * 0.015;
+
+              p.vx *= 0.88;
+              p.vy *= 0.88;
+            } else {
+              // 3. Free Floating State
+              p.vx += noiseX * 0.1;
+              p.vy += noiseY * 0.1;
+              p.vx *= 0.96;
+              p.vy *= 0.96;
+            }
+
+            // 4. Reactive Mouse Impulse
+            var mdx = p.x - mouseX, mdy = p.y - mouseY;
+            var distSq = mdx * mdx + mdy * mdy;
+            if (distSq < 22000 && distSq > 0) {
+              var dist = Math.sqrt(distSq);
+              var force = (150 - dist) / 150;
+              p.vx += (mdx / dist) * force * 14;
+              p.vy += (mdy / dist) * force * 14;
+            }
+
+            // Apply Velocity
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // Boundary Bounce
+            if (p.x < 0 || p.x > W) p.vx *= -0.8;
+            if (p.y < 0 || p.y > H) p.vy *= -0.8;
+
+            ctx.drawImage(glowSprites[p.hue], p.x - size / 2, p.y - size / 2, size, size);
+          }
+        }
+
+        var resizeTimer;
+        window.addEventListener("resize", function () {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(resize, 100);
+        });
+
+        setTimeout(function () {
+          resize();
+          animate();
+        }, 200);
+      })();
+    });
+  </script>
+
+  <!-- Background Three.js Quantum Scene Engine -->
+  <script>
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x020617, 0.032);
+
+    const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 1.4, 8.5);
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true, antialias: true, powerPreference: 'high-performance' });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    /* ---------- Helper: soft radial glow texture for sprites ---------- */
+    function makeGlowTexture() {
+      const c = document.createElement('canvas');
+      c.width = c.height = 128;
+      const g = c.getContext('2d');
+      const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+      grad.addColorStop(0, 'rgba(255,255,255,1)');
+      grad.addColorStop(0.35, 'rgba(255,255,255,0.5)');
+      grad.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = grad;
+      g.fillRect(0, 0, 128, 128);
+      return new THREE.CanvasTexture(c);
+    }
+    const glowTexture = makeGlowTexture();
+
+    /* =========================================================
+       1. SHOOTING STARS — comet-trail sprites that periodically
+          streak across the scene, fading in and out.
+       ========================================================= */
+    function makeStreakTexture() {
+      const c = document.createElement('canvas');
+      c.width = 256; c.height = 32;
+      const g = c.getContext('2d');
+      const grad = g.createLinearGradient(0, 0, 256, 0);
+      grad.addColorStop(0, 'rgba(255,255,255,0)');
+      grad.addColorStop(0.7, 'rgba(180,220,255,0.55)');
+      grad.addColorStop(1, 'rgba(255,255,255,1)');
+      g.fillStyle = grad;
+      g.fillRect(0, 12, 256, 8);
+      // soft vertical falloff so the streak isn't a hard bar
+      const vgrad = g.createLinearGradient(0, 0, 0, 32);
+      vgrad.addColorStop(0, 'rgba(0,0,0,0)');
+      vgrad.addColorStop(0.5, 'rgba(0,0,0,1)');
+      vgrad.addColorStop(1, 'rgba(0,0,0,0)');
+      g.globalCompositeOperation = 'destination-in';
+      g.fillStyle = vgrad;
+      g.fillRect(0, 0, 256, 32);
+      return new THREE.CanvasTexture(c);
+    }
+    const streakTexture = makeStreakTexture();
+
+    const SHOOTING_STAR_COUNT = 7;
+    const shootingStars = [];
+    for (let i = 0; i < SHOOTING_STAR_COUNT; i++) {
+      const mat = new THREE.SpriteMaterial({
+        map: streakTexture,
+        color: 0xdbeafe,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const sprite = new THREE.Sprite(mat);
+      sprite.scale.set(0.001, 0.001, 1);
+      scene.add(sprite);
+      shootingStars.push({
+        sprite,
+        active: false,
+        pos: new THREE.Vector3(),
+        vel: new THREE.Vector3(),
+        life: 0,
+        maxLife: 1,
+        delay: Math.random() * 5
+      });
+    }
+
+    function igniteShootingStar(s) {
+      const side = Math.random() < 0.5 ? -1 : 1;
+      const startX = side * (9 + Math.random() * 4);
+      const startY = 4 + Math.random() * 4;
+      const startZ = -4 + Math.random() * 8;
+      s.pos.set(startX, startY, startZ);
+
+      const speed = 9 + Math.random() * 6;
+      s.vel.set(-side * (0.85 + Math.random() * 0.3), -(0.4 + Math.random() * 0.3), (Math.random() - 0.5) * 0.3);
+      s.vel.normalize().multiplyScalar(speed);
+
+      s.life = 0;
+      s.maxLife = 0.9 + Math.random() * 0.5;
+      s.active = true;
+
+      const len = 1.1 + Math.random() * 0.9;
+      s.length = len;
+      s.width = 0.055 + Math.random() * 0.03;
+
+      const angle = Math.atan2(s.vel.y, s.vel.x);
+      s.sprite.material.rotation = angle;
+    }
+
+    function updateShootingStars(dt) {
+      for (let i = 0; i < shootingStars.length; i++) {
+        const s = shootingStars[i];
+        if (!s.active) {
+          s.delay -= dt;
+          if (s.delay <= 0) igniteShootingStar(s);
+          continue;
+        }
+
+        s.life += dt;
+        if (s.life > s.maxLife) {
+          s.active = false;
+          s.delay = 1.5 + Math.random() * 5;
+          s.sprite.material.opacity = 0;
+          continue;
+        }
+
+        s.pos.addScaledVector(s.vel, dt);
+        s.sprite.position.copy(s.pos);
+
+        const t = s.life / s.maxLife;
+        const fade = Math.sin(Math.min(t, 1) * Math.PI);
+        s.sprite.material.opacity = fade * 0.95;
+        s.sprite.scale.set(s.length * (0.6 + fade * 0.4), s.width, 1);
+      }
+    }
+
+    /* =========================================================
+       5. LIGHTING
+       ========================================================= */
+    const mouseLight = new THREE.PointLight(0x38bdf8, 9, 14);
+    scene.add(mouseLight);
+
+    const coreLight = new THREE.PointLight(0xd946ef, 6, 10);
+    coreLight.position.set(0, 0, 0);
+    scene.add(coreLight);
+
+    const ambientLight = new THREE.AmbientLight(0x0f172a, 3);
+    scene.add(ambientLight);
+
+    /* =========================================================
+       6. INTERACTION + RENDER LOOP
+       ========================================================= */
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2(-999, -999);
+    const mouseWorld = new THREE.Vector3(9999, 9999, 9999);
+    const targetPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+    const clock = new THREE.Clock();
+    let mouseNDC = { x: 0, y: 0 };
+
+    let shockTime = -10;
+    let introDone = false;
+    let bgVisible = true;
+    let pageHidden = document.hidden;
+
+    /* ---------- Cinematic scroll-locked camera flythrough (Draftly-style) ---------- */
+    const CAM_PATH = [
+      { anchor: 'hero',      pos: [0, 1.4, 8.5],    look: [0, 0, 0] },
+      { anchor: 'signature', pos: [2.3, 0.6, 5.6],  look: [0.3, 0, 0] },
+      { anchor: 'about',     pos: [-2.6, 1.8, 4.3], look: [-0.2, 0.3, 0] },
+      { anchor: 'services',  pos: [0, -0.9, 3.4],   look: [0, -0.1, 0] },
+      { anchor: 'showcase',  pos: [3.0, 2.4, 6.6],  look: [0.5, 0.2, 0] },
+      { anchor: 'feedback',  pos: [-3.2, 0.5, 7.6], look: [-0.4, 0, 0] },
+      { anchor: 'contact',   pos: [0, 3.1, 10.6],   look: [0, 0.5, 0] }
+    ];
+
+    function computeAnchorFractions() {
+      const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+      CAM_PATH.forEach((kf) => {
+        const el = document.getElementById(kf.anchor);
+        kf.frac = el ? Math.min(Math.max(el.offsetTop / maxScroll, 0), 1) : 0;
+      });
+      CAM_PATH[0].frac = 0;
+      for (let i = 1; i < CAM_PATH.length; i++) {
+        if (CAM_PATH[i].frac <= CAM_PATH[i - 1].frac) CAM_PATH[i].frac = CAM_PATH[i - 1].frac + 0.001;
+      }
+      CAM_PATH[CAM_PATH.length - 1].frac = 1;
+    }
+    computeAnchorFractions();
+    window.addEventListener('load', computeAnchorFractions);
+
+    let scrollFrac = 0;
+    function updateScrollFrac() {
+      const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+      scrollFrac = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+    }
+    window.addEventListener('scroll', updateScrollFrac, { passive: true });
+    updateScrollFrac();
+
+    function smoothstep(t) { return t * t * (3 - 2 * t); }
+
+    const scrollCamPos = new THREE.Vector3();
+    const scrollCamLook = new THREE.Vector3();
+    function getScrollCamera(f) {
+      let i = 0;
+      while (i < CAM_PATH.length - 2 && f > CAM_PATH[i + 1].frac) i++;
+      const a = CAM_PATH[i];
+      const b = CAM_PATH[i + 1];
+      const span = Math.max(b.frac - a.frac, 0.0001);
+      const localT = smoothstep(Math.min(Math.max((f - a.frac) / span, 0), 1));
+      scrollCamPos.set(
+        a.pos[0] + (b.pos[0] - a.pos[0]) * localT,
+        a.pos[1] + (b.pos[1] - a.pos[1]) * localT,
+        a.pos[2] + (b.pos[2] - a.pos[2]) * localT
+      );
+      scrollCamLook.set(
+        a.look[0] + (b.look[0] - a.look[0]) * localT,
+        a.look[1] + (b.look[1] - a.look[1]) * localT,
+        a.look[2] + (b.look[2] - a.look[2]) * localT
+      );
+      return { pos: scrollCamPos, look: scrollCamLook };
+    }
+    const currentLookAt = new THREE.Vector3(0, 0, 0);
+
+    function updateMouseWorld(e) {
+      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      mouseNDC.x = mouse.x;
+      mouseNDC.y = mouse.y;
+      raycaster.setFromCamera(mouse, camera);
+      if (raycaster.ray.intersectPlane(targetPlane, mouseWorld)) {
+        mouseLight.position.copy(mouseWorld);
+      }
+    }
+
+    window.addEventListener('pointermove', updateMouseWorld);
+
+    window.addEventListener('pointerdown', (e) => {
+      if (e.target && e.target.closest && e.target.closest('a, button, input, textarea, form, header, #video-modal, #privacyBanner')) return;
+      updateMouseWorld(e);
+      shockTime = clock.elapsedTime;
+    });
+
+    document.documentElement.addEventListener('mouseleave', () => {
+      mouseWorld.set(9999, 9999, 9999);
+      mouseNDC.x = 0;
+      mouseNDC.y = 0;
+    });
+
+    function pointBaseSize() {
+      return 0.12 * (window.innerHeight * 0.5) / Math.tan((camera.fov * Math.PI) / 360);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      computeAnchorFractions();
+      updateScrollFrac();
+    });
+
+    document.addEventListener('visibilitychange', () => { pageHidden = document.hidden; });
+    window.addEventListener('vincentec:intro-done', () => { introDone = true; });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        entries.forEach((entry) => { bgVisible = entry.isIntersecting; });
+      }, { threshold: 0.02 }).observe(document.getElementById('bg-canvas'));
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (!introDone || pageHidden || !bgVisible) return;
+
+      const dt = clock.getDelta();
+      const elapsedTime = clock.elapsedTime;
+
+      updateShootingStars(dt);
+
+      // Click pulse — a brief flare that decays away
+      const timeSinceShock = elapsedTime - shockTime;
+      const pulse = shockTime > -5 ? Math.max(0, Math.exp(-timeSinceShock * 1.4)) : 0;
+
+      mouseLight.intensity = 9 + pulse * 6;
+      coreLight.intensity = 5 + Math.sin(elapsedTime * 2.2) * 1.5 + pulse * 4;
+
+      // Cinematic scroll-locked flythrough, with mouse parallax layered on top
+      const scrollTarget = getScrollCamera(scrollFrac);
+      camera.position.x += ((scrollTarget.pos.x + mouseNDC.x * 0.5) - camera.position.x) * 0.045;
+      camera.position.y += ((scrollTarget.pos.y + mouseNDC.y * 0.3) - camera.position.y) * 0.045;
+      camera.position.z += (scrollTarget.pos.z - camera.position.z) * 0.045;
+      currentLookAt.x += (scrollTarget.look.x - currentLookAt.x) * 0.05;
+      currentLookAt.y += (scrollTarget.look.y - currentLookAt.y) * 0.05;
+      currentLookAt.z += (scrollTarget.look.z - currentLookAt.z) * 0.05;
+      camera.lookAt(currentLookAt);
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    function openModal(title, desc, videoSrc) {
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-desc').innerText = desc;
+      
+      const container = document.getElementById('modal-video-container');
+      container.innerHTML = `
+        <video class="w-full h-full object-cover" autoplay muted loop playsinline controls>
+          <source src="${videoSrc}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="video-fallback"><span class="text-xs font-mono text-cyan-400">[ VIDEO ASSET PLACEHOLDER ]</span></div>
+      `;
+      if (window.guardVideo) window.guardVideo(container.querySelector('video'));
+
+      document.getElementById('video-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('video-modal').classList.add('hidden');
+      document.getElementById('modal-video-container').innerHTML = '';
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const status = document.getElementById('form-status');
+      const btn = document.getElementById('project-submit-btn');
+      const name = document.getElementById('project-name').value.trim();
+      const email = document.getElementById('project-email').value.trim();
+      const message = document.getElementById('project-message').value.trim();
+
+      status.classList.remove('hidden');
+
+      if (!name || !email || !message) {
+        status.textContent = 'Please fill in your name, email, and project vision.';
+        status.style.color = '#f87171';
+        return;
+      }
+
+      if (!window.__submitProjectToFirebase) {
+        status.textContent = 'Request service is still loading — please try again in a moment.';
+        status.style.color = '#f87171';
+        return;
+      }
+
+      btn.disabled = true;
+      status.textContent = 'Transmitting…';
+      status.style.color = '#38bdf8';
+
+      window.__submitProjectToFirebase({ name, email, message, type: 'Project Inquiry', time: Date.now() })
+        .then(function () {
+          status.textContent = 'Transmission received. We will respond shortly.';
+          status.style.color = '#34d399';
+          e.target.reset();
+        })
+        .catch(function (err) {
+          status.textContent = 'Something went wrong: ' + err.message;
+          status.style.color = '#f87171';
+        })
+        .finally(function () {
+          btn.disabled = false;
+        });
+    }
+
+    function handleFeedbackSubmit(e) {
+      e.preventDefault();
+      const status = document.getElementById('feedback-status');
+      const btn = document.getElementById('feedback-submit-btn');
+      const name = document.getElementById('feedback-name').value.trim();
+      const email = document.getElementById('feedback-email').value.trim();
+      const role = document.getElementById('feedback-role').value.trim();
+      const message = document.getElementById('feedback-message').value.trim();
+
+      status.classList.remove('hidden');
+
+      if (!name || !email || !message) {
+        status.textContent = 'Please fill in your name, email, and feedback.';
+        status.style.color = '#f87171';
+        return;
+      }
+
+      if (!window.__submitFeedbackToFirebase) {
+        status.textContent = 'Feedback service is still loading — please try again in a moment.';
+        status.style.color = '#f87171';
+        return;
+      }
+
+      btn.disabled = true;
+      status.textContent = 'Sending…';
+      status.style.color = '#38bdf8';
+
+      window.__submitFeedbackToFirebase({ name, email, role, message, type: 'Feedback', time: Date.now() })
+        .then(function () {
+          status.textContent = 'Feedback received — thank you for the signal.';
+          status.style.color = '#34d399';
+          e.target.reset();
+        })
+        .catch(function (err) {
+          status.textContent = 'Something went wrong: ' + err.message;
+          status.style.color = '#f87171';
+        })
+        .finally(function () {
+          btn.disabled = false;
+        });
+    }
+  </script>
+
+  <!-- Feedback storage (Firebase Realtime Database) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7PRz9K6IMr3foH5xsaVwmRTFJUlpv1Sg",
+      authDomain: "vinctec-admin.firebaseapp.com",
+      databaseURL: "https://vinctec-admin-default-rtdb.firebaseio.com",
+      projectId: "vinctec-admin",
+      storageBucket: "vinctec-admin.firebasestorage.app",
+      messagingSenderId: "714000687361",
+      appId: "1:714000687361:web:db2cc5745df0cb91b9bb00"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.__submitFeedbackToFirebase = function (data) {
+      return push(ref(db, "feedback"), data);
+    };
+
+    window.__submitProjectToFirebase = function (data) {
+      return push(ref(db, "feedback"), data);
+    };
+  </script>
+</body>
+</html>
