@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VINCENTEC.CO.UK | Quantum Spatial Core</title>
+  <title>VINCENTEC.CO.UK</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <!-- Apple-Style Smooth Scroll Engine (Lenis) -->
@@ -54,6 +54,17 @@
     .glass-card:hover {
       border-color: rgba(217, 70, 239, 0.4);
       box-shadow: 0 0 50px rgba(217, 70, 239, 0.25);
+    }
+    /* Mobile performance: heavy blur re-composites every scroll frame on phones */
+    @media (max-width: 768px) {
+      .glass-nav {
+        background: rgba(8, 12, 22, 0.92);
+        backdrop-filter: blur(8px);
+      }
+      .glass-card {
+        backdrop-filter: blur(10px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      }
     }
     .text-gradient {
       background: linear-gradient(135deg, #ffffff 0%, #a5f3fc 40%, #d946ef 100%);
@@ -127,6 +138,86 @@
         #020617;
     }
     .video-fallback.show { display: flex; }
+
+    /* ===== PREMIUM NAV ===== */
+    .nav-link {
+      position: relative;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+      padding-bottom: 5px;
+      color: #94a3b8;
+    }
+    .nav-link .nav-index {
+      color: #d946ef;
+      opacity: 0.55;
+      font-size: 9px;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 1.5px;
+      width: 100%;
+      background: linear-gradient(90deg, #d946ef, #38bdf8);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-link:hover {
+      color: #ffffff;
+      text-shadow: 0 0 14px rgba(217, 70, 239, 0.55);
+    }
+    .nav-link:hover::after { transform: scaleX(1); }
+
+    #mobileMenuBtn {
+      border-radius: 999px;
+      background: radial-gradient(circle at center, rgba(217, 70, 239, 0.14), transparent 72%);
+      transition: background 0.3s ease;
+    }
+    #mobileMenuBtn:active {
+      background: radial-gradient(circle at center, rgba(217, 70, 239, 0.28), transparent 72%);
+    }
+
+    #mobileMenu {
+      background: linear-gradient(180deg, rgba(15, 10, 25, 0.4), transparent);
+    }
+    #mobileMenu .mobile-link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      transform: translateX(-14px);
+      transition: opacity 0.45s ease, transform 0.45s ease, color 0.2s ease;
+    }
+    #mobileMenu.menu-open .mobile-link {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    #mobileMenu.menu-open .mobile-link:nth-child(1) { transition-delay: 0.05s; }
+    #mobileMenu.menu-open .mobile-link:nth-child(2) { transition-delay: 0.1s; }
+    #mobileMenu.menu-open .mobile-link:nth-child(3) { transition-delay: 0.15s; }
+    #mobileMenu.menu-open .mobile-link:nth-child(4) { transition-delay: 0.2s; }
+    #mobileMenu.menu-open .mobile-link:nth-child(5) { transition-delay: 0.25s; }
+    .mobile-link-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #d946ef, #38bdf8);
+      box-shadow: 0 0 8px rgba(217, 70, 239, 0.7);
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+    }
+    .mobile-link:hover .mobile-link-dot {
+      transform: scale(1.6);
+    }
+    .mobile-link .nav-index {
+      color: #38bdf8;
+      opacity: 0.6;
+      font-size: 9px;
+    }
 
     /* ===== BACK TO TOP ===== */
     #backToTop {
@@ -297,7 +388,7 @@
 
     /* ===== HERO — INTERACTIVE TECH CORE VIEWPORT ===== */
     #techCoreWrap {
-      touch-action: none;
+      touch-action: pan-y;
     }
     #techCoreWrap canvas {
       cursor: grab;
@@ -384,12 +475,12 @@
         </div>
         <span class="text-lg font-bold tracking-widest text-white font-mono">VINCENTEC<span class="text-fuchsia-400">.CO.UK</span></span>
       </a>
-      <nav class="hidden md:flex space-x-10 text-xs font-mono tracking-widest text-slate-400">
-        <a href="#about" class="hover:text-white transition duration-200">ABOUT</a>
-        <a href="#services" class="hover:text-white transition duration-200">SOLUTIONS</a>
-        <a href="#showcase" class="hover:text-white transition duration-200">SHOWCASE</a>
-        <a href="#feedback" class="hover:text-white transition duration-200">FEEDBACK</a>
-        <a href="#contact" class="hover:text-white transition duration-200">CONTACT</a>
+      <nav class="hidden md:flex space-x-10 text-xs font-mono tracking-widest">
+        <a href="#about" class="nav-link"><span class="nav-index">01</span>ABOUT</a>
+        <a href="#services" class="nav-link"><span class="nav-index">02</span>SOLUTIONS</a>
+        <a href="#showcase" class="nav-link"><span class="nav-index">03</span>SHOWCASE</a>
+        <a href="#feedback" class="nav-link"><span class="nav-index">04</span>FEEDBACK</a>
+        <a href="#contact" class="nav-link"><span class="nav-index">05</span>CONTACT</a>
       </nav>
       <a href="#contact" class="hidden md:inline-block px-6 py-2.5 text-xs font-mono font-semibold tracking-widest text-white bg-gradient-to-r from-fuchsia-600 via-cyan-500 to-blue-600 rounded-full hover:shadow-lg hover:shadow-fuchsia-500/30 transition duration-300 uppercase">
         Initialize
@@ -402,12 +493,12 @@
     </div>
     <nav id="mobileMenu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
       <div class="px-8 pb-6 pt-2 flex flex-col gap-1 text-sm font-mono tracking-widest text-slate-300 border-t border-slate-800/60">
-        <a href="#about" class="py-3 border-b border-slate-800/60 hover:text-white transition">ABOUT</a>
-        <a href="#services" class="py-3 border-b border-slate-800/60 hover:text-white transition">SOLUTIONS</a>
-        <a href="#showcase" class="py-3 border-b border-slate-800/60 hover:text-white transition">SHOWCASE</a>
-        <a href="#feedback" class="py-3 border-b border-slate-800/60 hover:text-white transition">FEEDBACK</a>
-        <a href="#contact" class="py-3 hover:text-white transition">CONTACT</a>
-        <a href="#contact" class="mt-4 text-center px-6 py-3 text-white bg-gradient-to-r from-fuchsia-600 via-cyan-500 to-blue-600 rounded-full uppercase font-semibold">
+        <a href="#about" class="mobile-link py-3 border-b border-slate-800/60 hover:text-white transition"><span class="mobile-link-dot"></span><span class="nav-index">01</span>ABOUT</a>
+        <a href="#services" class="mobile-link py-3 border-b border-slate-800/60 hover:text-white transition"><span class="mobile-link-dot"></span><span class="nav-index">02</span>SOLUTIONS</a>
+        <a href="#showcase" class="mobile-link py-3 border-b border-slate-800/60 hover:text-white transition"><span class="mobile-link-dot"></span><span class="nav-index">03</span>SHOWCASE</a>
+        <a href="#feedback" class="mobile-link py-3 border-b border-slate-800/60 hover:text-white transition"><span class="mobile-link-dot"></span><span class="nav-index">04</span>FEEDBACK</a>
+        <a href="#contact" class="mobile-link py-3 hover:text-white transition"><span class="mobile-link-dot"></span><span class="nav-index">05</span>CONTACT</a>
+        <a href="#contact" class="mt-4 flex justify-center px-6 py-3 text-white bg-gradient-to-r from-fuchsia-600 via-cyan-500 to-blue-600 rounded-full uppercase font-semibold">
           Initialize
         </a>
       </div>
@@ -556,7 +647,7 @@
         <div class="reveal glass-card project-card rounded-3xl p-6 md:p-8 flex flex-col justify-between group">
           <div class="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-slate-800 bg-black/60 shadow-2xl">
             <video autoplay muted loop playsinline class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-              <source src="screen-recording-1.mp4" type="video/mp4">
+              <source src="Screen Recording 2026-09-02 225813 (1).mp4" type="video/mp4">
             </video>
             <div class="video-fallback"><span class="text-xs font-mono text-cyan-400 tracking-widest">[ DEMO REEL 01 // QUANTUM SWARM ]</span></div>
             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
@@ -578,7 +669,7 @@
         <div class="reveal glass-card project-card rounded-3xl p-6 md:p-8 flex flex-col justify-between group">
           <div class="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-slate-800 bg-black/60 shadow-2xl">
             <video autoplay muted loop playsinline class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-              <source src="screen-recording-2.mp4" type="video/mp4">
+              <source src="Screen Recording 2026-09-03 075714 (1).mp4" type="video/mp4">
             </video>
             <div class="video-fallback"><span class="text-xs font-mono text-cyan-400 tracking-widest">[ DEMO REEL 02 // CHRONOS CORE ]</span></div>
             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
@@ -751,6 +842,11 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
 
+      // Shared mobile-performance flag: phones get lighter particle counts and
+      // lower render resolution across every animated system on the page.
+      window.__isMobile = window.matchMedia("(max-width: 768px)").matches ||
+        ("ontouchstart" in window && window.innerWidth < 900);
+
       /* ===== APPLE-STYLE LENIS SMOOTH SCROLL ENGINE ===== */
       const lenis = new Lenis({
         duration: 1.45,
@@ -853,8 +949,10 @@
           btn.setAttribute("aria-expanded", String(open));
           if (open) {
             menu.style.maxHeight = menu.scrollHeight + "px";
+            menu.classList.add("menu-open");
           } else {
             menu.style.maxHeight = "0px";
+            menu.classList.remove("menu-open");
           }
           var lines = btn.querySelectorAll(".mobile-burger-line");
           if (lines.length === 3) {
@@ -885,7 +983,7 @@
         var W, H;
         var targetPoints = [];
         var particles = [];
-        var PARTICLE_COUNT = 1900;
+        var PARTICLE_COUNT = window.__isMobile ? 700 : 1900;
         var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
         function makeGlowSprite(rgb) {
@@ -1150,8 +1248,8 @@
         var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 50);
         camera.position.set(0, 0, 6.2);
 
-        var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: !window.__isMobile });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.__isMobile ? 1 : 2));
 
         var coreGroup = new THREE.Group();
         scene.add(coreGroup);
@@ -1391,7 +1489,7 @@
         var W, H;
         var targetPoints = [];
         var particles = [];
-        var PARTICLE_COUNT = 1800;
+        var PARTICLE_COUNT = window.__isMobile ? 700 : 1800;
 
         function resize() {
           W = canvas.clientWidth;
@@ -1573,6 +1671,11 @@
 
   <!-- Background Three.js Quantum Scene Engine -->
   <script>
+    // This script runs at parse time, before DOMContentLoaded fires, so it
+    // can't rely on window.__isMobile being set yet — compute locally.
+    var isMobileBG = window.matchMedia("(max-width: 768px)").matches ||
+      ("ontouchstart" in window && window.innerWidth < 900);
+
     const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0x020617, 0.032);
 
@@ -1580,9 +1683,9 @@
     camera.position.set(0, 1.4, 8.5);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true, antialias: true, powerPreference: 'high-performance' });
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true, antialias: !isMobileBG, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileBG ? 1 : 2));
 
     /* ---------- Helper: soft radial glow texture for sprites ---------- */
     function makeGlowTexture() {
@@ -1625,7 +1728,7 @@
     }
     const streakTexture = makeStreakTexture();
 
-    const SHOOTING_STAR_COUNT = 7;
+    const SHOOTING_STAR_COUNT = isMobileBG ? 4 : 7;
     const shootingStars = [];
     for (let i = 0; i < SHOOTING_STAR_COUNT; i++) {
       const mat = new THREE.SpriteMaterial({
@@ -1820,7 +1923,7 @@
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileBG ? 1 : 2));
       computeAnchorFractions();
       updateScrollFrac();
     });
