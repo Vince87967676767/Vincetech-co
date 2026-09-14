@@ -1121,6 +1121,27 @@
           mouseX = -9999; mouseY = -9999;
         });
 
+        var touchResetTimer;
+        function updateTouchPos(e) {
+          if (!e.touches || !e.touches.length) return;
+          var rect = canvas.getBoundingClientRect();
+          mouseX = e.touches[0].clientX - rect.left;
+          mouseY = e.touches[0].clientY - rect.top;
+          clearTimeout(touchResetTimer);
+        }
+        function resetTouchPos() {
+          // Touch devices never fire mouseleave, so reset shortly after the
+          // finger lifts instead of leaving particles scattered forever.
+          clearTimeout(touchResetTimer);
+          touchResetTimer = setTimeout(function () {
+            mouseX = -9999; mouseY = -9999;
+          }, 250);
+        }
+        wrap.addEventListener("touchstart", updateTouchPos, { passive: true });
+        wrap.addEventListener("touchmove", updateTouchPos, { passive: true });
+        wrap.addEventListener("touchend", resetTouchPos, { passive: true });
+        wrap.addEventListener("touchcancel", resetTouchPos, { passive: true });
+
         // Breathing cycle: hold formation, then briefly scatter into a nebula, then reassemble — on a loop, forever.
         var cyclePos = 0;
         var CYCLE_DURATION = 9000;
@@ -1582,6 +1603,25 @@
           mouseX = -9999; mouseY = -9999;
         });
 
+        var touchResetTimer;
+        function updateTouchPos(e) {
+          if (!e.touches || !e.touches.length) return;
+          var rect = canvas.getBoundingClientRect();
+          mouseX = e.touches[0].clientX - rect.left;
+          mouseY = e.touches[0].clientY - rect.top;
+          clearTimeout(touchResetTimer);
+        }
+        function resetTouchPos() {
+          clearTimeout(touchResetTimer);
+          touchResetTimer = setTimeout(function () {
+            mouseX = -9999; mouseY = -9999;
+          }, 250);
+        }
+        section.addEventListener("touchstart", updateTouchPos, { passive: true });
+        section.addEventListener("touchmove", updateTouchPos, { passive: true });
+        section.addEventListener("touchend", resetTouchPos, { passive: true });
+        section.addEventListener("touchcancel", resetTouchPos, { passive: true });
+
         var assembled = false;
         var sectionVisible = false;
 
@@ -1917,6 +1957,19 @@
     });
 
     document.documentElement.addEventListener('mouseleave', () => {
+      mouseWorld.set(9999, 9999, 9999);
+      mouseNDC.x = 0;
+      mouseNDC.y = 0;
+    });
+
+    window.addEventListener('pointerup', (e) => {
+      if (e.pointerType !== 'touch') return;
+      mouseWorld.set(9999, 9999, 9999);
+      mouseNDC.x = 0;
+      mouseNDC.y = 0;
+    });
+    window.addEventListener('pointercancel', (e) => {
+      if (e.pointerType !== 'touch') return;
       mouseWorld.set(9999, 9999, 9999);
       mouseNDC.x = 0;
       mouseNDC.y = 0;
