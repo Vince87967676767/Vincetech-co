@@ -983,7 +983,7 @@
         var W, H;
         var targetPoints = [];
         var particles = [];
-        var PARTICLE_COUNT = window.__isMobile ? 700 : 1900;
+        var PARTICLE_COUNT = window.__isMobile ? 1600 : 1900;
         var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
         function makeGlowSprite(rgb) {
@@ -1489,7 +1489,7 @@
         var W, H;
         var targetPoints = [];
         var particles = [];
-        var PARTICLE_COUNT = window.__isMobile ? 700 : 1800;
+        var PARTICLE_COUNT = window.__isMobile ? 1500 : 1800;
 
         function resize() {
           W = canvas.clientWidth;
@@ -1842,11 +1842,16 @@
       { anchor: 'contact',   pos: [0, 3.1, 10.6],   look: [0, 0.5, 0] }
     ];
 
+    let cachedMaxScroll = 1;
+    function updateMaxScroll() {
+      cachedMaxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+    }
+
     function computeAnchorFractions() {
-      const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+      updateMaxScroll();
       CAM_PATH.forEach((kf) => {
         const el = document.getElementById(kf.anchor);
-        kf.frac = el ? Math.min(Math.max(el.offsetTop / maxScroll, 0), 1) : 0;
+        kf.frac = el ? Math.min(Math.max(el.offsetTop / cachedMaxScroll, 0), 1) : 0;
       });
       CAM_PATH[0].frac = 0;
       for (let i = 1; i < CAM_PATH.length; i++) {
@@ -1859,8 +1864,10 @@
 
     let scrollFrac = 0;
     function updateScrollFrac() {
-      const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
-      scrollFrac = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+      // Uses the cached scroll range rather than recomputing window.innerHeight
+      // on every scroll tick — mobile browsers resize the viewport continuously
+      // as their address bar shows/hides mid-scroll, which caused jitter.
+      scrollFrac = Math.min(Math.max(window.scrollY / cachedMaxScroll, 0), 1);
     }
     window.addEventListener('scroll', updateScrollFrac, { passive: true });
     updateScrollFrac();
