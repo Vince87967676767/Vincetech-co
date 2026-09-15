@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VINCENTEC.CO.UK</title>
+  <title>VINCENTEC.CO.Uk</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <!-- Apple-Style Smooth Scroll Engine (Lenis) -->
@@ -979,7 +979,6 @@
         }, true);
 
         video.addEventListener("loadeddata", function () {
-          showVideo();
           var playPromise = video.play();
           if (playPromise && typeof playPromise.catch === "function") {
             playPromise.catch(function () {});
@@ -990,6 +989,24 @@
         // genuinely being rendered — far more trustworthy than checking
         // .paused alone, which can lie in some mobile edge cases.
         video.addEventListener("playing", showVideo);
+
+        // Mobile browsers (iOS Safari especially) can silently block autoplay
+        // even on a muted/playsinline video, leaving it loaded but paused with
+        // no error and no 'playing' event ever firing. Let a tap start it —
+        // play() called directly from a user gesture is allowed even when
+        // the earlier automatic attempt was blocked.
+        video.addEventListener("click", function () {
+          if (video.paused) video.play().catch(function () {});
+        });
+        video.parentElement.addEventListener("touchend", function () {
+          if (video.paused) video.play().catch(function () {});
+        }, { passive: true });
+        video.addEventListener("canplay", function () {
+          if (resolved) return;
+          setTimeout(function () {
+            if (!resolved && video.paused && video.readyState >= 2) showVideo();
+          }, 600);
+        });
 
         // Give slower GitHub Pages/CDN connections enough time to load,
         // and fall through to the next candidate filename if it's stuck.
