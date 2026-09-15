@@ -433,7 +433,7 @@
         </svg>
       </div>
       <div class="relative w-64 h-36 md:w-80 md:h-44 mb-8 rounded-2xl overflow-hidden border border-fuchsia-500/40 shadow-[0_0_50px_rgba(217,70,239,0.25)] bg-black/80">
-        <video autoplay muted loop playsinline class="w-full h-full object-cover scale-105 filter contrast-125">
+        <video autoplay muted loop playsinline preload="metadata" data-video-candidates="logomotion-720p.mp4|logomotion-720p%20(1).mp4" class="w-full h-full object-cover scale-105 filter contrast-125">
           <source src="logomotion-720p.mp4" type="video/mp4" />
           Your browser does not support HTML5 video.
         </video>
@@ -647,7 +647,7 @@
         <!-- Project 1 -->
         <div class="reveal glass-card project-card rounded-3xl p-6 md:p-8 flex flex-col justify-between group">
           <div class="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-slate-800 bg-black/60 shadow-2xl">
-            <video autoplay muted loop playsinline class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <video autoplay muted loop playsinline preload="metadata" data-video-candidates="screen-recording-1.mp4|Screen%20Recording%202026-09-02%20225813%20(1).mp4|screen-recording-2.mp4|Screen%20Recording%202026-09-03%20075714%20(1).mp4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
               <source src="screen-recording-1.mp4" type="video/mp4">
             </video>
             <div class="video-fallback"><span class="text-xs font-mono text-cyan-400 tracking-widest">[ DEMO REEL 01 // QUANTUM SWARM ]</span></div>
@@ -669,7 +669,7 @@
         <!-- Project 2 -->
         <div class="reveal glass-card project-card rounded-3xl p-6 md:p-8 flex flex-col justify-between group">
           <div class="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-slate-800 bg-black/60 shadow-2xl">
-            <video autoplay muted loop playsinline class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <video autoplay muted loop playsinline preload="metadata" data-video-candidates="screen-recording-2.mp4|Screen%20Recording%202026-09-03%20075714%20(1).mp4|screen-recording-1.mp4|Screen%20Recording%202026-09-02%20225813%20(1).mp4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
               <source src="screen-recording-2.mp4" type="video/mp4">
             </video>
             <div class="video-fallback"><span class="text-xs font-mono text-cyan-400 tracking-widest">[ DEMO REEL 02 // CHRONOS CORE ]</span></div>
@@ -917,22 +917,28 @@
       /* ===== VIDEO ASSET FALLBACK GUARD ===== */
       window.guardVideo = function (video) {
         if (!video) return;
-        var fallback = video.parentElement.querySelector(".video-fallback");
+
+        var fallback = video.parentElement && video.parentElement.querySelector(".video-fallback");
         if (!fallback) return;
 
-        // Hide the raw video immediately — the styled placeholder (.video-fallback)
-        // is already visible by default via CSS with zero delay, so there is never
-        // a moment where the browser's own broken-video UI can flash on screen.
         video.style.opacity = "0";
         video.style.transition = "opacity 0.4s ease";
 
         var resolved = false;
+        var candidates = (video.getAttribute("data-video-candidates") || "")
+          .split("|")
+          .map(function (src) { return src.trim(); })
+          .filter(Boolean);
+
+        var source = video.querySelector("source");
+
         function showFallback() {
           if (resolved) return;
           resolved = true;
           fallback.classList.remove("hide");
           video.style.opacity = "0";
         }
+
         function showVideo() {
           if (resolved) return;
           resolved = true;
@@ -940,40 +946,74 @@
           video.style.opacity = "1";
         }
 
-        if (video.error) { showFallback(); return; }
-        video.addEventListener("error", showFallback, true);
-        var sources = video.querySelectorAll("source");
-        for (var s = 0; s < sources.length; s++) {
-          sources[s].addEventListener("error", showFallback);
+        function tryNextSource() {
+          if (!candidates.length) {
+            showFallback();
+            return;
+          }
+
+          var nextSrc = candidates.shift();
+          if (source) {
+            source.src = nextSrc;
+            video.load();
+          } else {
+            video.src = nextSrc;
+            video.load();
+          }
+
+          var playPromise = video.play();
+          if (playPromise && typeof playPromise.catch === "function") {
+            playPromise.catch(function () {
+              /* Some browsers delay autoplay until the media has loaded. */
+            });
+          }
         }
 
-        // The 'playing' event is the one reliable signal that frames are
-        // genuinely being rendered — far more trustworthy than checking
-        // .paused alone, which can lie in some mobile edge cases.
+        video.addEventListener("error", function () {
+          if (candidates.length) {
+            tryNextSource();
+          } else {
+            showFallback();
+          }
+        }, true);
+
+        video.addEventListener("loadeddata", function () {
+          showVideo();
+          var playPromise = video.play();
+          if (playPromise && typeof playPromise.catch === "function") {
+            playPromise.catch(function () {});
+          }
+        });
+
         video.addEventListener("playing", showVideo);
 
+        // Give slower GitHub Pages/CDN connections enough time to load.
         setTimeout(function () {
-          if (!resolved && (video.readyState === 0 || video.networkState === 3)) showFallback();
-        }, 3000);
-
-        // Loading isn't the only way autoplay can fail — mobile browsers
-        // (iOS Low Power Mode especially) can silently refuse to actually
-        // start playback even on a correctly muted/playsinline video, with
-        // no error event at all. Verify playback actually started.
-        var playAttempt = video.play();
-        if (playAttempt && typeof playAttempt.catch === "function") {
-          playAttempt.catch(function () {
-            setTimeout(function () {
-              if (!resolved && video.paused) showFallback();
-            }, 400);
-          });
-        }
-        setTimeout(function () {
-          if (!resolved) {
-            if (video.paused) showFallback(); else showVideo();
+          if (!resolved && video.readyState >= 2) {
+            showVideo();
+          } else if (!resolved && candidates.length) {
+            tryNextSource();
+          } else if (!resolved && video.readyState === 0) {
+            showFallback();
           }
-        }, 2500);
+        }, 8000);
+
+        // Try the HTML source first. Candidate sources are used only if it fails.
+        if (source && source.getAttribute("src")) {
+          var playPromise = video.play();
+          if (playPromise && typeof playPromise.catch === "function") {
+            playPromise.catch(function () {});
+          }
+        } else if (video.getAttribute("src")) {
+          var playPromise2 = video.play();
+          if (playPromise2 && typeof playPromise2.catch === "function") {
+            playPromise2.catch(function () {});
+          }
+        } else {
+          tryNextSource();
+        }
       };
+
       document.querySelectorAll("video").forEach(window.guardVideo);
 
       /* ===== MOBILE NAV MENU ===== */
@@ -2105,7 +2145,7 @@
       
       const container = document.getElementById('modal-video-container');
       container.innerHTML = `
-        <video class="w-full h-full object-cover" autoplay muted loop playsinline controls>
+        <video class="w-full h-full object-cover" autoplay muted loop playsinline controls preload="metadata">
           <source src="${videoSrc}" type="video/mp4">
           Your browser does not support the video tag.
         </video>
