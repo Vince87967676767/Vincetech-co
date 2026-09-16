@@ -659,7 +659,7 @@
             <p class="text-slate-400 text-sm font-light leading-relaxed mb-6">5,000 GPU-computed autonomous kinetic particles responding dynamically to user cursor velocity and click impulses.</p>
             <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
               <span class="text-xs font-mono text-cyan-400">WebGL • Three.js • Shaders</span>
-              <button onclick="openModal('Quantum Swarm Architecture', '5,000 GPU-computed particles responding to user mouse speed and click impulses.', 'Screen Recording 2026-09-02 225813 (1).mp4')" class="px-5 py-2 bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-500 hover:to-blue-500 rounded-full text-xs font-mono font-bold text-white uppercase tracking-wider transition duration-300 shadow-md">
+              <button onclick="openModal('Quantum Swarm Architecture', '5,000 GPU-computed particles responding to user mouse speed and click impulses.', 'screen-recording-1.mp4', 'screen-recording-1.mp4|Screen Recording 2026-09-02 225813 (1).mp4|Screen Recording 2026-09-02 225813.mp4')" class="px-5 py-2 bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-500 hover:to-blue-500 rounded-full text-xs font-mono font-bold text-white uppercase tracking-wider transition duration-300 shadow-md">
                 Launch Experience
               </button>
             </div>
@@ -681,7 +681,7 @@
             <p class="text-slate-400 text-sm font-light leading-relaxed mb-6">An ethereal wireframe Icosahedron geometry matrix wrapped in dynamic counter-rotating orbital rings with real-time light refraction.</p>
             <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
               <span class="text-xs font-mono text-cyan-400">Procedural Mesh • GLSL</span>
-              <button onclick="openModal('Chronos Spatial Core', 'Wireframe geometry matrix emitting dynamic light refraction vectors.', 'Screen Recording 2026-09-03 075714 (1).mp4')" class="px-5 py-2 bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-500 hover:to-blue-500 rounded-full text-xs font-mono font-bold text-white uppercase tracking-wider transition duration-300 shadow-md">
+              <button onclick="openModal('Chronos Spatial Core', 'Wireframe geometry matrix emitting dynamic light refraction vectors.', 'screen-recording-2.mp4', 'screen-recording-2.mp4|Screen Recording 2026-09-03 075714 (1).mp4|Screen Recording 2026-09-03 075714.mp4')" class="px-5 py-2 bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-500 hover:to-blue-500 rounded-full text-xs font-mono font-bold text-white uppercase tracking-wider transition duration-300 shadow-md">
                 Launch Experience
               </button>
             </div>
@@ -2162,13 +2162,14 @@
 
     animate();
 
-    function openModal(title, desc, videoSrc) {
+    function openModal(title, desc, videoSrc, videoCandidates) {
       document.getElementById('modal-title').innerText = title;
       document.getElementById('modal-desc').innerText = desc;
       
       const container = document.getElementById('modal-video-container');
+      const candidatesAttr = videoCandidates ? `data-video-candidates="${videoCandidates}"` : '';
       container.innerHTML = `
-        <video class="w-full h-full object-cover" autoplay muted loop playsinline controls>
+        <video class="w-full h-full object-cover" autoplay muted loop playsinline controls preload="metadata" ${candidatesAttr}>
           <source src="${videoSrc}" type="video/mp4">
           Your browser does not support the video tag.
         </video>
