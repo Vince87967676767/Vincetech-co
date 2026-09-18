@@ -955,15 +955,17 @@
 
         var source = video.querySelector("source");
 
+        var videoConfirmed = false;
+
         function showFallback() {
-          if (resolved) return;
+          if (resolved || videoConfirmed) return;
           resolved = true;
           fallback.classList.remove("hide");
           video.style.opacity = "0";
         }
 
         function showVideo() {
-          if (resolved) return;
+          videoConfirmed = true;
           resolved = true;
           fallback.classList.add("hide");
           video.style.opacity = "1";
@@ -1005,11 +1007,21 @@
           }
         });
 
-        // The 'playing' event is the one reliable signal that frames are
-        // genuinely being rendered — far more trustworthy than checking
-        // .paused alone, which can lie in some mobile edge cases.
+        // The 'playing' event is a reliable signal that frames are being
+        // rendered — but it isn't the only one we trust; see 'timeupdate'
+        // below, which is the single most bulletproof confirmation across
+        // browsers that a video is genuinely advancing.
         video.addEventListener("playing", function () {
           if (video.videoWidth > 0) showVideo();
+        });
+
+        // The most reliable signal of all: if playback position is actually
+        // advancing, the video is unambiguously playing, regardless of
+        // whether 'playing' fired cleanly on this particular browser. This
+        // catches cases where the video was genuinely working but stayed
+        // hidden behind the placeholder due to a missed event elsewhere.
+        video.addEventListener("timeupdate", function () {
+          if (video.currentTime > 0.05) showVideo();
         });
 
         // Mobile browsers (iOS Safari especially) can silently block autoplay
