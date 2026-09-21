@@ -955,6 +955,12 @@
         var fallback = video.parentElement && video.parentElement.querySelector(".video-fallback");
         if (!fallback) return;
 
+        // Some mobile browsers check the JS property specifically, not just
+        // the HTML "muted" attribute, when deciding whether to allow
+        // autoplay — set both to give it the best possible chance.
+        video.muted = true;
+        video.defaultMuted = true;
+
         // Hide the raw video immediately — the styled placeholder (.video-fallback)
         // is already visible by default via CSS with zero delay, so there is never
         // a moment where the browser's own broken-video UI can flash on screen.
