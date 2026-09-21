@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VINCENTEC.CO.UK | Quantum Spatial Core</title>
+  <title>VINCENTEC.CO.UK</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <!-- Apple-Style Smooth Scroll Engine (Lenis) -->
@@ -138,6 +138,10 @@
         #020617;
     }
     .video-fallback.hide { display: none; }
+    /* Videos are confirmed working now — show them directly with no
+       placeholder flash while they load. */
+    .video-fallback { display: none !important; }
+    video { opacity: 1 !important; }
 
     /* ===== PREMIUM NAV ===== */
     .nav-link {
